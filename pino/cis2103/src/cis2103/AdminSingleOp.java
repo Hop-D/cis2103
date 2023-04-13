@@ -17,7 +17,7 @@ public class AdminSingleOp {
     Connection con = MyConnection.getConnection();
     PreparedStatement ps;
     
-    // get latest single item id possible
+    // return the latest possible unique id in items
     public int getMax() {
         int id = 0;
         Statement st;
@@ -34,6 +34,7 @@ public class AdminSingleOp {
         return id + 1;   
     }
     
+    // return the latest possible unique id in list
     public int getlistMax() {
         int id = 0;
         Statement st;
@@ -50,6 +51,7 @@ public class AdminSingleOp {
         return id + 1;    
     }
     
+    // add item into the list
     public void addList() {
         int id = getlistMax();
         int id2 = getMax();
@@ -70,6 +72,7 @@ public class AdminSingleOp {
         }
     }
     
+    // remove item from the list
     public void removeList(int itemID) {
         
         String sql = "DELETE FROM list WHERE ID = ?";
@@ -85,7 +88,47 @@ public class AdminSingleOp {
         }
     }
     
-    // insert single item entry to database
+    // check if item already exists
+    public boolean isSingleExist(String itemName) {
+        String sql = "SELECT * FROM items where itemName = ?";
+        try {
+            ps = con.prepareStatement(sql);
+            ps.setString(1, itemName);
+            ResultSet rs = ps.executeQuery();
+            if(rs.next()) {
+                return true;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(AdminSingleOp.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+    
+    // fetch all data for initial display in Manage Single Items
+    public void getSingleItems(JTable table, String searchVal) {
+        String sql = "SELECT * FROM items WHERE CONCAT(itemID, itemName, itemPrice, itemAdded, itemUpdated)like ? ORDER BY itemID DESC";
+        try {
+            ps = con.prepareStatement(sql);
+            ps.setString(1, "%" + searchVal + "%");
+            ResultSet rs = ps.executeQuery();
+            DefaultTableModel model = (DefaultTableModel) table.getModel();
+            Object[] row;
+            while(rs.next()) {
+                row = new Object[5];
+                row[0] = rs.getInt(1);
+                row[1] = rs.getString(2);
+                row[2] = rs.getString(3);
+                row[3] = rs.getString(6);
+                row[4] = rs.getString(7);
+                model.addRow(row);
+            }
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(AdminSingleOp.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    // CREATE A NEW ITEM
     public void insertSingle(int itemID, String itemName, String itemPrice) {
         String sql = "INSERT INTO items VALUES (?, ?, ?, ?, ?, ?, ?)";
         
@@ -111,47 +154,7 @@ public class AdminSingleOp {
         
     }
     
-    // check if item already exists
-    public boolean isSingleExist(String itemName) {
-        String sql = "SELECT * FROM items where itemName = ?";
-        try {
-            ps = con.prepareStatement(sql);
-            ps.setString(1, itemName);
-            ResultSet rs = ps.executeQuery();
-            if(rs.next()) {
-                return true;
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(AdminSingleOp.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return false;
-    }
-    
-    // display in table
-    public void getSingleItems(JTable table, String searchVal) {
-        String sql = "SELECT * FROM items WHERE CONCAT(itemID, itemName, itemPrice, itemAdded, itemUpdated)like ? ORDER BY itemID DESC";
-        try {
-            ps = con.prepareStatement(sql);
-            ps.setString(1, "%" + searchVal + "%");
-            ResultSet rs = ps.executeQuery();
-            DefaultTableModel model = (DefaultTableModel) table.getModel();
-            Object[] row;
-            while(rs.next()) {
-                row = new Object[5];
-                row[0] = rs.getInt(1);
-                row[1] = rs.getString(2);
-                row[2] = rs.getString(3);
-                row[3] = rs.getString(6);
-                row[4] = rs.getString(7);
-                model.addRow(row);
-            }
-            
-        } catch (SQLException ex) {
-            Logger.getLogger(AdminSingleOp.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    
-    // update single item
+    // UPDATE ITEM
     public void updateSingle(int itemID, String itemName, String itemPrice) {
         String sql = "UPDATE items SET itemName = ?, itemPrice = ?, itemUpdated = ? WHERE itemID = ?";
         
@@ -172,7 +175,7 @@ public class AdminSingleOp {
       
     }
     
-    // delete single item
+    // REMOVE ITEM
     public void removeSingle(int itemID) {
         int choice = JOptionPane.showConfirmDialog(null, "Removing an item is irreversible", "Item Remove", JOptionPane.OK_CANCEL_OPTION, 0);
         
