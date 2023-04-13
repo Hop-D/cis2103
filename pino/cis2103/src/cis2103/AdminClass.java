@@ -1094,11 +1094,23 @@ public class AdminClass extends javax.swing.JFrame {
         pack();
     }
 
+    // LOG OUT
+    private void buttonAdminOutActionPerformed(java.awt.event.ActionEvent evt) {
+        
+        int out = JOptionPane.showConfirmDialog(this, "Do you want to log out?", "SELECT", JOptionPane.YES_NO_OPTION);
+        if(out == 0) {
+            this.dispose();
+        }
+    }
+    
+    // initial fetch data for tables
+    // for Manage Single Items
     private void tableViewItems() {
         admin.getSingleItems(tableSingleItem, "");
         model = (DefaultTableModel) tableSingleItem.getModel();
     }
     
+    // for Manage Package Items
     private void tableViewPackages() {
         admin2.getPackages(tablePackages, "");
         model = (DefaultTableModel) tablePackages.getModel();
@@ -1109,17 +1121,27 @@ public class AdminClass extends javax.swing.JFrame {
         model = (DefaultTableModel) tablePackageSingle.getModel();
     }
     
+    // for Manage Users
     private void tableViewUsers() {
         admin3.getUsers(tableUsers, "");
         model3 = (DefaultTableModel) tableUsers.getModel();
     }
     
+    // clearing input boxes
+    // for Manage Single Items
     private void clearSingle() {
         inputSingleID.setText(String.valueOf(admin.getMax()));
         inputSingleName.setText(null);
         inputSinglePrice.setText(null);
     }
     
+    // for Manage Package Items
+    private void clearTable(JTable table) {
+        model = (DefaultTableModel) table.getModel();
+        model.setRowCount(0);
+    }
+    
+    // for Manage Users
     private void clearUser() {
         inputUserID.setText(String.valueOf(admin3.getMax()));
         inputUserName.setText(null);
@@ -1128,11 +1150,8 @@ public class AdminClass extends javax.swing.JFrame {
         radioUserRegular.setSelected(true);     
     }
     
-    private void clearTable(JTable table) {
-        model = (DefaultTableModel) table.getModel();
-        model.setRowCount(0);
-    }
-    
+    // check if input components are empty
+    // for Manage Single Items
     public boolean isEmptySingle() {
         
         if(inputSingleID.getText().isEmpty()) {
@@ -1150,6 +1169,7 @@ public class AdminClass extends javax.swing.JFrame {
         return true;
     }
     
+    // for Manage Users
     public boolean isEmptyUser() {
         if(inputUserName.getText().isEmpty()) {
             JOptionPane.showMessageDialog(this, "User Name is missing");
@@ -1166,6 +1186,9 @@ public class AdminClass extends javax.swing.JFrame {
         return true;
     } 
     
+    // EVENTS FOR MANAGE SINGLE ITEMS
+    
+    // Add Single Item
     private void buttonSingleAddActionPerformed(java.awt.event.ActionEvent evt) {
         
         if(isEmptySingle()) {
@@ -1177,7 +1200,6 @@ public class AdminClass extends javax.swing.JFrame {
                 String itemPrice = inputSinglePrice.getText();
 
                 admin.insertSingle(itemID, itemName, itemPrice);
-             
                 tableSingleItem.setModel(new DefaultTableModel(null, new Object[] {
                     "ID", "NAME", "PRICE", "DATE ADDED", "LAST UPDATED ON"
                 }));
@@ -1190,7 +1212,8 @@ public class AdminClass extends javax.swing.JFrame {
             }
         }
     }
-
+    
+    // Clear Single Item Input Components
     private void buttonSingleClearActionPerformed(java.awt.event.ActionEvent evt) {
         
         inputSingleName.setText(null);
@@ -1200,6 +1223,7 @@ public class AdminClass extends javax.swing.JFrame {
         
     }
 
+    // Update Single Item
     private void buttonSingleUpdateActionPerformed(java.awt.event.ActionEvent evt) {
         
         if(isEmptySingle()) {
@@ -1224,7 +1248,8 @@ public class AdminClass extends javax.swing.JFrame {
             }
         }
     }
-
+    
+    // Remove Single Items
     private void buttonSingleRemoveActionPerformed(java.awt.event.ActionEvent evt) {
         
         int itemID = Integer.parseInt(inputSingleID.getText());
@@ -1238,7 +1263,8 @@ public class AdminClass extends javax.swing.JFrame {
 
         clearSingle();
     }
-
+    
+    // Print List of Single Items
     private void buttonSinglePrintActionPerformed(java.awt.event.ActionEvent evt) {
         
         try {
@@ -1250,6 +1276,7 @@ public class AdminClass extends javax.swing.JFrame {
         }
     }
 
+    // Search for a Single Item
     private void buttonSingleSearchActionPerformed(java.awt.event.ActionEvent evt) {
         
         if(inputSingleSearch.getText().isEmpty()) {
@@ -1262,6 +1289,7 @@ public class AdminClass extends javax.swing.JFrame {
         }
     }
 
+    // Refresh Single Item Table
     private void buttonSingleRefreshActionPerformed(java.awt.event.ActionEvent evt) {
         
         tableSingleItem.setModel(new DefaultTableModel(null, new Object[] {
@@ -1271,21 +1299,7 @@ public class AdminClass extends javax.swing.JFrame {
         inputSingleSearch.setText(null);
     }
 
-    private void buttonAdminOutActionPerformed(java.awt.event.ActionEvent evt) {
-        
-        int out = JOptionPane.showConfirmDialog(this, "Do you want to log out?", "SELECT", JOptionPane.YES_NO_OPTION);
-        if(out == 0) {
-            this.dispose();
-        }
-    }
-
-    private void inputSinglePriceKeyTyped(java.awt.event.KeyEvent evt) {
-        
-        if(!Character.isDigit(evt.getKeyChar())) {
-            evt.consume();
-        }
-    }
-
+    // Fetch data values of selected table row
     private void tableSingleItemMouseClicked(java.awt.event.MouseEvent evt) {
         
         model = (DefaultTableModel) tableSingleItem.getModel();
@@ -1295,13 +1309,43 @@ public class AdminClass extends javax.swing.JFrame {
         inputSingleName.setText(model.getValueAt(rowIndex, 1).toString());
         inputSinglePrice.setText(model.getValueAt(rowIndex, 2).toString());
     }
-
+    
+    // Only numeric inputs for price
+    private void inputSinglePriceKeyTyped(java.awt.event.KeyEvent evt) {
+        
+        if(!Character.isDigit(evt.getKeyChar())) {
+            evt.consume();
+        }
+    }
+    
+    // EVENTS FOR MANAGE USERS
+    
+    // Only numeric inputs for contact
     private void inputUserContactKeyTyped(java.awt.event.KeyEvent evt) {
         if(!Character.isDigit(evt.getKeyChar())) {
             evt.consume();
         }
     }
+    
+    // Fetch data of selected table row
+    private void tableUsersMouseClicked(java.awt.event.MouseEvent evt) {
+        model = (DefaultTableModel) tableUsers.getModel();
+        rowIndex = tableUsers.getSelectedRow();
+        
+        inputUserID.setText(model.getValueAt(rowIndex, 0).toString());
+        inputUserName.setText(model.getValueAt(rowIndex, 1).toString());
+        inputUserPass.setText(model.getValueAt(rowIndex, 2).toString());
+        inputUserContact.setText(model.getValueAt(rowIndex, 3).toString());
+        if(model.getValueAt(rowIndex, 4).toString().equals("admin")) {
+            radioUserAdmin.setSelected(true);
+            radioUserRegular.setSelected(false);
+        } else {
+            radioUserAdmin.setSelected(false);
+            radioUserRegular.setSelected(true);
+        }
+    }
 
+    // Add User
     private void buttonUserAddActionPerformed(java.awt.event.ActionEvent evt) {
         if(isEmptyUser()) {
             
@@ -1331,14 +1375,7 @@ public class AdminClass extends javax.swing.JFrame {
         }
     }
 
-    private void buttonUserClearActionPerformed(java.awt.event.ActionEvent evt) {
-        inputUserID.setText(String.valueOf(admin3.getMax()));
-        inputUserName.setText(null);
-        inputUserPass.setText(null);
-        inputUserContact.setText(null);
-        radioUserRegular.setSelected(true);  
-    }
-
+    // Update User 
     private void buttonUserUpdateActionPerformed(java.awt.event.ActionEvent evt) {
         if(isEmptyUser()) {
         
@@ -1370,6 +1407,7 @@ public class AdminClass extends javax.swing.JFrame {
         }
     }
 
+    // Remove User
     private void buttonUserRemoveActionPerformed(java.awt.event.ActionEvent evt) {
         int userID = Integer.parseInt(inputUserID.getText());
         
@@ -1382,7 +1420,17 @@ public class AdminClass extends javax.swing.JFrame {
 
         clearUser();  
     }
+    
+    // Clear input components
+    private void buttonUserClearActionPerformed(java.awt.event.ActionEvent evt) {
+        inputUserID.setText(String.valueOf(admin3.getMax()));
+        inputUserName.setText(null);
+        inputUserPass.setText(null);
+        inputUserContact.setText(null);
+        radioUserRegular.setSelected(true);  
+    }
 
+    // Print User List
     private void buttonUserPrintActionPerformed(java.awt.event.ActionEvent evt) {
         try {
             MessageFormat header = new MessageFormat("ALL USERS");
@@ -1393,6 +1441,7 @@ public class AdminClass extends javax.swing.JFrame {
         }
     }
 
+    // Search User
     private void buttonUserSearchActionPerformed(java.awt.event.ActionEvent evt) {
         if(inputUserSearch.getText().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Input is empty");
@@ -1404,6 +1453,7 @@ public class AdminClass extends javax.swing.JFrame {
         }
     }
 
+    // Refresh User Table
     private void buttonUserRefreshActionPerformed(java.awt.event.ActionEvent evt) {
         tableUsers.setModel(new DefaultTableModel(null, new Object[] {
             "ID", "USERNAME", "PASSWORD", "CONTACT#", "ROLE", "CREATED ON", "UPDATED ON"
@@ -1412,23 +1462,10 @@ public class AdminClass extends javax.swing.JFrame {
         inputUserSearch.setText(null);
     }
 
-    private void tableUsersMouseClicked(java.awt.event.MouseEvent evt) {
-        model = (DefaultTableModel) tableUsers.getModel();
-        rowIndex = tableUsers.getSelectedRow();
-        
-        inputUserID.setText(model.getValueAt(rowIndex, 0).toString());
-        inputUserName.setText(model.getValueAt(rowIndex, 1).toString());
-        inputUserPass.setText(model.getValueAt(rowIndex, 2).toString());
-        inputUserContact.setText(model.getValueAt(rowIndex, 3).toString());
-        if(model.getValueAt(rowIndex, 4).toString().equals("admin")) {
-            radioUserAdmin.setSelected(true);
-            radioUserRegular.setSelected(false);
-        } else {
-            radioUserAdmin.setSelected(false);
-            radioUserRegular.setSelected(true);
-        }
-    }
+    
+    // EVENTS FOR MANAGE PACKAGE ITEMS
 
+    // Fetch data of selected package
     private void tablePackagesMouseClicked(java.awt.event.MouseEvent evt) {
         
         clearTable(tablePackageItem);
@@ -1444,6 +1481,7 @@ public class AdminClass extends javax.swing.JFrame {
         admin2.getPackageItem(tablePackageItem, inputPackageID.getText());
     }
 
+    // Add Package
     private void buttonPackageAddActionPerformed(java.awt.event.ActionEvent evt) {
         int packageID = admin2.getMax();
         String packageName = "Package " + packageID;
@@ -1461,6 +1499,7 @@ public class AdminClass extends javax.swing.JFrame {
         
     }
 
+    // Update a package
     private void buttonPackageUpdateActionPerformed(java.awt.event.ActionEvent evt) {
         int packageID = Integer.parseInt(inputPackageID.getText());
         String packagePrice = inputPackagePrice.getText();
@@ -1471,7 +1510,28 @@ public class AdminClass extends javax.swing.JFrame {
         }));
         admin2.getPackages(tablePackages, "");
     }
-
+    
+    // Remove a package
+    private void buttonPackageRemoveActionPerformed(java.awt.event.ActionEvent evt) {
+        int packageID = Integer.parseInt(inputPackageID.getText());
+        
+        admin2.removeAllItems(packageID);
+        admin2.removePackage(packageID);
+        
+        tablePackages.setModel(new DefaultTableModel(null, new Object[] {
+            "ID", "NAME", "PRICE", "# ITEMS", "CREATED ON"
+        }));
+        admin2.getPackages(tablePackages, "");
+        
+        inputNewPackage.setText(String.valueOf(admin2.getMax()));
+        
+        tablePackageItem.setModel(new DefaultTableModel(null, new Object[] {
+            "ITEM ID", "NAME", "PRICE"
+        }));
+        admin2.getPackageItem(tablePackageItem, inputPackageID.getText());
+    }
+    
+    // Fetch data of selected item
     private void tablePackageSingleMouseClicked(java.awt.event.MouseEvent evt) {
         model = (DefaultTableModel) tablePackageSingle.getModel();
         rowIndex = tablePackageSingle.getSelectedRow();
@@ -1479,6 +1539,7 @@ public class AdminClass extends javax.swing.JFrame {
         inputPackageSingleID.setText(model.getValueAt(rowIndex, 0).toString());
     }
 
+    // Add Item to Package
     private void buttonPackageItemAddActionPerformed(java.awt.event.ActionEvent evt) {
         if(inputPackageID.getText().equals("0")) {
             JOptionPane.showMessageDialog(null, "Choose A Package");
@@ -1503,7 +1564,16 @@ public class AdminClass extends javax.swing.JFrame {
             }   
         }
     }
+    
+    // Fetch data of item inside package
+    private void tablePackageItemMouseClicked(java.awt.event.MouseEvent evt) {
+        model = (DefaultTableModel) tablePackageItem.getModel();
+        rowIndex = tablePackageItem.getSelectedRow();
+        
+        inputPackageSingleID.setText(model.getValueAt(rowIndex, 0).toString());
+    }
 
+    // Remove Item from Package
     private void buttonPackageItemRemoveActionPerformed(java.awt.event.ActionEvent evt) {
         if(inputPackageID.getText().equals("0")) {
             JOptionPane.showMessageDialog(null, "Choose A Package");
@@ -1514,35 +1584,14 @@ public class AdminClass extends javax.swing.JFrame {
                 "ITEM ID", "NAME", "PRICE"
             }));
             admin2.getPackageItem(tablePackageItem, inputPackageID.getText());
+            
+            tablePackages.setModel(new DefaultTableModel(null, new Object[] {
+                "ID", "NAME", "PRICE", "# ITEMS", "CREATED ON"
+            }));
+            admin2.getPackages(tablePackages, "");
         }
     }
 
-    private void tablePackageItemMouseClicked(java.awt.event.MouseEvent evt) {
-        model = (DefaultTableModel) tablePackageItem.getModel();
-        rowIndex = tablePackageItem.getSelectedRow();
-        
-        inputPackageSingleID.setText(model.getValueAt(rowIndex, 0).toString());
-    }
-
-    private void buttonPackageRemoveActionPerformed(java.awt.event.ActionEvent evt) {
-        int packageID = Integer.parseInt(inputPackageID.getText());
-        
-        admin2.removeAllItems(packageID);
-        admin2.removePackage(packageID);
-        
-        tablePackages.setModel(new DefaultTableModel(null, new Object[] {
-            "ID", "NAME", "PRICE", "# ITEMS", "CREATED ON"
-        }));
-        admin2.getPackages(tablePackages, "");
-        
-        inputNewPackage.setText(String.valueOf(admin2.getMax()));
-        
-        tablePackageItem.setModel(new DefaultTableModel(null, new Object[] {
-            "ITEM ID", "NAME", "PRICE"
-        }));
-        admin2.getPackageItem(tablePackageItem, inputPackageID.getText());
-
-    }
 
     /**
      * @param args the command line arguments
