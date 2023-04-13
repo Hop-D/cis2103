@@ -9,7 +9,6 @@ package cis2103;
 import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -19,6 +18,7 @@ public class AdminUser {
     Connection con = MyConnection.getConnection();
     PreparedStatement ps;
     
+    // return the latest possible unique id in users
     public int getMax() {
         int id = 0;
         Statement st;
@@ -35,6 +35,7 @@ public class AdminUser {
         return id + 1;   
     }
     
+    // fetch all data for initial display in Manage Users
     public void getUsers(JTable table, String searchVal) {
         String sql = "SELECT * FROM users WHERE CONCAT(userID, username, password, contact, usertype, userCreated, userUpdated)like ? ORDER BY userID DESC";
         try {
@@ -60,6 +61,7 @@ public class AdminUser {
         }
     }
     
+    // check if user already exists
     public boolean isUserExist(String username) {
         String sql = "SELECT * FROM users where username = ?";
         try {
@@ -75,6 +77,7 @@ public class AdminUser {
         return false;
     }
     
+    // CREATE NEW USER
     public void insertUser(int userID, String userName, String userPass, String userContact, String userType) {
         String sql = "INSERT INTO users VALUES (?, ?, ?, ?, ?, ?, ?)";
         
@@ -98,6 +101,7 @@ public class AdminUser {
         }  
     }
     
+    // UPDATE USER
     public void updateUser(int userID, String userName, String userPass, String userContact, String userType) {
         String sql = "UPDATE users SET username = ?, password = ?, contact = ?, usertype = ?, userUpdated = ? WHERE userID = ?";
         
@@ -119,6 +123,7 @@ public class AdminUser {
         }
     }
     
+    // REMOVE USER
     public void removeUser(int userID) {
         int choice = JOptionPane.showConfirmDialog(null, "Removing a user is irreversible", "User Remove", JOptionPane.OK_CANCEL_OPTION, 0);
         
@@ -137,8 +142,5 @@ public class AdminUser {
             }
         }
     }
-    
-    
-    
 
 }
