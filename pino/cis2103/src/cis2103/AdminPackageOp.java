@@ -17,6 +17,7 @@ public class AdminPackageOp {
     Connection con = MyConnection.getConnection();
     PreparedStatement ps;
     
+    // Return the latest possible unique id in packages
     public int getMax() {
         int id = 0;
         Statement st;
@@ -33,6 +34,7 @@ public class AdminPackageOp {
         return id + 1;   
     }
     
+    // return the latest possible unique id in list
     public int getlistMax() {
         int id = 0;
         Statement st;
@@ -49,6 +51,7 @@ public class AdminPackageOp {
         return id + 1;    
     }
     
+    // increment item count when a new item is added in a package
     public void addItemCount(int packageID) {
         String sql = "UPDATE packages SET itemCount  = itemCount + 1 WHERE packageID = ?";
         try {
@@ -62,6 +65,7 @@ public class AdminPackageOp {
         }
     }
     
+    // decrement item count when an item inside package is removed
     public void subtractItemCount(int packageID) {
         String sql = "UPDATE packages SET itemCount  = itemCount - 1 WHERE packageID = ?";
         try {
@@ -75,6 +79,7 @@ public class AdminPackageOp {
         }
     }
     
+    // add a package into the list
     public void addList() {
         int id = getlistMax();
         int id2 = getMax();
@@ -94,6 +99,7 @@ public class AdminPackageOp {
         }
     }
     
+    // remove a package from the list
     public void removeList(int listID) {
         
         String sql = "DELETE FROM list WHERE listID = ?";
@@ -110,6 +116,7 @@ public class AdminPackageOp {
  
     }
     
+    // check if package already exists
     public boolean isPackageItemExist(int packageID, int itemID) {
         String sql = "SELECT * FROM packitem WHERE itemID = ? AND packageID = ?";
         try {
@@ -126,6 +133,7 @@ public class AdminPackageOp {
         return false;
     }
     
+    // fetch all packages for initial display in Manage Package Items
     public void getPackages(JTable table, String searchVal) {
         String sql = "SELECT * FROM packages WHERE CONCAT(packageID, packageName, packagePrice, packageCount, packageCreated)like ? ORDER BY packageID DESC";
         try {
@@ -148,6 +156,7 @@ public class AdminPackageOp {
         }
     }
     
+    // fetch all items for initial display in Manage Package Items
     public void getPackageSingle(JTable table, String searchVal) {
         String sql = "SELECT * FROM items WHERE CONCAT(itemID, itemName, itemPrice)like ? ORDER BY itemID DESC";
         try {
@@ -169,6 +178,7 @@ public class AdminPackageOp {
         }
     }
     
+    // fetch all items in a selected package for display in Manage Package Items
     public void getPackageItem(JTable table, String searchVal) {
         String sql = "SELECT items.itemID, items.itemName, items.itemPrice FROM items, packages, packitem WHERE packitem.itemID = items.itemID AND packitem.packageID = packages.packageID AND packitem.packageID = ?";
         try {
@@ -190,6 +200,7 @@ public class AdminPackageOp {
         }
     }
     
+    // CREATE A NEW PACKAGE
     public void insertPackage(int packageID, String packageName, String packagePrice, int packageCount) {
         String sql = "INSERT INTO packages VALUES (?, ?, ?, ?, ?, ?, ?)";
         
@@ -214,6 +225,7 @@ public class AdminPackageOp {
         }
     }
     
+    // REMOVE A PACKAGE
     public void removePackage(int packageID) {
         int choice = JOptionPane.showConfirmDialog(null, "Removing a package is irreversible", "Package Remove", JOptionPane.OK_CANCEL_OPTION, 0); 
         int id = 0;
@@ -247,6 +259,7 @@ public class AdminPackageOp {
         
     }
     
+    // UPDATE A PACKAGE
     public void updatePackage(int packageID, String packagePrice) {
         String sql = "UPDATE packages SET packagePrice = ? WHERE packageID = ?";
         
@@ -265,6 +278,7 @@ public class AdminPackageOp {
       
     }
     
+    // ADD AN ITEM TO A PACKAGE
     public void addItemPackage(int packageID, int itemID) {
         String sql = "INSERT INTO packitem (itemID, packageID) VALUES (?, ?)";
         
@@ -283,6 +297,7 @@ public class AdminPackageOp {
         }
     }
     
+    // REMOVE AN ITEM FROM A PACKAGE
     public void removeItemPackage(int packageID, int itemID) {
         
         int choice = JOptionPane.showConfirmDialog(null, "Removing an item is irreversible", "Item Remove", JOptionPane.OK_CANCEL_OPTION, 0);
@@ -307,6 +322,7 @@ public class AdminPackageOp {
 
     }
     
+    // REMOVE ALL ITEMS. USED WHEN PACKAGE REMOVED IS USED.
     public void removeAllItems(int packageID) {
         String sql = "DELETE FROM packitem WHERE packageID = ?";
         
