@@ -1,6 +1,9 @@
 
 package cis2103;
 
+import java.util.ArrayList;
+import javax.swing.ButtonGroup;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -14,20 +17,32 @@ public class RegularClass extends javax.swing.JFrame {
      */
     
     RegularSystemOp reg = new RegularSystemOp();
+    ArrayList<SaleItem> saleitems = new ArrayList<>();
     private DefaultTableModel model;
-    int rowIndex;
+    int rowIndex1, rowIndex2, rowIndex3;
     
     public RegularClass() {
         initComponents();
         
         tableViewRegSingle();
         tableViewRegPackage();
-        tableViewRegItem();
+        //tableViewRegItem();
+        
+        ButtonGroup custOrderBG = new ButtonGroup();
+        custOrderBG.add(radioRegDigital);
+        custOrderBG.add(radioRegPhysical);
+        ButtonGroup custModeBG = new ButtonGroup();
+        custModeBG.add(radioRegPickup);
+        custModeBG.add(radioRegDeliver);
+        
+        inputRegTrans.setText(String.valueOf(reg.getMax()));
+        inputRegTotal.setEditable(false);
+        inputRegChange.setEditable(false);
         
     }
 
     @SuppressWarnings("unchecked")
-
+                  
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
@@ -144,8 +159,18 @@ public class RegularClass extends javax.swing.JFrame {
         jLabel4.setText("Qty");
 
         buttonRegUpdate.setText("UPDATE");
+        buttonRegUpdate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonRegUpdateActionPerformed(evt);
+            }
+        });
 
         buttonRegRemove.setText("REMOVE");
+        buttonRegRemove.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonRegRemoveActionPerformed(evt);
+            }
+        });
 
         jSpinner1.setModel(new javax.swing.SpinnerNumberModel(0, 0, null, 1));
 
@@ -233,12 +258,22 @@ public class RegularClass extends javax.swing.JFrame {
         jScrollPane2.setViewportView(tableRegPackage);
 
         buttonRegAddP.setText("ADD");
+        buttonRegAddP.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonRegAddPActionPerformed(evt);
+            }
+        });
 
         spinnerPackage.setModel(new javax.swing.SpinnerNumberModel(0, 0, null, 1));
 
         spinnerSingle.setModel(new javax.swing.SpinnerNumberModel(0, 0, null, 1));
 
         buttonRegAddS.setText("ADD");
+        buttonRegAddS.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonRegAddSActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
@@ -382,14 +417,29 @@ public class RegularClass extends javax.swing.JFrame {
         );
 
         buttonRegPay.setText("PAY");
+        buttonRegPay.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonRegPayActionPerformed(evt);
+            }
+        });
 
         inputRegPrint.setText("PRINT");
+        inputRegPrint.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                inputRegPrintActionPerformed(evt);
+            }
+        });
 
-        inputRegChange.setText("jTextField1");
+        inputRegChange.setText("0.00");
 
-        inputRegAmount.setText("jTextField2");
+        inputRegAmount.setText("0.00");
+        inputRegAmount.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                inputRegAmountKeyPressed(evt);
+            }
+        });
 
-        inputRegTotal.setText("jTextField3");
+        inputRegTotal.setText("0.00");
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel1.setText("TOTAL");
@@ -519,7 +569,8 @@ public class RegularClass extends javax.swing.JFrame {
         );
 
         pack();
-    }
+    }                      
+
     private void tableViewRegSingle() {
         reg.getRegSingle(tableRegSingle, "");
         model = (DefaultTableModel) tableRegSingle.getModel();
@@ -531,32 +582,294 @@ public class RegularClass extends javax.swing.JFrame {
     }
     
     private void tableViewRegItem() {
-        reg.getRegItem(tableRegItems, "");
-        model = (DefaultTableModel) tableRegItems.getModel();
+        //reg.getRegItem(tableRegItems, "");
         
+        model = (DefaultTableModel) tableRegItems.getModel();
+        Object[] rowData = new Object[3];
+        for(int i = 0; i < saleitems.size(); i++) {
+            rowData[0] = saleitems.get(i).itemName;
+            rowData[1] = saleitems.get(i).itemQty;
+            rowData[2] = saleitems.get(i).subTotal;
+            model.addRow(rowData);
+        }
+
     }
     
-    private void tableRegSingleMouseClicked(java.awt.event.MouseEvent evt) {
+    private void tableRegSingleMouseClicked(java.awt.event.MouseEvent evt) {                                            
         model = (DefaultTableModel) tableRegSingle.getModel();
-        rowIndex = tableRegSingle.getSelectedRow();
+        rowIndex1 = tableRegSingle.getSelectedRow();
         
-        inputRegSingle.setText(model.getValueAt(rowIndex, 1).toString());
-    }
+        inputRegSingle.setText(model.getValueAt(rowIndex1, 1).toString());
+        spinnerSingle.setValue(1);
+        
+        inputRegPackage.setText("");
+        spinnerPackage.setValue(0);
+        tableRegPackage.clearSelection();
+        tableRegItems.clearSelection();
+    }                                           
 
-    private void tableRegPackageMouseClicked(java.awt.event.MouseEvent evt) {
+    private void tableRegPackageMouseClicked(java.awt.event.MouseEvent evt) {                                             
         model = (DefaultTableModel) tableRegPackage.getModel();
-        rowIndex = tableRegPackage.getSelectedRow();
+        rowIndex2 = tableRegPackage.getSelectedRow();
         
-        inputRegPackage.setText(model.getValueAt(rowIndex, 1).toString());
-    }
-
-    private void tableRegItemsMouseClicked(java.awt.event.MouseEvent evt) {
+        inputRegPackage.setText(model.getValueAt(rowIndex2, 1).toString());
+        spinnerPackage.setValue(1);
         
-    }
+        inputRegSingle.setText("");
+        spinnerSingle.setValue(0);
+        tableRegSingle.clearSelection();
+        tableRegItems.clearSelection();
+    }                                            
 
-    /**
-     * @param args the command line arguments
-     */
+    private void tableRegItemsMouseClicked(java.awt.event.MouseEvent evt) {                                           
+        // TODO add your handling code here:
+        
+        model = (DefaultTableModel) tableRegItems.getModel();
+        rowIndex3 = tableRegItems.getSelectedRow();
+        
+        jSpinner1.setValue(model.getValueAt(rowIndex3, 1));
+        
+        inputRegPackage.setText("");
+        spinnerPackage.setValue(0);
+        inputRegSingle.setText("");
+        spinnerSingle.setValue(0);
+        tableRegSingle.clearSelection();
+        tableRegPackage.clearSelection();
+    }                                          
+
+    private void buttonRegAddSActionPerformed(java.awt.event.ActionEvent evt) {                                              
+        // TODO add your handling code here:
+        int i, exist = 0;
+        model = (DefaultTableModel) tableRegSingle.getModel();
+        SaleItem si = new SaleItem();
+        
+        si.itemName = inputRegSingle.getText();
+        si.itemQty = Integer.parseInt(spinnerSingle.getValue().toString());
+        si.itemPrice = Integer.parseInt(model.getValueAt(rowIndex1, 2).toString());
+        si.subTotal = si.itemQty * si.itemPrice;
+                
+        for(i = 0; i < saleitems.size(); i++) {
+            if(saleitems.get(i).itemName.equals(si.itemName)) {
+                exist = 1;
+                break;
+            } else {
+                exist = 0;
+            }
+        }
+        
+        if(exist == 1) {
+            saleitems.get(i).itemQty += si.itemQty;
+            saleitems.get(i).subTotal += si.subTotal;
+        } else {
+            saleitems.add(si);
+        }
+
+        model = (DefaultTableModel) tableRegItems.getModel();
+        model.setRowCount(0);
+        Object[] rowData = new Object[3];
+        for(i = 0; i < saleitems.size(); i++) {
+            rowData[0] = saleitems.get(i).itemName;
+            rowData[1] = saleitems.get(i).itemQty;
+            rowData[2] = saleitems.get(i).subTotal;
+            model.addRow(rowData);
+        }
+       
+        inputRegTotal.setText(Float.toString(currentTotal()));
+        inputRegChange.setText(Float.toString(showChange()));
+        tableRegSingle.clearSelection();
+        tableRegPackage.clearSelection();
+        tableRegItems.clearSelection();
+        
+    }                                             
+
+    private void buttonRegAddPActionPerformed(java.awt.event.ActionEvent evt) {                                              
+        
+        int i, exist = 0;
+        model = (DefaultTableModel) tableRegPackage.getModel();
+        SaleItem si = new SaleItem();
+        
+        si.itemName = inputRegPackage.getText();
+        si.itemQty = Integer.parseInt(spinnerPackage.getValue().toString());
+        si.itemPrice = Integer.parseInt(model.getValueAt(rowIndex2, 2).toString());
+        si.subTotal = si.itemQty * si.itemPrice;
+                
+        for(i = 0; i < saleitems.size(); i++) {
+            if(saleitems.get(i).itemName.equals(si.itemName)) {
+                exist = 1;
+                break;
+            } else {
+                exist = 0;
+            }
+        }
+        
+        if(exist == 1) {
+            saleitems.get(i).itemQty += si.itemQty;
+            saleitems.get(i).subTotal += si.subTotal;
+        } else {
+            saleitems.add(si);
+        }
+
+        model = (DefaultTableModel) tableRegItems.getModel();
+        model.setRowCount(0);
+        Object[] rowData = new Object[3];
+        for(i = 0; i < saleitems.size(); i++) {
+            rowData[0] = saleitems.get(i).itemName;
+            rowData[1] = saleitems.get(i).itemQty;
+            rowData[2] = saleitems.get(i).subTotal;
+            model.addRow(rowData);
+        }
+        
+        inputRegTotal.setText(Float.toString(currentTotal()));
+        inputRegChange.setText(Float.toString(showChange()));
+        tableRegSingle.clearSelection();
+        tableRegPackage.clearSelection();
+        tableRegItems.clearSelection(); 
+    }                                             
+
+    private void buttonRegUpdateActionPerformed(java.awt.event.ActionEvent evt) {                                                
+        
+        int i;
+        String tempName = model.getValueAt(rowIndex3, 0).toString();
+        int tempQty = Integer.parseInt(jSpinner1.getValue().toString());
+        
+        for(i = 0; i < saleitems.size(); i++) {
+            if(saleitems.get(i).itemName.equals(tempName)) {
+                saleitems.get(i).itemQty = tempQty;
+                saleitems.get(i).subTotal = saleitems.get(i).itemQty * saleitems.get(i).itemPrice;
+            }
+        }
+        
+        model = (DefaultTableModel) tableRegItems.getModel();
+        model.setRowCount(0);
+        Object[] rowData = new Object[3];
+        for(i = 0; i < saleitems.size(); i++) {
+            rowData[0] = saleitems.get(i).itemName;
+            rowData[1] = saleitems.get(i).itemQty;
+            rowData[2] = saleitems.get(i).subTotal;
+            model.addRow(rowData);
+        }
+        
+        inputRegTotal.setText(Float.toString(currentTotal()));
+        inputRegChange.setText(Float.toString(showChange()));
+        
+    }                                               
+
+    private void buttonRegRemoveActionPerformed(java.awt.event.ActionEvent evt) {                                                
+        
+        int i;
+        model = (DefaultTableModel) tableRegItems.getModel();
+        String tempName = model.getValueAt(rowIndex3, 0).toString();
+        
+        int choice = JOptionPane.showConfirmDialog(this, "Remove item?");
+        
+        if(choice == JOptionPane.OK_OPTION) {
+            for(i = 0; i < saleitems.size(); i++) {
+                if(saleitems.get(i).itemName.equals(tempName)) {
+                    saleitems.remove(i);
+                }
+            }
+        }
+        
+        model.setRowCount(0);
+        Object[] rowData = new Object[3];
+        for(i = 0; i < saleitems.size(); i++) {
+            rowData[0] = saleitems.get(i).itemName;
+            rowData[1] = saleitems.get(i).itemQty;
+            rowData[2] = saleitems.get(i).subTotal;
+            model.addRow(rowData);
+        }
+        
+        inputRegTotal.setText(Float.toString(currentTotal()));
+        inputRegChange.setText(Float.toString(showChange()));
+    
+    }                                               
+
+    private void buttonRegPayActionPerformed(java.awt.event.ActionEvent evt) {                                             
+        // TODO add your handling code here:
+        
+        int saleID = reg.getMax();
+        String custName = inputRegName.getText().toString();
+        String custAdd = inputRegAdd.getText().toString();
+        String custNum = inputRegNum.getText().toString();
+        String custOrder = "";
+        if(radioRegDigital.isSelected()) {
+            custOrder = "digital";
+        } if(radioRegPhysical.isSelected()) {
+            custOrder = "physical";
+        }
+        String custMode = "";
+        if(radioRegPickup.isSelected()) {
+            custMode = "pickup";
+        } else if(radioRegDeliver.isSelected()) {
+            custMode = "deliver";
+        }
+        int itemCount = saleitems.size();
+        float total = currentTotal(); 
+        float amount = Float.parseFloat(inputRegAmount.getText());
+        float change = showChange();
+        
+        reg.insertSale(saleID, custName, custAdd, custNum, custOrder, custMode, itemCount, total, amount, change);
+        reg.insertSaleItem(saleitems, saleID);
+
+        saleitems.clear();
+        model = (DefaultTableModel) tableRegItems.getModel();
+        model.setRowCount(0);
+        
+    }                                            
+
+    private void inputRegPrintActionPerformed(java.awt.event.ActionEvent evt) {                                              
+        // TODO add your handling code here:
+    }                                             
+
+    private void inputRegAmountKeyPressed(java.awt.event.KeyEvent evt) {                                          
+        try {
+            inputRegChange.setText(Float.toString(showChange()));
+        } catch (Exception e) {
+            System.out.println("lawl");
+        }
+    }                                         
+
+    public boolean isEmpty() {
+        if(inputRegName.getText().equals("")) {
+            JOptionPane.showMessageDialog(this, "Customer Name is missing");
+            return false;
+        }
+        if(inputRegAdd.getText().equals("")) {
+            JOptionPane.showMessageDialog(this, "Customer Address is missing");
+            return false;
+        }
+        if(inputRegNum.getText().equals("")) {
+            JOptionPane.showMessageDialog(this, "Customer Number is missing");
+            return false;
+        }
+        return true;
+    }
+    
+    public float currentTotal() {
+        int i;
+        float total = 0;
+        for(i = 0; i < saleitems.size(); i++) {
+            total += saleitems.get(i).subTotal;
+        }
+        return total;
+    }
+    
+    public float showChange() {
+        float change = 0;
+        float amount = Float.parseFloat(inputRegAmount.getText());
+        float total = currentTotal();
+        if(inputRegAmount.getText().equals("")) {
+            inputRegChange.setText(Float.toString(change));
+        } else {
+            change = amount - total;
+        }
+        return change;
+    }
+    
+    
+    
+    
+
     public static void main(String args[]) {
 
         try {
@@ -576,14 +889,13 @@ public class RegularClass extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(RegularClass.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
 
-        /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new RegularClass().setVisible(true);
             }
         });
     }
-
+                  
     private javax.swing.JButton buttonRegAddP;
     private javax.swing.JButton buttonRegAddS;
     private javax.swing.JButton buttonRegPay;
@@ -631,6 +943,5 @@ public class RegularClass extends javax.swing.JFrame {
     private javax.swing.JSpinner spinnerSingle;
     private javax.swing.JTable tableRegItems;
     private javax.swing.JTable tableRegPackage;
-    private javax.swing.JTable tableRegSingle;
-
+    private javax.swing.JTable tableRegSingle;             
 }
