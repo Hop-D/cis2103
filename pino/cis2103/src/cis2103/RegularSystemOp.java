@@ -1,12 +1,8 @@
 
 package cis2103;
 
-/**
- *
- * @author Janica Nyle Pino
- */
-
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -81,6 +77,71 @@ public class RegularSystemOp {
         }
     }
     
+    public int getMax() {
+        int id = 0;
+        Statement st;
+        try {
+            st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT MAX(saleID) FROM sales");
+            while(rs.next()) {
+                id = rs.getInt(1);
+            }
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(AdminSingleOp.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return id + 1;   
+    }
     
+    public void insertSaleItem(ArrayList<SaleItem> saleitems, int saleID) {
+        int i;
+        String items = "";
+        for(i = 0; i < saleitems.size(); i++) {
+            String current = saleitems.get(i).itemName + " - ";
+            items = items.concat(current);
+        }
+        System.out.println(items);
+        
+        String sql = "INSERT INTO saleitem VALUES (?, ?, ?)";
+        try {
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, saleID);
+            ps.setInt(2, saleID);
+            ps.setString(3, items);
+            
+            if(ps.executeUpdate() > 0) {
+                JOptionPane.showMessageDialog(null, "Sale Done");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(RegularSystemOp.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     
+    public void insertSale(int saleID, String custName, String custAdd, String custNum, String custOrder, String custMode, int itemCount, float total, float amount, float cchange) {
+        String sql = "INSERT INTO sales VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        
+        try {
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, saleID);
+            ps.setString(2, custName);
+            ps.setString(3, custAdd);
+            ps.setString(4, custNum);
+            ps.setString(5, custOrder);
+            ps.setString(6, custMode);
+            ps.setInt(7, itemCount);
+            ps.setFloat(8, total);
+            ps.setFloat(9, amount);
+            ps.setFloat(10, cchange);
+            ps.setTimestamp(11, new java.sql.Timestamp(new java.util.Date().getTime()));
+            
+            if(ps.executeUpdate() > 0) {
+                JOptionPane.showMessageDialog(null, "Sale Done");
+            }
+            
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(RegularSystemOp.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+ 
 }
