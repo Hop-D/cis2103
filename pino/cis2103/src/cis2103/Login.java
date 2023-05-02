@@ -8,6 +8,12 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.swing.JOptionPane;
+
+import exceptions.UserNotFoundException;
+import model.Database;
+import model.UserClass;
+
 /**
  *
  * @author Janica Nyle Pino
@@ -24,7 +30,6 @@ public class Login extends javax.swing.JFrame {
         labelUP.setVisible(false);
     }
 
-    @SuppressWarnings("unchecked")
 
     private void initComponents() {
 
@@ -117,92 +122,45 @@ public class Login extends javax.swing.JFrame {
 
     private void buttonLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonLoginActionPerformed
         
+    	
+    	
         labelUN.setVisible(false);
         labelUP.setVisible(false);
-
-        if(inputLoginUN.getText().equals("")) {
+        
+        String username = inputLoginUN.getText();
+        String password = String.valueOf(inputLoginUP.getPassword());
+        for(UserClass user: Database.getUsers()) {
+        	System.out.println(user.getRole());
+        }
+        if(username.equals("")) {
             labelUN.setVisible(true);
         }
 
-        if(String.valueOf(inputLoginUP.getPassword()).equals("")) {
+        if(password.equals("")) {
             labelUP.setVisible(true);
         }
 
         else {
-            Connection con = MyConnection.getConnection();
-            PreparedStatement ps;
-
-            try {
-                ps = con.prepareStatement("SELECT * FROM users WHERE username = ? AND password = ?");
-                ps.setString(1, inputLoginUN.getText());
-                ps.setString(2, String.valueOf(inputLoginUP.getPassword()));
-
-                ResultSet rs = ps.executeQuery();
-
-                if(rs.next()) {   
-                    String type = rs.getString("usertype");
-                    System.out.println("YES");
-
-                    switch(type) {
-                        case "admin": 
-                            AdminClass admin = new AdminClass();
-                            admin.setVisible(true);
-                            admin.pack();
-                            admin.setLocationRelativeTo(null);
-                            this.dispose();
-                            break;
-                        case "regular":
-                            RegularClass regular = new RegularClass();
-                            regular.setVisible(true);
-                            regular.pack();
-                            regular.setLocationRelativeTo(null);
-                            this.dispose();
-                            break;
-                    }
-
-                    //System.out.println(type);
-                } else {
-                    System.out.println("NO");
-                }
-
-            } catch (SQLException ex) {
-                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        	try {
+				UserClass temp = loginUser(username, password);
+				if(temp.getRole().equals(UserClass.ADMIN_USER)) {
+					new AdminClassFrame(temp).setVisible(true);
+				}else {
+					new RegularClassFrame().setVisible(true);
+				}
+			} catch (UserNotFoundException e) {
+				JOptionPane.showMessageDialog(this, "Credentials incorrect. Please contact administrator.");
+			}
         }
     }//GEN-LAST:event_buttonLoginActionPerformed
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+    
+    public UserClass loginUser(String username, String password) throws UserNotFoundException {
+        for (UserClass user : Database.getUsers()) {
+        	if(user.getUserName().equals(username) && user.getPassword().equals(password)) {
+        		return user;
+        	}
         }
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Login().setVisible(true);
-            }
-        });
+        throw new UserNotFoundException("User not found.");
     }
 
     private javax.swing.JButton buttonLogin;

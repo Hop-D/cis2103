@@ -10,11 +10,14 @@ import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+import model.AdminClass;
+import model.UserClass;
+
 /**
  *
  * @author Janica Nyle Pino
  */
-public class AdminClass extends javax.swing.JFrame {
+public class AdminClassFrame extends javax.swing.JFrame {
     
     AdminSingleOp admin = new AdminSingleOp();
     AdminPackageOp admin2 = new AdminPackageOp();
@@ -22,11 +25,12 @@ public class AdminClass extends javax.swing.JFrame {
     private DefaultTableModel model;
     private DefaultTableModel model3;
     private int rowIndex;
-
+    
+    private static AdminClass user;
     /**
      * Creates new form AdminClass
      */
-    public AdminClass() {
+    public AdminClassFrame(UserClass user) {
         initComponents();
         
         tableSingleItem.setRowHeight(40);
@@ -42,6 +46,7 @@ public class AdminClass extends javax.swing.JFrame {
         userRoles.add(radioUserAdmin);
         userRoles.add(radioUserRegular);
         radioUserRegular.setSelected(true);
+        user = (AdminClass) user;
         
         tablePackages.setRowHeight(30);
         tableViewPackages();
@@ -55,7 +60,6 @@ public class AdminClass extends javax.swing.JFrame {
         inputPackageSingleID.setEditable(false);
     }
 
-    @SuppressWarnings("unchecked")
 
     private void initComponents() {
 
@@ -1272,7 +1276,7 @@ public class AdminClass extends javax.swing.JFrame {
             MessageFormat footer = new MessageFormat("Page {0, number, integer}");
             tableSingleItem.print(JTable.PrintMode.FIT_WIDTH, header, footer);
         } catch (PrinterException ex) {
-            Logger.getLogger(AdminClass.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AdminClassFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -1437,7 +1441,7 @@ public class AdminClass extends javax.swing.JFrame {
             MessageFormat footer = new MessageFormat("Page {0, number, integer}");
             tableUsers.print(JTable.PrintMode.FIT_WIDTH, header, footer);
         } catch (PrinterException ex) {
-            Logger.getLogger(AdminClass.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AdminClassFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -1596,32 +1600,32 @@ public class AdminClass extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(AdminClass.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(AdminClass.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(AdminClass.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(AdminClass.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new AdminClass().setVisible(true);
-            }
-        });
-    }
+//    public static void main(String args[]) {
+//
+//        try {
+//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+//                if ("Nimbus".equals(info.getName())) {
+//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+//                    break;
+//                }
+//            }
+//        } catch (ClassNotFoundException ex) {
+//            java.util.logging.Logger.getLogger(AdminClassFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (InstantiationException ex) {
+//            java.util.logging.Logger.getLogger(AdminClassFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (IllegalAccessException ex) {
+//            java.util.logging.Logger.getLogger(AdminClassFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+//            java.util.logging.Logger.getLogger(AdminClassFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        }
+//
+//        /* Create and display the form */
+//        java.awt.EventQueue.invokeLater(new Runnable() {
+//            public void run() {
+//                new AdminClassFrame().setVisible(true);
+//            }
+//        });
+//    }
 
     private javax.swing.JButton buttonAdminOut;
     private javax.swing.JButton buttonPackageAdd;
