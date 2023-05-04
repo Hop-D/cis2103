@@ -3,13 +3,14 @@ package model;
 import java.time.LocalDateTime;
 
 public class AdminClass extends UserClass {
+	
 	public AdminClass(String id, String userName, String password, String contact, String role) {
 		super(id, userName, password, contact, UserClass.ADMIN_USER);
 		// TODO Auto-generated constructor stub
 	}
 
-	public AdminClass(String id, String userName, String password, String contact, String role, LocalDateTime userCreated, LocalDateTime userUpdated) {
-		super(id, userName, password, contact, UserClass.ADMIN_USER, userCreated, userUpdated);
+	public AdminClass(String id, String userName, String password, String contact, String role, LocalDateTime userCreated, LocalDateTime userUpdated, String editedByID) {
+		super(id, userName, password, contact, UserClass.ADMIN_USER, userCreated, userUpdated, editedByID);
 	}
 	
 	@Override

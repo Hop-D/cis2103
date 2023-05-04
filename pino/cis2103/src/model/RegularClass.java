@@ -3,14 +3,14 @@ package model;
 import java.time.LocalDateTime;
 
 public class RegularClass extends UserClass {
-
+	int id;
 	public RegularClass(String id, String userName, String password, String contact, String role) {
 		super(id, userName, password, contact, UserClass.REGULAR_USER);
 		// TODO Auto-generated constructor stub
 	}
 	
-	public RegularClass(String id, String userName, String password, String contact, String role, LocalDateTime userCreated, LocalDateTime userUpdated) {
-		super(id, userName, password, contact, UserClass.REGULAR_USER, userCreated, userUpdated);
+	public RegularClass(String id, String userName, String password, String contact, String role, LocalDateTime userCreated, LocalDateTime userUpdated, String editedByID) {
+		super(id, userName, password, contact, UserClass.REGULAR_USER, userCreated, userUpdated, editedByID);
 	}
 
 	@Override
