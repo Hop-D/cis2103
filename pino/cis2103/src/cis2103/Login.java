@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -12,6 +13,7 @@ import javax.swing.JOptionPane;
 
 import exceptions.UserNotFoundException;
 import model.Database;
+import model.Item;
 import model.UserClass;
 
 /**
@@ -24,10 +26,32 @@ public class Login extends javax.swing.JFrame {
      * Creates new form Login
      */
     public Login() {
+		boolean connected = false;
+		while (!connected) {
+	        try {
+	            Database.loadUsersFromDatabase();
+	            Database.loadMenuFromDatabase();
+	            Database.loadItemsFromDatabase();
+	            Database.loadPackageFromDatabase();
+	            connected = true;
+	        } catch (SQLException e) {
+	            String[] options = {"Try Again", "Exit"};
+	            int choice = javax.swing.JOptionPane.showOptionDialog(null, "Database Error. Try again once connected.", "Database Error", javax.swing.JOptionPane.DEFAULT_OPTION, javax.swing.JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+	            System.out.println(e.getMessage());
+	            if (choice == 1) {
+	                return;
+	            }
+	        }
+	    }
+		
         initComponents();
         
         labelUN.setVisible(false);
         labelUP.setVisible(false);
+//        ArrayList<Item> items = Database.getItems();
+//        for(Item i: items) {
+//        	System.out.println(i.getId() + " "+ i.getDateAdded() + " " + i.getDateUpdated());
+//        }
     }
 
 
@@ -129,9 +153,7 @@ public class Login extends javax.swing.JFrame {
         
         String username = inputLoginUN.getText();
         String password = String.valueOf(inputLoginUP.getPassword());
-        for(UserClass user: Database.getUsers()) {
-        	System.out.println(user.getRole());
-        }
+        
         if(username.equals("")) {
             labelUN.setVisible(true);
         }
@@ -145,8 +167,10 @@ public class Login extends javax.swing.JFrame {
 				UserClass temp = loginUser(username, password);
 				if(temp.getRole().equals(UserClass.ADMIN_USER)) {
 					new AdminClassFrame(temp).setVisible(true);
+					this.dispose();
 				}else {
 					new RegularClassFrame().setVisible(true);
+					this.dispose();
 				}
 			} catch (UserNotFoundException e) {
 				JOptionPane.showMessageDialog(this, "Credentials incorrect. Please contact administrator.");
@@ -162,6 +186,14 @@ public class Login extends javax.swing.JFrame {
         }
         throw new UserNotFoundException("User not found.");
     }
+    
+    
+    public static void main(String[] args) {
+		
+		new Login().setVisible(true);
+	
+	
+	}
 
     private javax.swing.JButton buttonLogin;
     private javax.swing.JTextField inputLoginUN;

@@ -19,7 +19,7 @@ public abstract class Menu {
 		this.name = name;
 		this.price = price;
 		this.dateAdded = dateAdded;
-		this.dateAdded = dateUpdated;
+		this.dateUpdated = dateUpdated;
 	}
 	
 	public Menu(String id, String type, String name, float price) {

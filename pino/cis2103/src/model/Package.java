@@ -10,6 +10,8 @@ public class Package extends Menu{
 		super(id, Menu.PACKAGE_TYPE, name, price, dateAdded, dateUpdated);
 		this.packageitems = packageitems;
 	}
+	
+	public Package(String id
 
 	public ArrayList<Item> getPackageitems() {
 		return packageitems;
@@ -25,5 +27,14 @@ public class Package extends Menu{
 		
 	}
 
+	@Override
+	public String concatDets() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public int getNumberOfItems() {
+		return this.packageitems.size();
+	}
 	
 }

@@ -11,19 +11,16 @@ import javax.swing.table.DefaultTableModel;
  * @author Janica Nyle Pino
  */
 public class RegularClassFrame extends javax.swing.JFrame {
-	
 
-
-    RegularSystemOp reg = new RegularSystemOp();
     ArrayList<SaleItem> saleitems = new ArrayList<>();
     private DefaultTableModel model;
     int rowIndex1, rowIndex2, rowIndex3;
     
     public RegularClassFrame() {
         initComponents();
-        
-        tableViewRegSingle();
-        tableViewRegPackage();
+//        
+//        tableViewRegSingle();
+//        tableViewRegPackage();
         //tableViewRegItem();
         
         ButtonGroup custOrderBG = new ButtonGroup();
@@ -33,7 +30,7 @@ public class RegularClassFrame extends javax.swing.JFrame {
         custModeBG.add(radioRegPickup);
         custModeBG.add(radioRegDeliver);
         
-        inputRegTrans.setText(String.valueOf(reg.getMax()));
+    //    inputRegTrans.setText(String.valueOf(reg.getMax()));
         inputRegTotal.setEditable(false);
         inputRegChange.setEditable(false);
         
@@ -570,15 +567,15 @@ public class RegularClassFrame extends javax.swing.JFrame {
         pack();
     }                        
 
-    private void tableViewRegSingle() {
-        reg.getRegSingle(tableRegSingle, "");
-        model = (DefaultTableModel) tableRegSingle.getModel();
-    }
-    
-    private void tableViewRegPackage() {
-        reg.getRegPackage(tableRegPackage, "");
-        model = (DefaultTableModel) tableRegPackage.getModel();   
-    }
+//    private void tableViewRegSingle() {
+//        reg.getRegSingle(tableRegSingle, "");
+//        model = (DefaultTableModel) tableRegSingle.getModel();
+//    }
+//    
+//    private void tableViewRegPackage() {
+//        reg.getRegPackage(tableRegPackage, "");
+//        model = (DefaultTableModel) tableRegPackage.getModel();   
+//    }
     
     private void tableViewRegItem() {
         //reg.getRegItem(tableRegItems, "");
@@ -784,35 +781,35 @@ public class RegularClassFrame extends javax.swing.JFrame {
     }                                               
 
     private void buttonRegPayActionPerformed(java.awt.event.ActionEvent evt) {                                             
-        // TODO add your handling code here:
-        
-        int saleID = reg.getMax();
-        String custName = inputRegName.getText().toString();
-        String custAdd = inputRegAdd.getText().toString();
-        String custNum = inputRegNum.getText().toString();
-        String custOrder = "";
-        if(radioRegDigital.isSelected()) {
-            custOrder = "digital";
-        } if(radioRegPhysical.isSelected()) {
-            custOrder = "physical";
-        }
-        String custMode = "";
-        if(radioRegPickup.isSelected()) {
-            custMode = "pickup";
-        } else if(radioRegDeliver.isSelected()) {
-            custMode = "deliver";
-        }
-        int itemCount = saleitems.size();
-        float total = currentTotal(); 
-        float amount = Float.parseFloat(inputRegAmount.getText());
-        float change = showChange();
-        
-        reg.insertSale(saleID, custName, custAdd, custNum, custOrder, custMode, itemCount, total, amount, change);
-        reg.insertSaleItem(saleitems, saleID);
-
-        saleitems.clear();
-        model = (DefaultTableModel) tableRegItems.getModel();
-        model.setRowCount(0);
+//        // TODO add your handling code here:
+//        
+////        int saleID = reg.getMax();
+//        String custName = inputRegName.getText().toString();
+//        String custAdd = inputRegAdd.getText().toString();
+//        String custNum = inputRegNum.getText().toString();
+//        String custOrder = "";
+//        if(radioRegDigital.isSelected()) {
+//            custOrder = "digital";
+//        } if(radioRegPhysical.isSelected()) {
+//            custOrder = "physical";
+//        }
+//        String custMode = "";
+//        if(radioRegPickup.isSelected()) {
+//            custMode = "pickup";
+//        } else if(radioRegDeliver.isSelected()) {
+//            custMode = "deliver";
+//        }
+//        int itemCount = saleitems.size();
+//        float total = currentTotal(); 
+//        float amount = Float.parseFloat(inputRegAmount.getText());
+//        float change = showChange();
+//        
+//        reg.insertSale(saleID, custName, custAdd, custNum, custOrder, custMode, itemCount, total, amount, change);
+//        reg.insertSaleItem(saleitems, saleID);
+//
+//        saleitems.clear();
+//        model = (DefaultTableModel) tableRegItems.getModel();
+//        model.setRowCount(0);
         
     }                                            
 

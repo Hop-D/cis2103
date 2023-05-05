@@ -15,6 +15,7 @@ import exceptions.MenuNotFoundException;
 import model.AdminClass;
 import model.Database;
 import model.Item;
+import model.Package;
 import model.UserClass;
 
 /**
@@ -23,45 +24,46 @@ import model.UserClass;
  */
 public class AdminClassFrame extends javax.swing.JFrame {
     
-    AdminSingleOp admin = new AdminSingleOp();
-    AdminPackageOp admin2 = new AdminPackageOp();
-    AdminUser admin3 = new AdminUser();
     private DefaultTableModel model;
     private DefaultTableModel model3;
     private int rowIndex;
-    
     private static AdminClass user;
-    /**
-     * Creates new form AdminClass
-     */
+    
+    
     public AdminClassFrame(UserClass user) {
         initComponents();
-        
-        tableSingleItem.setRowHeight(40);
-        tableViewItems("");
-        inputSingleID.setEditable(false);
-        inputSingleID.setText(String.valueOf(admin.getMax()));
-        
-        tableUsers.setRowHeight(40);
-        tableViewUsers();
+
+		inputItemID.setText(String.valueOf("" + Database.getLastItemID()));
+		inputNewPackage.setText("" + Database.getLastPackageID());
+        inputUserID.setText(String.valueOf("" + Database.getLastUserID()));
+          
+        inputItemID.setEditable(false);
+        inputPackageID.setEditable(false);
         inputUserID.setEditable(false);
-   //     inputUserID.setText(String.valueOf(admin3.getMax()));
+        inputNewPackage.setEditable(false);
+        inputPackageSingleID.setEditable(false);
+        
+        tableViewUsers();
+        tableViewItems("");
+        tableViewPackages();
+  
+        tableItems.setRowHeight(40);
+        tableUsers.setRowHeight(40);
+        tablePackages.setRowHeight(30);
+        tablePackageSingle.setRowHeight(30);
+        tablePackageItem.setRowHeight(30);
+        
         ButtonGroup userRoles = new ButtonGroup();
         userRoles.add(radioUserAdmin);
         userRoles.add(radioUserRegular);
         radioUserRegular.setSelected(true);
         user = (AdminClass) user;
         
-        tablePackages.setRowHeight(30);
-//        tableViewPackages();
-        tablePackageSingle.setRowHeight(30);
+        
+//        
         tableViewPackageSingle();
-        tablePackageItem.setRowHeight(30);
-        inputNewPackage.setEditable(false);
-        inputPackageID.setEditable(false);
-        inputPackageID.setText("0");
-        inputNewPackage.setText(String.valueOf(admin2.getMax()));
-        inputPackageSingleID.setEditable(false);
+        
+        
     }
 
 
@@ -69,19 +71,19 @@ public class AdminClassFrame extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
-        buttonAdminOut = new javax.swing.JButton();
+        buttonLogOut = new javax.swing.JButton();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel3 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         jPanel7 = new javax.swing.JPanel();
         jPanel8 = new javax.swing.JPanel();
         jPanel12 = new javax.swing.JPanel();
-        buttonSingleAdd = new javax.swing.JButton();
-        buttonSingleUpdate = new javax.swing.JButton();
-        buttonSingleRemove = new javax.swing.JButton();
-        buttonSingleClear = new javax.swing.JButton();
-        buttonSinglePrint = new javax.swing.JButton();
-        inputSingleID = new javax.swing.JTextField();
+        buttonAddNewItem = new javax.swing.JButton();
+        buttonItemUpdate = new javax.swing.JButton();
+        buttonItemRemove = new javax.swing.JButton();
+        buttonClearInputItem = new javax.swing.JButton();
+        buttonItemPrint = new javax.swing.JButton();
+        inputItemID = new javax.swing.JTextField();
         inputSingleName = new javax.swing.JTextField();
         inputSinglePrice = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
@@ -91,11 +93,11 @@ public class AdminClassFrame extends javax.swing.JFrame {
         jPanel10 = new javax.swing.JPanel();
         inputSingleSearch = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        buttonSingleSearch = new javax.swing.JButton();
-        buttonSingleRefresh = new javax.swing.JButton();
+        buttonItemSearch = new javax.swing.JButton();
+        buttonItemTableRefresh = new javax.swing.JButton();
         jPanel11 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tableSingleItem = new javax.swing.JTable();
+        tableItems = new javax.swing.JTable();
         jPanel5 = new javax.swing.JPanel();
         jPanel13 = new javax.swing.JPanel();
         jPanel14 = new javax.swing.JPanel();
@@ -158,10 +160,10 @@ public class AdminClassFrame extends javax.swing.JFrame {
 
         jPanel2.setBackground(new java.awt.Color(0, 102, 102));
 
-        buttonAdminOut.setText("LOG OUT");
-        buttonAdminOut.addActionListener(new java.awt.event.ActionListener() {
+        buttonLogOut.setText("LOG OUT");
+        buttonLogOut.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonAdminOutActionPerformed(evt);
+                buttonLogOutActionPerformed(evt);
             }
         });
 
@@ -171,14 +173,14 @@ public class AdminClassFrame extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(buttonAdminOut, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(buttonLogOut, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(buttonAdminOut, javax.swing.GroupLayout.DEFAULT_SIZE, 58, Short.MAX_VALUE)
+                .addComponent(buttonLogOut, javax.swing.GroupLayout.DEFAULT_SIZE, 58, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -203,38 +205,43 @@ public class AdminClassFrame extends javax.swing.JFrame {
 
         jPanel12.setBackground(new java.awt.Color(0, 51, 51));
 
-        buttonSingleAdd.setText("ADD NEW");
-        buttonSingleAdd.addActionListener(new java.awt.event.ActionListener() {
+        buttonAddNewItem.setText("ADD NEW");
+        buttonAddNewItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonSingleAddActionPerformed(evt);
+                buttonAddNewItemActionPerformed(evt);
             }
         });
 
-        buttonSingleUpdate.setText("UPDATE");
-        buttonSingleUpdate.addActionListener(new java.awt.event.ActionListener() {
+        buttonItemUpdate.setText("UPDATE");
+        buttonItemUpdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonSingleUpdateActionPerformed(evt);
+                try {
+					buttonItemUpdateActionPerformed(evt);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
             }
         });
 
-        buttonSingleRemove.setText("REMOVE");
-        buttonSingleRemove.addActionListener(new java.awt.event.ActionListener() {
+        buttonItemRemove.setText("REMOVE");
+        buttonItemRemove.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonSingleRemoveActionPerformed(evt);
+                buttonItemRemoveActionPerformed(evt);
             }
         });
 
-        buttonSingleClear.setText("CLEAR");
-        buttonSingleClear.addActionListener(new java.awt.event.ActionListener() {
+        buttonClearInputItem.setText("CLEAR");
+        buttonClearInputItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonSingleClearActionPerformed(evt);
+                buttonClearInputItemActionPerformed(evt);
             }
         });
 
-        buttonSinglePrint.setText("PRINT");
-        buttonSinglePrint.addActionListener(new java.awt.event.ActionListener() {
+        buttonItemPrint.setText("PRINT");
+        buttonItemPrint.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonSinglePrintActionPerformed(evt);
+                buttonItemPrintActionPerformed(evt);
             }
         });
 
@@ -246,14 +253,14 @@ public class AdminClassFrame extends javax.swing.JFrame {
                 .addGap(26, 26, 26)
                 .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel12Layout.createSequentialGroup()
-                        .addComponent(buttonSingleUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(buttonItemUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(buttonSingleRemove, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(buttonSingleAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(buttonItemRemove, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(buttonAddNewItem, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(buttonSingleClear, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(buttonSinglePrint, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(buttonClearInputItem, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(buttonItemPrint, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(33, Short.MAX_VALUE))
         );
         jPanel12Layout.setVerticalGroup(
@@ -261,13 +268,13 @@ public class AdminClassFrame extends javax.swing.JFrame {
             .addGroup(jPanel12Layout.createSequentialGroup()
                 .addContainerGap(73, Short.MAX_VALUE)
                 .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(buttonSingleAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(buttonSingleClear, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(buttonAddNewItem, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(buttonClearInputItem, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(35, 35, 35)
                 .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(buttonSingleUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(buttonSingleRemove, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(buttonSinglePrint, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(buttonItemUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(buttonItemRemove, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(buttonItemPrint, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(30, 30, 30))
         );
 
@@ -306,7 +313,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
                 .addGap(53, 53, 53)
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(inputSingleName, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(inputSingleID, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(inputItemID, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(inputSinglePrice, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -315,7 +322,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
                 .addGap(40, 40, 40)
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(inputSingleID, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(inputItemID, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -334,17 +341,17 @@ public class AdminClassFrame extends javax.swing.JFrame {
 
         jLabel4.setText("Search an Item");
 
-        buttonSingleSearch.setText("SEARCH");
-        buttonSingleSearch.addActionListener(new java.awt.event.ActionListener() {
+        buttonItemSearch.setText("SEARCH");
+        buttonItemSearch.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonSingleSearchActionPerformed(evt);
+                buttonItemSearchActionPerformed(evt);
             }
         });
 
-        buttonSingleRefresh.setText("REFRESH");
-        buttonSingleRefresh.addActionListener(new java.awt.event.ActionListener() {
+        buttonItemTableRefresh.setText("REFRESH");
+        buttonItemTableRefresh.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonSingleRefreshActionPerformed(evt);
+                buttonItemTableRefreshActionPerformed(evt);
             }
         });
 
@@ -358,9 +365,9 @@ public class AdminClassFrame extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(inputSingleSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(buttonSingleSearch)
+                .addComponent(buttonItemSearch)
                 .addGap(33, 33, 33)
-                .addComponent(buttonSingleRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(buttonItemTableRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(213, Short.MAX_VALUE))
         );
         jPanel10Layout.setVerticalGroup(
@@ -370,14 +377,14 @@ public class AdminClassFrame extends javax.swing.JFrame {
                 .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(inputSingleSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4)
-                    .addComponent(buttonSingleSearch)
-                    .addComponent(buttonSingleRefresh))
+                    .addComponent(buttonItemSearch)
+                    .addComponent(buttonItemTableRefresh))
                 .addContainerGap(15, Short.MAX_VALUE))
         );
 
         jPanel11.setBackground(new java.awt.Color(0, 51, 51));
 
-        tableSingleItem.setModel(new javax.swing.table.DefaultTableModel(
+        tableItems.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -393,18 +400,18 @@ public class AdminClassFrame extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        tableSingleItem.addMouseListener(new java.awt.event.MouseAdapter() {
+        tableItems.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tableSingleItemMouseClicked(evt);
+                tableItemsMouseClicked(evt);
             }
         });
-        jScrollPane1.setViewportView(tableSingleItem);
-        if (tableSingleItem.getColumnModel().getColumnCount() > 0) {
-            tableSingleItem.getColumnModel().getColumn(0).setResizable(false);
-            tableSingleItem.getColumnModel().getColumn(1).setResizable(false);
-            tableSingleItem.getColumnModel().getColumn(2).setResizable(false);
-            tableSingleItem.getColumnModel().getColumn(3).setResizable(false);
-            tableSingleItem.getColumnModel().getColumn(4).setResizable(false);
+        jScrollPane1.setViewportView(tableItems);
+        if (tableItems.getColumnModel().getColumnCount() > 0) {
+            tableItems.getColumnModel().getColumn(0).setResizable(false);
+            tableItems.getColumnModel().getColumn(1).setResizable(false);
+            tableItems.getColumnModel().getColumn(2).setResizable(false);
+            tableItems.getColumnModel().getColumn(3).setResizable(false);
+            tableItems.getColumnModel().getColumn(4).setResizable(false);
         }
 
         javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
@@ -1103,19 +1110,117 @@ public class AdminClassFrame extends javax.swing.JFrame {
     }
 
     // LOG OUT
-    private void buttonAdminOutActionPerformed(java.awt.event.ActionEvent evt) {
+    private void buttonLogOutActionPerformed(java.awt.event.ActionEvent evt) {
         
         int out = JOptionPane.showConfirmDialog(this, "Do you want to log out?", "SELECT", JOptionPane.YES_NO_OPTION);
         if(out == 0) {
             this.dispose();
             new Login().setVisible(true);
         }
+    } 
+    
+    ////////////MANAGE SINGLE ITEMS////////////////////
+    //```buttons ---- ADD NEW//
+    private void buttonAddNewItemActionPerformed(java.awt.event.ActionEvent evt) {
+        if(isEmptyItems()) {
+        	try {
+				@SuppressWarnings("unused")
+				Item item = Database.getItemByName(inputSingleName.getText());
+				JOptionPane.showMessageDialog(this, "Item already exists");
+			} catch (MenuNotFoundException e) {
+				try {
+					int choice = JOptionPane.showConfirmDialog(null, "Add item?", "Add Confirmation", JOptionPane.YES_NO_OPTION);
+			        
+			        if(choice == JOptionPane.NO_OPTION) {
+			        	return;
+			        }
+					Database.addItem(new Item("I" + inputItemID.getText(), inputSingleName.getText(), Float.parseFloat(inputSinglePrice.getText())));
+					tableViewItems("");
+				} catch (NumberFormatException | SQLException e1) {
+					JOptionPane.showMessageDialog(this, e1.getMessage());
+					System.out.println(e.getMessage() + " " + e1.getClass());
+				}
+			}finally {
+				clearSingle();
+			}
+        }
+    }
+  //```buttons ---- UPDATE ITEM//
+    private void buttonItemUpdateActionPerformed(java.awt.event.ActionEvent evt) throws SQLException {
+    	
+    	
+		try {
+			Database.updateItem(inputItemID.getText(), inputSingleName.getText(), Float.parseFloat(inputSinglePrice.getText()));
+			tableViewItems("");
+			clearSingle();
+		} catch (Exception e) {
+			JOptionPane.showInputDialog(this, e.getMessage());
+		}
     }
     
-    // initial fetch data for tables
-    // for Manage Single Items
+    //```buttons ---- REMOVE ITEM//
+    private void buttonItemRemoveActionPerformed(java.awt.event.ActionEvent evt) {
+        try {
+        	Item item = Database.getItemByID(inputItemID.getText());
+			Database.removeItem(item);
+			tableViewItems("");
+		} catch (SQLException | MenuNotFoundException e) {
+			JOptionPane.showMessageDialog(this, e.getMessage());
+		}finally {
+			clearSingle();
+		}
+    }
+    
+    //```buttons ---- PRINT ITEM//
+    private void buttonItemPrintActionPerformed(java.awt.event.ActionEvent evt) {
+        
+        try {
+            MessageFormat header = new MessageFormat("ALL ITEMS");
+            MessageFormat footer = new MessageFormat("Page {0, number, integer}");
+            tableItems.print(JTable.PrintMode.FIT_WIDTH, header, footer);
+        } catch (PrinterException ex) {
+            Logger.getLogger(AdminClassFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    //```buttons ---- SEARCH ITEM//
+    private void buttonItemSearchActionPerformed(java.awt.event.ActionEvent evt) {
+        
+        if(inputSingleSearch.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Input is empty");
+        } else {
+            tableItems.setModel(new DefaultTableModel(null, new Object[] {
+            "ID", "NAME", "PRICE", "DATE ADDED", "LAST UPDATED ON"
+        }));
+        tableViewItems(inputSingleSearch.getText());
+        }
+    }
+
+    //```buttons ---- CLEAR//    
+    private void buttonClearInputItemActionPerformed(java.awt.event.ActionEvent evt) {   
+        clearSingle();
+    }
+
+    //```buttons ---- REFRESH ITEM//
+    private void buttonItemTableRefreshActionPerformed(java.awt.event.ActionEvent evt) {
+		tableViewItems("");
+    }
+
+    // Display data of clicked row in MANAGE SINGLE ITEMS
+    private void tableItemsMouseClicked(java.awt.event.MouseEvent evt) {
+        
+        model = (DefaultTableModel) tableItems.getModel();
+        rowIndex = tableItems.getSelectedRow();
+        
+        inputItemID.setText(model.getValueAt(rowIndex, 0).toString());
+        inputSingleName.setText(model.getValueAt(rowIndex, 1).toString());
+        inputSinglePrice.setText(model.getValueAt(rowIndex, 2).toString());
+    }
+    
+    // put data of items in a table
     private void tableViewItems(String searchVal) {
-    	DefaultTableModel model = (DefaultTableModel) tableSingleItem.getModel();
+    	DefaultTableModel model = (DefaultTableModel) tableItems.getModel();
+    	model.setRowCount(0);
     	Object[] row;
     	for(Item i: Database.getItems()) {
     		if(i.concatDets().contains(searchVal)) {
@@ -1128,57 +1233,13 @@ public class AdminClassFrame extends javax.swing.JFrame {
                 model.addRow(row);
     		}
     	}
-    	model = (DefaultTableModel) tableSingleItem.getModel();
-//    	
-//        admin.getSingleItems(tableSingleItem, "");
-//        model = (DefaultTableModel) tableSingleItem.getModel();
+    	model = (DefaultTableModel) tableItems.getModel();
     }
-    
-    // for Manage Package Items
-//    private void tableViewPackages() {
-//        admin2.getPackages(tablePackages, "");
-//        model = (DefaultTableModel) tablePackages.getModel();
-//    }
-    
-    private void tableViewPackageSingle() {
-        admin2.getPackageSingle(tablePackageSingle, "");
-        model = (DefaultTableModel) tablePackageSingle.getModel();
-    }
-    
-    // for Manage Users
-    private void tableViewUsers() {
-      //  admin3.getUsers(tableUsers, "");
-        model3 = (DefaultTableModel) tableUsers.getModel();
-    }
-    
-    // clearing input boxes
-    // for Manage Single Items
-    private void clearSingle() {
-        inputSingleID.setText("" + Database.getNextItemID());
-        inputSingleName.setText(null);
-        inputSinglePrice.setText(null);
-    }
-    
-    // for Manage Package Items
-    private void clearTable(JTable table) {
-        model = (DefaultTableModel) table.getModel();
-        model.setRowCount(0);
-    }
-    
-    // for Manage Users
-    private void clearUser() {
-   //     inputUserID.setText(String.valueOf(admin3.getMax()));
-        inputUserName.setText(null);
-        inputUserPass.setText(null);
-        inputUserContact.setText(null);
-        radioUserRegular.setSelected(true);     
-    }
-    
-    // check if input components are empty
-    // for Manage Single Items
-    public boolean isEmptySingle() {
+
+    //Check if all fields are filled
+    public boolean isEmptyItems() {
         
-        if(inputSingleID.getText().isEmpty()) {
+        if(inputItemID.getText().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Item ID is missing");
             return false;
         }   
@@ -1192,6 +1253,196 @@ public class AdminClassFrame extends javax.swing.JFrame {
         }
         return true;
     }
+
+    
+	////////////MANAGE PACKAGES////////////////////
+	//```buttons ---- ADD NEW//
+    // Fetch data of selected package
+    private void tablePackagesMouseClicked(java.awt.event.MouseEvent evt) {
+        
+        //clearTable(tablePackageItem);
+//        model = (DefaultTableModel) tablePackages.getModel();
+//        rowIndex = tablePackages.getSelectedRow();
+//        
+//        inputPackageID.setText(model.getValueAt(rowIndex, 0).toString());
+//        inputPackagePrice.setText(model.getValueAt(rowIndex, 2).toString());
+//        
+//        tablePackageItem.setModel(new DefaultTableModel(null, new Object[] {
+//            "ITEM ID", "NAME", "PRICE"
+//        }));
+//        admin2.getPackageItem(tablePackageItem, inputPackageID.getText());
+    }
+
+    // Add Package
+    private void buttonPackageAddActionPerformed(java.awt.event.ActionEvent evt) {
+    	try {
+    		
+    	}
+//    	
+//    	
+//    	int packageID = admin2.getMax();
+//        String packageName = "Package " + packageID;
+//        String packagePrice = "0";
+//        int packageCount = 0;
+//        
+//        admin2.insertPackage(packageID, packageName, packagePrice, packageCount);
+//
+//        tablePackages.setModel(new DefaultTableModel(null, new Object[] {
+//            "ID", "NAME", "PRICE", "# ITEMS", "CREATED ON"
+//        }));
+////        admin2.getPackages(tablePackages, "");
+//        
+//        inputNewPackage.setText(String.valueOf(admin2.getMax()));
+        
+    }
+
+    // Update a package
+    private void buttonPackageUpdateActionPerformed(java.awt.event.ActionEvent evt) {
+//        int packageID = Integer.parseInt(inputPackageID.getText());
+//        String packagePrice = inputPackagePrice.getText();
+//        
+//        admin2.updatePackage(packageID, packagePrice);
+//        tablePackages.setModel(new DefaultTableModel(null, new Object[] {
+//            "ID", "NAME", "PRICE", "# ITEMS", "CREATED ON"
+//        }));
+////        admin2.getPackages(tablePackages, "");
+    }
+    
+    // Remove a package
+    private void buttonPackageRemoveActionPerformed(java.awt.event.ActionEvent evt) {
+//        int packageID = Integer.parseInt(inputPackageID.getText());
+//        
+//        admin2.removeAllItems(packageID);
+//        admin2.removePackage(packageID);
+//        
+//        tablePackages.setModel(new DefaultTableModel(null, new Object[] {
+//            "ID", "NAME", "PRICE", "# ITEMS", "CREATED ON"
+//        }));
+////        admin2.getPackages(tablePackages, "");
+//        
+//        inputNewPackage.setText(String.valueOf(admin2.getMax()));
+//        
+//        tablePackageItem.setModel(new DefaultTableModel(null, new Object[] {
+//            "ITEM ID", "NAME", "PRICE"
+//        }));
+//        admin2.getPackageItem(tablePackageItem, inputPackageID.getText());
+    }
+    
+    // Fetch data of selected item
+    private void tablePackageSingleMouseClicked(java.awt.event.MouseEvent evt) {
+        model = (DefaultTableModel) tablePackageSingle.getModel();
+        rowIndex = tablePackageSingle.getSelectedRow();
+        
+        inputPackageSingleID.setText(model.getValueAt(rowIndex, 0).toString());
+    }
+
+    // Add Item to Package
+    private void buttonPackageItemAddActionPerformed(java.awt.event.ActionEvent evt) {
+//        if(inputPackageID.getText().equals("0")) {
+//            JOptionPane.showMessageDialog(null, "Choose A Package");
+//        } else {
+//            
+//            if(!admin2.isPackageItemExist(Integer.parseInt(inputPackageID.getText()), Integer.parseInt(inputPackageSingleID.getText()))) {
+//            
+//                admin2.addItemPackage(Integer.parseInt(inputPackageID.getText()), Integer.parseInt(inputPackageSingleID.getText()));
+//
+//                tablePackageItem.setModel(new DefaultTableModel(null, new Object[] {
+//                    "ITEM ID", "NAME", "PRICE"
+//                }));
+//                admin2.getPackageItem(tablePackageItem, inputPackageID.getText());
+//                
+//                tablePackages.setModel(new DefaultTableModel(null, new Object[] {
+//                    "ID", "NAME", "PRICE", "# ITEMS", "CREATED ON"
+//                }));
+////                admin2.getPackages(tablePackages, "");
+//                
+//            } else {
+//                JOptionPane.showMessageDialog(this, "Item already exists in package");
+//            }   
+//        }
+    }
+    
+    // Fetch data of item inside package
+    private void tablePackageItemMouseClicked(java.awt.event.MouseEvent evt) {
+        model = (DefaultTableModel) tablePackageItem.getModel();
+        rowIndex = tablePackageItem.getSelectedRow();
+        
+        inputPackageSingleID.setText(model.getValueAt(rowIndex, 0).toString());
+    }
+
+    // Remove Item from Package
+    private void buttonPackageItemRemoveActionPerformed(java.awt.event.ActionEvent evt) {
+//        if(inputPackageID.getText().equals("0")) {
+//            JOptionPane.showMessageDialog(null, "Choose A Package");
+//        } else {
+//            admin2.removeItemPackage(Integer.parseInt(inputPackageID.getText()), Integer.parseInt(inputPackageSingleID.getText()));
+//            
+//            tablePackageItem.setModel(new DefaultTableModel(null, new Object[] {
+//                "ITEM ID", "NAME", "PRICE"
+//            }));
+//            admin2.getPackageItem(tablePackageItem, inputPackageID.getText());
+//            
+//            tablePackages.setModel(new DefaultTableModel(null, new Object[] {
+//                "ID", "NAME", "PRICE", "# ITEMS", "CREATED ON"
+//            }));
+////            admin2.getPackages(tablePackages, "");
+//        }
+    }
+
+    
+	private void tableViewPackages() {
+    	DefaultTableModel model1 = (DefaultTableModel) tablePackages.getModel();
+    	model1.setRowCount(0);
+    	Object[] row;
+    	for(Package pack: Database.getPack()) {
+    		row = new Object[5];
+    		row[0] = pack.getId();
+            row[1] = pack.getName();
+            row[2] = pack.getPrice();
+            row[3] = pack.getNumberOfItems();
+            row[4] = pack.getDateAdded();
+            model1.addRow(row);
+  		}
+    }
+  
+    
+    private void tableViewPackageSingle() {
+    	DefaultTableModel model = (DefaultTableModel) tablePackageSingle.getModel();
+    	model.setRowCount(0);
+    	Object[] row;
+    	for(Item i: Database.getItems()) {
+               row = new Object[5];
+               row[0] = i.getId();
+               row[1] = i.getName();
+               row[2] = i.getPrice();
+               model.addRow(row);
+    	}
+    	model = (DefaultTableModel) tablePackageSingle.getModel();
+    }
+    
+    // for Manage Users
+    private void tableViewUsers() {
+      //  admin3.getUsers(tableUsers, "");
+        model3 = (DefaultTableModel) tableUsers.getModel();
+    }
+    
+    // clearing input boxes
+    // for Manage Single Items
+    private void clearSingle() {
+		inputItemID.setText("" + Database.getLastItemID());
+	    inputSingleName.setText(null);
+	    inputSinglePrice.setText(null);
+    }
+    
+    // for Manage Users
+    private void clearUser() {
+   //     inputUserID.setText(String.valueOf(admin3.getMax()));
+        inputUserName.setText(null);
+        inputUserPass.setText(null);
+        inputUserContact.setText(null);
+        radioUserRegular.setSelected(true);     
+    }
+    
     
     // for Manage Users
     public boolean isEmptyUser() {
@@ -1210,156 +1461,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
         return true;
     } 
     
-    // EVENTS FOR MANAGE SINGLE ITEMS
-    
-    // Add Single Item
-    private void buttonSingleAddActionPerformed(java.awt.event.ActionEvent evt) {
-        
-        if(isEmptySingle()) {
-        	try {
-				@SuppressWarnings("unused")
-				Item item = Database.getItemByName(inputSingleName.getText());
-				JOptionPane.showMessageDialog(this, "Item already exists");
-				for(Item i:Database.getItems()) {
-					System.out.println(i.concatDets());
-				}
-			} catch (MenuNotFoundException e) {
-				try {
-					System.out.println("Tried");
-					Database.addItem(new Item("I" + inputSingleID.getText(), inputSingleName.getText(), Float.parseFloat(inputSinglePrice.getText())));
-					tableViewItems("");
-				} catch (NumberFormatException | SQLException e1) {
-					JOptionPane.showMessageDialog(this, e1.getMessage());
-					System.out.println(e.getMessage() + " " + e1.getClass());
-				}
-			}finally {
-				clearSingle();
-			}
-//            
-//            if(!admin.isSingleExist(inputSingleName.getText())) {
-//                            
-//                int itemID = admin.getMax();
-//                String itemName = inputSingleName.getText();
-//                String itemPrice = inputSinglePrice.getText();
-//
-//             //   admin.insertSingle(itemID, itemName, itemPrice);
-//                tableSingleItem.setModel(new DefaultTableModel(null, new Object[] {
-//                    "ID", "NAME", "PRICE", "DATE ADDED", "LAST UPDATED ON"
-//                }));
-//                admin.getSingleItems(tableSingleItem, "");
-//                
-//                clearSingle();         
-//            } else {
-//                JOptionPane.showMessageDialog(this, "Item already exists");
-//                clearSingle();
-//            }
-        }
-    }
-    
-    // Clear Single Item Input Components
-    private void buttonSingleClearActionPerformed(java.awt.event.ActionEvent evt) {
-        
-        inputSingleName.setText(null);
-        inputSinglePrice.setText(null);
-        
-        inputSingleID.setText(String.valueOf(admin.getMax()));
-        
-    }
-
-    // Update Single Item
-    private void buttonSingleUpdateActionPerformed(java.awt.event.ActionEvent evt) {
-        
-        if(isEmptySingle()) {
-        
-            int itemID = Integer.parseInt(inputSingleID.getText());
-            String oldName = model.getValueAt(rowIndex, 1).toString();
-
-            String itemName = inputSingleName.getText();
-            String itemPrice = inputSinglePrice.getText();
-
-            if(oldName.equals(itemName) && admin.isSingleExist(inputSingleName.getText()) ) {
-                admin.updateSingle(itemID, itemName, itemPrice);
-                tableSingleItem.setModel(new DefaultTableModel(null, new Object[] {
-                    "ID", "NAME", "PRICE", "DATE ADDED", "LAST UPDATED ON"
-                }));
-                admin.getSingleItems(tableSingleItem, "");
-
-                clearSingle(); 
-            } else {
-                JOptionPane.showMessageDialog(this, "Item already exists");
-                clearSingle();
-            }
-        }
-    }
-    
-    // Remove Single Items
-    private void buttonSingleRemoveActionPerformed(java.awt.event.ActionEvent evt) {
-        
-        int itemID = Integer.parseInt(inputSingleID.getText());
-        
-        admin.removeSingle(itemID);
-        
-        tableSingleItem.setModel(new DefaultTableModel(null, new Object[] {
-            "ID", "NAME", "PRICE", "DATE ADDED", "LAST UPDATED ON"
-        }));
-        admin.getSingleItems(tableSingleItem, "");
-
-        clearSingle();
-    }
-    
-    // Print List of Single Items
-    private void buttonSinglePrintActionPerformed(java.awt.event.ActionEvent evt) {
-        
-        try {
-            MessageFormat header = new MessageFormat("ALL ITEMS");
-            MessageFormat footer = new MessageFormat("Page {0, number, integer}");
-            tableSingleItem.print(JTable.PrintMode.FIT_WIDTH, header, footer);
-        } catch (PrinterException ex) {
-            Logger.getLogger(AdminClassFrame.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    // Search for a Single Item
-    private void buttonSingleSearchActionPerformed(java.awt.event.ActionEvent evt) {
-        
-        if(inputSingleSearch.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Input is empty");
-        } else {
-            tableSingleItem.setModel(new DefaultTableModel(null, new Object[] {
-            "ID", "NAME", "PRICE", "DATE ADDED", "LAST UPDATED ON"
-        }));
-        admin.getSingleItems(tableSingleItem, inputSingleSearch.getText());
-        }
-    }
-
-    // Refresh Single Item Table
-    private void buttonSingleRefreshActionPerformed(java.awt.event.ActionEvent evt) {
-        
-        tableSingleItem.setModel(new DefaultTableModel(null, new Object[] {
-            "ID", "NAME", "PRICE", "DATE ADDED", "LAST UPDATED ON"
-        }));
-        admin.getSingleItems(tableSingleItem, "");
-        inputSingleSearch.setText(null);
-    }
-
-    // Fetch data values of selected table row
-    private void tableSingleItemMouseClicked(java.awt.event.MouseEvent evt) {
-        
-        model = (DefaultTableModel) tableSingleItem.getModel();
-        rowIndex = tableSingleItem.getSelectedRow();
-        
-        inputSingleID.setText(model.getValueAt(rowIndex, 0).toString());
-        inputSingleName.setText(model.getValueAt(rowIndex, 1).toString());
-        inputSinglePrice.setText(model.getValueAt(rowIndex, 2).toString());
-    }
-    
-    // Only numeric inputs for price
-    private void inputSinglePriceKeyTyped(java.awt.event.KeyEvent evt) {
-        
-        if(!Character.isDigit(evt.getKeyChar())) {
-            evt.consume();
-        }
-    }
+  
     
     // EVENTS FOR MANAGE USERS
     
@@ -1390,78 +1492,78 @@ public class AdminClassFrame extends javax.swing.JFrame {
 
     // Add User
     private void buttonUserAddActionPerformed(java.awt.event.ActionEvent evt) {
-        if(isEmptyUser()) {
-            
-            if(!admin3.isUserExist(inputUserName.getText())) {
-                            
-     //           int userID = admin3.getMax();
-                String userName = inputUserName.getText();
-                String userPass = inputUserPass.getText();
-                String userContact = inputUserContact.getText();
-                String userType = "regular";
-                if(radioUserAdmin.isSelected()) {
-                    userType = "admin";
-                }
-
-     //           admin3.insertUser(userID, userName, userPass, userContact, userType);
-             
-                tableUsers.setModel(new DefaultTableModel(null, new Object[] {
-                    "ID", "USERNAME", "PASSWORD", "CONTACT#", "ROLE", "CREATED ON", "UPDATED ON"
-                }));
-            //    admin3.getUsers(tableUsers, "");
-                
-                clearUser();         
-            } else {
-                JOptionPane.showMessageDialog(this, "User already exists");
-                clearUser();
-            }
-        }
+//        if(isEmptyUser()) {
+//            
+//            if(!admin3.isUserExist(inputUserName.getText())) {
+//                            
+//     //           int userID = admin3.getMax();
+//                String userName = inputUserName.getText();
+//                String userPass = inputUserPass.getText();
+//                String userContact = inputUserContact.getText();
+//                String userType = "regular";
+//                if(radioUserAdmin.isSelected()) {
+//                    userType = "admin";
+//                }
+//
+//     //           admin3.insertUser(userID, userName, userPass, userContact, userType);
+//             
+//                tableUsers.setModel(new DefaultTableModel(null, new Object[] {
+//                    "ID", "USERNAME", "PASSWORD", "CONTACT#", "ROLE", "CREATED ON", "UPDATED ON"
+//                }));
+//            //    admin3.getUsers(tableUsers, "");
+//                
+//                clearUser();         
+//            } else {
+//                JOptionPane.showMessageDialog(this, "User already exists");
+//                clearUser();
+//            }
+//        }
     }
 
     // Update User 
     private void buttonUserUpdateActionPerformed(java.awt.event.ActionEvent evt) {
-        if(isEmptyUser()) {
-        
-            int userID = Integer.parseInt(inputUserID.getText());
-            String oldName = model3.getValueAt(rowIndex, 1).toString();
-
-            String userName = inputUserName.getText();
-            String userPass = inputUserPass.getText();
-            String userContact = inputUserContact.getText();
-            String userType = "";
-            if(radioUserAdmin.isSelected()) {
-                userType = "admin";
-            } else if(radioUserRegular.isSelected()) {
-                userType = "regular";
-            }
-
-            if(oldName.equals(userName) && admin3.isUserExist(inputUserName.getText()) ) {
-                admin3.updateUser(userID, userName, userPass, userContact, userType);
-                tableUsers.setModel(new DefaultTableModel(null, new Object[] {
-                    "ID", "USERNAME", "PASSWORD", "CONTACT#", "ROLE", "CREATED ON", "UPDATED ON"
-                }));
-        //        admin3.getUsers(tableUsers, "");
-                
-                clearUser(); 
-            } else {
-                JOptionPane.showMessageDialog(this, "User already exists");
-                clearUser();
-            }
-        }
+//        if(isEmptyUser()) {
+//        
+//            int userID = Integer.parseInt(inputUserID.getText());
+//            String oldName = model3.getValueAt(rowIndex, 1).toString();
+//
+//            String userName = inputUserName.getText();
+//            String userPass = inputUserPass.getText();
+//            String userContact = inputUserContact.getText();
+//            String userType = "";
+//            if(radioUserAdmin.isSelected()) {
+//                userType = "admin";
+//            } else if(radioUserRegular.isSelected()) {
+//                userType = "regular";
+//            }
+//
+//            if(oldName.equals(userName) && admin3.isUserExist(inputUserName.getText()) ) {
+//                admin3.updateUser(userID, userName, userPass, userContact, userType);
+//                tableUsers.setModel(new DefaultTableModel(null, new Object[] {
+//                    "ID", "USERNAME", "PASSWORD", "CONTACT#", "ROLE", "CREATED ON", "UPDATED ON"
+//                }));
+//        //        admin3.getUsers(tableUsers, "");
+//                
+//                clearUser(); 
+//            } else {
+//                JOptionPane.showMessageDialog(this, "User already exists");
+//                clearUser();
+//            }
+//        }
     }
 
     // Remove User
     private void buttonUserRemoveActionPerformed(java.awt.event.ActionEvent evt) {
-        int userID = Integer.parseInt(inputUserID.getText());
-        
-        admin3.removeUser(userID);
-        
-        tableUsers.setModel(new DefaultTableModel(null, new Object[] {
-            "ID", "USERNAME", "PASSWORD", "CONTACT#", "ROLE", "CREATED ON", "UPDATED ON"
-        }));
-   //     admin3.getUsers(tableUsers, "");
-
-        clearUser();  
+//        int userID = Integer.parseInt(inputUserID.getText());
+//        
+//        admin3.removeUser(userID);
+//        
+//        tableUsers.setModel(new DefaultTableModel(null, new Object[] {
+//            "ID", "USERNAME", "PASSWORD", "CONTACT#", "ROLE", "CREATED ON", "UPDATED ON"
+//        }));
+//   //     admin3.getUsers(tableUsers, "");
+//
+//        clearUser();  
     }
     
     // Clear input components
@@ -1508,177 +1610,29 @@ public class AdminClassFrame extends javax.swing.JFrame {
     
     // EVENTS FOR MANAGE PACKAGE ITEMS
 
-    // Fetch data of selected package
-    private void tablePackagesMouseClicked(java.awt.event.MouseEvent evt) {
-        
-        clearTable(tablePackageItem);
-        model = (DefaultTableModel) tablePackages.getModel();
-        rowIndex = tablePackages.getSelectedRow();
-        
-        inputPackageID.setText(model.getValueAt(rowIndex, 0).toString());
-        inputPackagePrice.setText(model.getValueAt(rowIndex, 2).toString());
-        
-        tablePackageItem.setModel(new DefaultTableModel(null, new Object[] {
-            "ITEM ID", "NAME", "PRICE"
-        }));
-        admin2.getPackageItem(tablePackageItem, inputPackageID.getText());
-    }
-
-    // Add Package
-    private void buttonPackageAddActionPerformed(java.awt.event.ActionEvent evt) {
-        int packageID = admin2.getMax();
-        String packageName = "Package " + packageID;
-        String packagePrice = "0";
-        int packageCount = 0;
-        
-        admin2.insertPackage(packageID, packageName, packagePrice, packageCount);
-
-        tablePackages.setModel(new DefaultTableModel(null, new Object[] {
-            "ID", "NAME", "PRICE", "# ITEMS", "CREATED ON"
-        }));
-//        admin2.getPackages(tablePackages, "");
-        
-        inputNewPackage.setText(String.valueOf(admin2.getMax()));
-        
-    }
-
-    // Update a package
-    private void buttonPackageUpdateActionPerformed(java.awt.event.ActionEvent evt) {
-        int packageID = Integer.parseInt(inputPackageID.getText());
-        String packagePrice = inputPackagePrice.getText();
-        
-        admin2.updatePackage(packageID, packagePrice);
-        tablePackages.setModel(new DefaultTableModel(null, new Object[] {
-            "ID", "NAME", "PRICE", "# ITEMS", "CREATED ON"
-        }));
-//        admin2.getPackages(tablePackages, "");
-    }
     
-    // Remove a package
-    private void buttonPackageRemoveActionPerformed(java.awt.event.ActionEvent evt) {
-        int packageID = Integer.parseInt(inputPackageID.getText());
+ // Only numeric inputs for price
+    private void inputSinglePriceKeyTyped(java.awt.event.KeyEvent evt) {
         
-        admin2.removeAllItems(packageID);
-        admin2.removePackage(packageID);
-        
-        tablePackages.setModel(new DefaultTableModel(null, new Object[] {
-            "ID", "NAME", "PRICE", "# ITEMS", "CREATED ON"
-        }));
-//        admin2.getPackages(tablePackages, "");
-        
-        inputNewPackage.setText(String.valueOf(admin2.getMax()));
-        
-        tablePackageItem.setModel(new DefaultTableModel(null, new Object[] {
-            "ITEM ID", "NAME", "PRICE"
-        }));
-        admin2.getPackageItem(tablePackageItem, inputPackageID.getText());
-    }
-    
-    // Fetch data of selected item
-    private void tablePackageSingleMouseClicked(java.awt.event.MouseEvent evt) {
-        model = (DefaultTableModel) tablePackageSingle.getModel();
-        rowIndex = tablePackageSingle.getSelectedRow();
-        
-        inputPackageSingleID.setText(model.getValueAt(rowIndex, 0).toString());
-    }
-
-    // Add Item to Package
-    private void buttonPackageItemAddActionPerformed(java.awt.event.ActionEvent evt) {
-        if(inputPackageID.getText().equals("0")) {
-            JOptionPane.showMessageDialog(null, "Choose A Package");
-        } else {
-            
-            if(!admin2.isPackageItemExist(Integer.parseInt(inputPackageID.getText()), Integer.parseInt(inputPackageSingleID.getText()))) {
-            
-                admin2.addItemPackage(Integer.parseInt(inputPackageID.getText()), Integer.parseInt(inputPackageSingleID.getText()));
-
-                tablePackageItem.setModel(new DefaultTableModel(null, new Object[] {
-                    "ITEM ID", "NAME", "PRICE"
-                }));
-                admin2.getPackageItem(tablePackageItem, inputPackageID.getText());
-                
-                tablePackages.setModel(new DefaultTableModel(null, new Object[] {
-                    "ID", "NAME", "PRICE", "# ITEMS", "CREATED ON"
-                }));
-//                admin2.getPackages(tablePackages, "");
-                
-            } else {
-                JOptionPane.showMessageDialog(this, "Item already exists in package");
-            }   
+        if(!Character.isDigit(evt.getKeyChar())) {
+            evt.consume();
         }
     }
     
-    // Fetch data of item inside package
-    private void tablePackageItemMouseClicked(java.awt.event.MouseEvent evt) {
-        model = (DefaultTableModel) tablePackageItem.getModel();
-        rowIndex = tablePackageItem.getSelectedRow();
-        
-        inputPackageSingleID.setText(model.getValueAt(rowIndex, 0).toString());
-    }
 
-    // Remove Item from Package
-    private void buttonPackageItemRemoveActionPerformed(java.awt.event.ActionEvent evt) {
-        if(inputPackageID.getText().equals("0")) {
-            JOptionPane.showMessageDialog(null, "Choose A Package");
-        } else {
-            admin2.removeItemPackage(Integer.parseInt(inputPackageID.getText()), Integer.parseInt(inputPackageSingleID.getText()));
-            
-            tablePackageItem.setModel(new DefaultTableModel(null, new Object[] {
-                "ITEM ID", "NAME", "PRICE"
-            }));
-            admin2.getPackageItem(tablePackageItem, inputPackageID.getText());
-            
-            tablePackages.setModel(new DefaultTableModel(null, new Object[] {
-                "ID", "NAME", "PRICE", "# ITEMS", "CREATED ON"
-            }));
-//            admin2.getPackages(tablePackages, "");
-        }
-    }
-
-
-    /**
-     * @param args the command line arguments
-     */
-//    public static void main(String args[]) {
-//
-//        try {
-//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-//                if ("Nimbus".equals(info.getName())) {
-//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-//                    break;
-//                }
-//            }
-//        } catch (ClassNotFoundException ex) {
-//            java.util.logging.Logger.getLogger(AdminClassFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (InstantiationException ex) {
-//            java.util.logging.Logger.getLogger(AdminClassFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (IllegalAccessException ex) {
-//            java.util.logging.Logger.getLogger(AdminClassFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-//            java.util.logging.Logger.getLogger(AdminClassFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        }
-//
-//        /* Create and display the form */
-//        java.awt.EventQueue.invokeLater(new Runnable() {
-//            public void run() {
-//                new AdminClassFrame().setVisible(true);
-//            }
-//        });
-//    }
-
-    private javax.swing.JButton buttonAdminOut;
+    private javax.swing.JButton buttonLogOut;
     private javax.swing.JButton buttonPackageAdd;
     private javax.swing.JButton buttonPackageItemAdd;
     private javax.swing.JButton buttonPackageItemRemove;
     private javax.swing.JButton buttonPackageRemove;
     private javax.swing.JButton buttonPackageUpdate;
-    private javax.swing.JButton buttonSingleAdd;
-    private javax.swing.JButton buttonSingleClear;
-    private javax.swing.JButton buttonSinglePrint;
-    private javax.swing.JButton buttonSingleRefresh;
-    private javax.swing.JButton buttonSingleRemove;
-    private javax.swing.JButton buttonSingleSearch;
-    private javax.swing.JButton buttonSingleUpdate;
+    private javax.swing.JButton buttonAddNewItem;
+    private javax.swing.JButton buttonClearInputItem;
+    private javax.swing.JButton buttonItemPrint;
+    private javax.swing.JButton buttonItemTableRefresh;
+    private javax.swing.JButton buttonItemRemove;
+    private javax.swing.JButton buttonItemSearch;
+    private javax.swing.JButton buttonItemUpdate;
     private javax.swing.JButton buttonUserAdd;
     private javax.swing.JButton buttonUserClear;
     private javax.swing.JButton buttonUserPrint;
@@ -1690,7 +1644,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
     private javax.swing.JTextField inputPackageID;
     private javax.swing.JTextField inputPackagePrice;
     private javax.swing.JTextField inputPackageSingleID;
-    private javax.swing.JTextField inputSingleID;
+    private javax.swing.JTextField inputItemID;
     private javax.swing.JTextField inputSingleName;
     private javax.swing.JTextField inputSinglePrice;
     private javax.swing.JTextField inputSingleSearch;
@@ -1749,6 +1703,6 @@ public class AdminClassFrame extends javax.swing.JFrame {
     private javax.swing.JTable tablePackageItem;
     private javax.swing.JTable tablePackageSingle;
     private javax.swing.JTable tablePackages;
-    private javax.swing.JTable tableSingleItem;
+    private javax.swing.JTable tableItems;
     private javax.swing.JTable tableUsers;
 }
