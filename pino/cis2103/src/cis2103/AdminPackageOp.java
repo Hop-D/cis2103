@@ -134,27 +134,27 @@ public class AdminPackageOp {
     }
     
     // fetch all packages for initial display in Manage Package Items
-    public void getPackages(JTable table, String searchVal) {
-        String sql = "SELECT * FROM packages WHERE CONCAT(packageID, packageName, packagePrice, packageCount, packageCreated)like ? ORDER BY packageID DESC";
-        try {
-            ps = con.prepareStatement(sql);
-            ps.setString(1, "%" + searchVal + "%");
-            ResultSet rs = ps.executeQuery();
-            DefaultTableModel model = (DefaultTableModel) table.getModel();
-            Object[] row;
-            while(rs.next()) {
-                row = new Object[5];
-                row[0] = rs.getInt(1);
-                row[1] = rs.getString(2);
-                row[2] = rs.getString(3);
-                row[3] = rs.getString(4);
-                row[4] = rs.getString(7);
-                model.addRow(row);
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(AdminPackageOp.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
+//    public void getPackages(JTable table, String searchVal) {
+//        String sql = "SELECT * FROM packages WHERE CONCAT(packageID, packageName, packagePrice, packageCount, packageCreated)like ? ORDER BY packageID DESC";
+//        try {
+//            ps = con.prepareStatement(sql);
+//            ps.setString(1, "%" + searchVal + "%");
+//            ResultSet rs = ps.executeQuery();
+//            DefaultTableModel model = (DefaultTableModel) table.getModel();
+//            Object[] row;
+//            while(rs.next()) {
+//                row = new Object[5];
+//                row[0] = rs.getInt(1);
+//                row[1] = rs.getString(2);
+//                row[2] = rs.getString(3);
+//                row[3] = rs.getString(4);
+//                row[4] = rs.getString(7);
+//                model.addRow(row);
+//            }
+//        } catch (SQLException ex) {
+//            Logger.getLogger(AdminPackageOp.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//    }
     
     // fetch all items for initial display in Manage Package Items
     public void getPackageSingle(JTable table, String searchVal) {

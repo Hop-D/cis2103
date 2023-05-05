@@ -2,74 +2,26 @@ package model;
 
 import java.time.LocalDateTime;
 
-public class Item {
+public class Item extends Menu{
 
-	private int id;
-	private String name;
-	private float price;
-	private int count;
-	private LocalDateTime dateAdded;
-	private LocalDateTime dateUpdated;
 	
-	public Item(int id, String name, float price, int count, LocalDateTime dateAdded, LocalDateTime dateUpdated) {
-		this.id = id;
-		this.name = name;
-		this.price = price;
-		this.count = count;
-		this.dateAdded = dateAdded;
-		this.dateAdded = dateUpdated;
+	public Item(String id, String name, float price,  LocalDateTime dateAdded, LocalDateTime dateUpdated) {
+		super(id, Menu.ITEM_TYPE, name, price, dateAdded, dateUpdated);
 		// TODO Auto-generated constructor stub
 	}
-
-	public int getId() {
-		return id;
+	public Item(String id, String name, float price) {
+		super(id, Menu.ITEM_TYPE, name, price);
 	}
 
-//	 private static int setId() {
-//		java.util.ArrayList<Item> items = Database.getItems();
-//		return items.get(items.size()-1).getId()+1;
-//	}
-
-	public String getName() {
-		return name;
+	@Override
+	public void updateMenu() {
+		// TODO Auto-generated method stub
+		
 	}
-
-	public void setName(String name) {
-		this.name = name;
+	public String concatDets() {
+		return super.getId() + " " + super.getType() + " " + super.getName() + " " + super.getPrice() + " " + super.getDateAdded() + " " + super.getDateUpdated();
 	}
-
-	public float getPrice() {
-		return price;
-	}
-
-	public void setPrice(float price) {
-		this.price = price;
-	}
-
-	public int getCount() {
-		return count;
-	}
-
-	public void setCount(int count) {
-		this.count = count;
-	}
-
-	public LocalDateTime getDateAdded() {
-		return dateAdded;
-	}
-
-	public void setDateAdded(LocalDateTime dateAdded) {
-		this.dateAdded = dateAdded;
-	}
-
-	public LocalDateTime getDateUpdated() {
-		return dateUpdated;
-	}
-
-	public void setDateUpdated(LocalDateTime dateUpdated) {
-		this.dateUpdated = dateUpdated;
-	}
-
+	
 	
 
 }

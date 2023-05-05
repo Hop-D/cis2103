@@ -19,47 +19,47 @@ public class AdminUser {
     PreparedStatement ps;
     
     // return the latest possible unique id in users
-    public int getMax() {
-        int id = 0;
-        Statement st;
-        try {
-            st = con.createStatement();
-            ResultSet rs = st.executeQuery("SELECT MAX(userID) FROM users");
-            while(rs.next()) {
-                id = rs.getInt(1);
-            }
-            
-        } catch (SQLException ex) {
-            Logger.getLogger(AdminUser.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return id + 1;   
-    }
+//    public int getMax() {
+//        int id = 0;
+//        Statement st;
+//        try {
+//            st = con.createStatement();
+//            ResultSet rs = st.executeQuery("SELECT MAX(userID) FROM users");
+//            while(rs.next()) {
+//                id = rs.getInt(1);
+//            }
+//            
+//        } catch (SQLException ex) {
+//            Logger.getLogger(AdminUser.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        return id + 1;   
+//    }
     
     // fetch all data for initial display in Manage Users
-    public void getUsers(JTable table, String searchVal) {
-        String sql = "SELECT * FROM users WHERE CONCAT(userID, username, password, contact, usertype, userCreated, userUpdated)like ? ORDER BY userID DESC";
-        try {
-            ps = con.prepareStatement(sql);
-            ps.setString(1, "%" + searchVal + "%");
-            ResultSet rs = ps.executeQuery();
-            DefaultTableModel model = (DefaultTableModel) table.getModel();
-            Object[] row;
-            while(rs.next()) {
-                row = new Object[7];
-                row[0] = rs.getInt(1);
-                row[1] = rs.getString(2);
-                row[2] = rs.getString(3);
-                row[3] = rs.getString(4);
-                row[4] = rs.getString(5);
-                row[5] = rs.getString(6);
-                row[6] = rs.getString(7);
-                model.addRow(row);
-            }
-            
-        } catch (SQLException ex) {
-            Logger.getLogger(AdminUser.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
+//    public void getUsers(JTable table, String searchVal) {
+//        String sql = "SELECT * FROM users WHERE CONCAT(userID, username, password, contact, usertype, userCreated, userUpdated)like ? ORDER BY userID DESC";
+//        try {
+//            ps = con.prepareStatement(sql);
+//            ps.setString(1, "%" + searchVal + "%");
+//            ResultSet rs = ps.executeQuery();
+//            DefaultTableModel model = (DefaultTableModel) table.getModel();
+//            Object[] row;
+//            while(rs.next()) {
+//                row = new Object[7];
+//                row[0] = rs.getInt(1);
+//                row[1] = rs.getString(2);
+//                row[2] = rs.getString(3);
+//                row[3] = rs.getString(4);
+//                row[4] = rs.getString(5);
+//                row[5] = rs.getString(6);
+//                row[6] = rs.getString(7);
+//                model.addRow(row);
+//            }
+//            
+//        } catch (SQLException ex) {
+//            Logger.getLogger(AdminUser.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//    }
     
     // check if user already exists
     public boolean isUserExist(String username) {

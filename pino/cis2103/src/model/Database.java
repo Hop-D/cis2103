@@ -9,8 +9,7 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
-import javax.swing.JOptionPane;
-
+import exceptions.MenuNotFoundException;
 import exceptions.UserNotFoundException;
 
 public class Database {
@@ -20,8 +19,15 @@ public class Database {
 	private ResultSet rs;
 	
 	private static ArrayList<UserClass> users = new ArrayList<UserClass>();
+	private static ArrayList<Menu> menu = new ArrayList<Menu>();
 	private static ArrayList<Item> items = new ArrayList<Item>();
 	private static ArrayList<Package> pack = new ArrayList<Package>();
+	private static ArrayList<Feedbacks> feedback = new ArrayList<Feedbacks>();
+	private static ArrayList<Vouchers> vouchers = new ArrayList<Vouchers>();
+	private static ArrayList<Invoice> invoice = new ArrayList<Invoice>();
+	private static int nextItemID = 1;
+	private static int nextPackageID = 1;
+	private static int nextFeedbackID = 1;
 	
 	public Database () throws SQLException {
 		conn = null;
@@ -100,21 +106,24 @@ public class Database {
 	}
 	
 
+	/////////////////////USER////////////////////////////////
+	
+	//store USERS from database to arraylist
 	public static void loadUsersFromDatabase() throws SQLException {
 	    Database db = null;
 	    UserClass user = null;
 	    try {
 	        db = new Database();
-	        ResultSet rs = db.executeStatement("SELECT * FROM users");
+	        ResultSet rs = db.executeStatement("SELECT * FROM user");
 	        while (rs.next()) {
 	            String id = rs.getString("userID");
-	            String userName = rs.getString("userName");
+	            String userName = rs.getString("name");
 	            String password = rs.getString("password");
-	            String contact = rs.getString("contact");
-	            String role = rs.getString("usertype");
+	            String contact = rs.getString("contactNo");
+	            String role = rs.getString("role");
 	            Timestamp userCreated = rs.getTimestamp("userCreated");
 	            Timestamp userUpdated = rs.getTimestamp("userUpdated");
-	            String editedByID = rs.getString("edited_by");
+	            String editedByID = rs.getString("editorID");
 	            if(role.equals(UserClass.ADMIN_USER)) {
 				    user = new AdminClass(id, userName, password, contact, role, userCreated.toLocalDateTime(), userUpdated.toLocalDateTime(), editedByID);    
 				}
@@ -130,51 +139,191 @@ public class Database {
 	    }
 	}
 	
-	public static void loadItemFromDatabase() throws SQLException {
-	    Database db = null;
-	    Item item = null;
-	    try {
-	        db = new Database();
-	        Statement stmt = db.getConn().createStatement();
-	        ResultSet rs = stmt.executeQuery("SELECT * FROM item");
-	        while (rs.next()) {
-	            int id = rs.getInt("itemID");
-	            String name = rs.getString("itemName");
-	            float price = rs.getFloat("itemPrice");
-	            int count = rs.getInt("itemCount");
-	            Timestamp itemAdded = rs.getTimestamp("itemUpdated");
-	            Timestamp itemUpdated = rs.getTimestamp("userUpdated");
-	            item = new Item(id, name, price, count, itemAdded.toLocalDateTime(), itemUpdated.toLocalDateTime());
-	            items.add(item);
-	        }
-	    } catch (SQLException e) {
-	        throw e;
+	//add a user
+	public static void addUser(UserClass u) throws SQLException {
+		Database db = null;
+		try {
+			db = new Database();
+			db.setPst("INSERT INTO user (userID, name, password, contactNo, role, userCreated, userUpdated, editorID) \r\n"
+					+ "VALUES (?, ?, ?, ?, ?, current_timestamp(), current_timestamp(), ?)");
+			db.getPst().setString(1, u.getId());
+			db.getPst().setString(2, u.getUserName());
+			db.getPst().setString(3, u.getPassword());
+			db.getPst().setString(4, u.getContact());
+			db.getPst().setString(5, u.getRole());
+			db.getPst().setString(6, u.getEditedByID());
+			db.getPst().executeUpdate();
 	    } finally {
 	        if (db != null) {
 	            db.closeConn();
 	        }
 	    }
 	}
+	
+	//get a user from array
+	public static UserClass getUserByID(String id) throws UserNotFoundException {
+		for(UserClass user: users) {
+			if(id.equals(user.getId())) {
+				return user;
+			}
+		}
+		throw new UserNotFoundException();
+	}
+	
+	////////////////////MENU////////////////////
+	
+	public static void loadMenuFromDatabase() throws SQLException {
+	    Database db = null;
+	    try {
+	        db = new Database();
+	        ResultSet rs = db.executeStatement("SELECT\r\n"
+	        		+ "  COALESCE(package.packageID, items.itemID) AS id,\r\n"
+	        		+ "  menu.menuType AS type,\r\n"
+	        		+ "  COALESCE(package.name, items.name) AS name,\r\n"
+	        		+ "  COALESCE(package.price, items.price) AS price,\r\n"
+	        		+ "  COALESCE(package.dateAdded, items.dateAdded) AS dateAdded,\r\n"
+	        		+ "  COALESCE(package.dateUpdated, items.dateUpdated) AS dateUpdated\r\n"
+	        		+ "FROM menu\r\n"
+	        		+ "LEFT JOIN package ON menu.menuID = package.menuID\r\n"
+	        		+ "LEFT JOIN items ON menu.menuID = items.menuID");
+	        while (rs.next()) {
+	            String id = rs.getString("id");
+	            String type = rs.getString("type");
+	            String name = rs.getString("name");
+	            float price = rs.getFloat("price");
+	            Timestamp dateAdded = rs.getTimestamp("dateAdded");
+	            Timestamp dateUpdated = rs.getTimestamp("dateUpdated");
+	            if(type.equals(Menu.PACKAGE_TYPE)) {
+				    menu.add(new Package(id, name, price, dateAdded.toLocalDateTime(), dateUpdated.toLocalDateTime(), loadPackageItemFromDatabase(id)));    
+				}else if(type.equals(Menu.ITEM_TYPE)) {
+					menu.add(new Item(id, name, price, dateAdded.toLocalDateTime(), dateUpdated.toLocalDateTime()));
+				}
+	        }
+	    } finally {
+	        if (db != null) {
+	            db.closeConn();
+	        }
+	    }
+	}
+	
+	public static Menu getMenuByID(String id) throws MenuNotFoundException{
+		for(Menu m: menu) {
+			if(id.equals(m.getId())) {
+				return m;
+			}
+		}
+		throw new MenuNotFoundException();
+	}
+	
+	public static void addMenu(String type) throws SQLException {
+		Database db = new Database();
+		try {
+			db = new Database();
+			db.setPst("INSERT INTO menu(menuType) VALUE(?)");
+			db.getPst().setString(1, type);
+			db.getPst().executeUpdate();
+			
+	    } finally {
+	        if (db != null) {
+	            db.closeConn();
+	        }
+	    }
+	}
+	
+	public static int getLastMenuID() throws SQLException {
+		Database db = new Database();
+		int ret = 0;
+		try {
+			db = new Database();
+			ResultSet rs = db.executeStatement("SELECT MAX(menuID) FROM menu");
+			if(rs.next()) {
+				ret = rs.getInt("MAX(menuID)");
+			}
+	    } finally {
+	        if (db != null) {
+	            db.closeConn();
+	        }
+	    }
+		return ret;
+	}
+	
+	public static void loadItemsFromDatabase() throws SQLException {
+	    Database db = null;
+	    try {
+	        db = new Database();
+	        ResultSet rs = db.executeStatement("Select * FROM items");
+	        while (rs.next()) {
+	            String id = rs.getString("itemID");
+	            String name = rs.getString("name");
+	            float price = rs.getFloat("price");
+	            Timestamp dateAdded = rs.getTimestamp("dateAdded");
+	            Timestamp dateUpdated = rs.getTimestamp("dateUpdated");
+				items.add(new Item(id, name, price, dateAdded.toLocalDateTime(), dateUpdated.toLocalDateTime()));
+		        nextItemID = Integer.parseInt(id.substring(1));
+	        }
+	    } finally {
+	        if (db != null) {
+	            db.closeConn();
+	        }
+	    }
+	}
+	
+	public static void addItem(Item item) throws SQLException {
+		Database db = new Database();
+		try {
+			db = new Database();
+			db.setPst("INSERT INTO items (itemID, name, price,  dateAdded, dateUpdated, menuID) \r\n"
+					+ "VALUES (?, ?, ?, current_timestamp(), current_timestamp(), ?)");
+			db.getPst().setString(1, item.getId());
+			db.getPst().setString(2, item.getName());
+			db.getPst().setFloat(3, item.getPrice());
+			db.getPst().setInt(4, getLastMenuID()+1);
+			db.getPst().executeUpdate();
+			items.add(item);
+			
+			addMenu(item.getType());
+			menu.add(item);
+			
+	    } finally {
+	        if (db != null) {
+	            db.closeConn();
+	        }
+	    }
+		
+	}
+	
+	public static Item getItemByID(String id) throws MenuNotFoundException {
+		for(Item i: items) {
+			if(id.equals(i.getId())) {
+				return i;
+			}
+		}
+		throw new MenuNotFoundException();
+	}
+	
+	public static Item getItemByName(String name) throws MenuNotFoundException {
+		for(Item i: items) {
+			if(name.equals(i.getName())) {
+				return i;
+			}
+		}
+		throw new MenuNotFoundException();
+	}
+	
 	
 	public static void loadPackageFromDatabase() throws SQLException {
 	    Database db = null;
-	    Package packag = null;
-	    ArrayList<Item> packageItem;
 	    try {
 	        db = new Database();
 	        Statement stmt = db.getConn().createStatement();
-	        ResultSet rs = stmt.executeQuery("SELECT * FROM item");
+	        ResultSet rs = stmt.executeQuery("SELECT * FROM items");
 	        while (rs.next()) {
-	            int id = rs.getInt("itemID");
-	            String name = rs.getString("itemName");
-	            float price = rs.getFloat("itemPrice");
-	            int count = rs.getInt("itemCount");
-	            Timestamp itemAdded = rs.getTimestamp("itemUpdated");
-	            Timestamp itemUpdated = rs.getTimestamp("userUpdated");
-	            
-	            
-	            packag = new Package(id, name, price, count, itemAdded.toLocalDateTime(), itemUpdated.toLocalDateTime(), loadPackageItemFromDatabase(id));
-	            pack.add(packag);
+	            String id = rs.getString("itemID");
+	            String name = rs.getString("name");
+	            float price = rs.getFloat("price");
+	            Timestamp dateAdded = rs.getTimestamp("dateAdded");
+	            Timestamp dateUpdated = rs.getTimestamp("dateUpdated");
+				pack.add(new Package(id, name, price, dateAdded.toLocalDateTime(), dateUpdated.toLocalDateTime(), loadPackageItemFromDatabase(id)));
 	        }
 	    } catch (SQLException e) {
 	        throw e;
@@ -185,22 +334,54 @@ public class Database {
 	    }
 	}
 	
-	public static ArrayList<Item> loadPackageItemFromDatabase(int packID) throws SQLException {
+	public static void addPackage(Package packag) throws SQLException {
+		Database db = new Database();
+		try {
+			db = new Database();
+			db.setPst("INSERT INTO Package (itemID, name, price,  dateAdded, dateUpdated, menuID`) \r\n"
+					+ "VALUES (?, ?, ?, current_timestamp(), current_timestamp(), ?)");
+			db.getPst().setString(1, packag.getId());
+			db.getPst().setString(2, packag.getName());
+			db.getPst().setFloat(3, packag.getPrice());
+			db.getPst().setInt(5, getLastMenuID()+1);
+			db.getPst().executeUpdate();
+			pack.add(packag);
+			
+			addMenu(packag.getType());
+			menu.add(packag);
+			
+	    } finally {
+	        if (db != null) {
+	            db.closeConn();
+	        }
+	    }
+		
+	}
+	
+	public static Package getPackageByID(String id) throws MenuNotFoundException {
+		for(Package p: pack) {
+			if(id.equals(p.getId())) {
+				return p;
+			}
+		}
+		throw new MenuNotFoundException();
+	}
+	
+	public static ArrayList<Item> loadPackageItemFromDatabase(String packID) throws SQLException {
 		ArrayList<Item> packItem = new ArrayList<Item>();
 		Database db = null;
 		try {
 			db = new Database();
-			db.setPst("Select * FROM item WHERE packageID = ?");
-			db.getPst().setInt(1, packID);
+			db.setPst("Select * FROM packageitem WHERE packageID = ?");
+			db.getPst().setString(1, packID);
 		    ResultSet rs = db.getRs();
 		    while (rs.next()) {
-	            int id = rs.getInt("itemID");
+	            String id = rs.getString("itemID");
 	            String name = rs.getString("itemName");
 	            float price = rs.getFloat("itemPrice");
-	            int count = rs.getInt("itemCount");
 	            Timestamp itemAdded = rs.getTimestamp("itemUpdated");
 	            Timestamp itemUpdated = rs.getTimestamp("userUpdated");
-	            packItem.add(new Item(id, name, price, count, itemAdded.toLocalDateTime(), itemUpdated.toLocalDateTime()));
+	            packItem.add(new Item(id, name, price, itemAdded.toLocalDateTime(), itemUpdated.toLocalDateTime()));
 	        }
 		} catch (SQLException e) {
 	        throw e;
@@ -211,44 +392,40 @@ public class Database {
 	    }
 		return packItem;
 	}
-
-	public static UserClass getUser(String id) throws UserNotFoundException {
-		for(UserClass user: users) {
-			if(id.equals(user.getId())) {
-				return user;
-			}
-		}
-		throw new UserNotFoundException();
+	public static ArrayList<Feedbacks> getFeedback() {
+		return feedback;
+	}
+	public static void setFeedback(ArrayList<Feedbacks> feedback) {
+		Database.feedback = feedback;
+	}
+	public static ArrayList<Vouchers> getVouchers() {
+		return vouchers;
+	}
+	public static void setVouchers(ArrayList<Vouchers> vouchers) {
+		Database.vouchers = vouchers;
+	}
+	public static ArrayList<Invoice> getInvoice() {
+		return invoice;
+	}
+	public static void setInvoice(ArrayList<Invoice> invoice) {
+		Database.invoice = invoice;
+	}
+	public static int getNextItemID() {
+		return nextItemID;
+	}
+	public static void setNextItemID(int nextItemID) {
+		nextItemID = nextItemID;
+	}
+	public static int getNextPackageID() {
+		return nextPackageID;
+	}
+	public static void setNextPackageID(int nextPackageID) {
+		nextPackageID = nextPackageID;
 	}
 	
-	public static UserClass loadUserFromDataBase(String ID) throws UserNotFoundException {
-		UserClass user = null;
-		try {
-			Database db = new Database();
-			db.setPst("Select * FROM users WHERE userID = ?");
-			db.getPst().setString(1, ID);
-			ResultSet rs = db.getRs();
-			if(!rs.next())
-				throw new UserNotFoundException();
-			else {
-				String id = rs.getString("userID");
-	            String userName = rs.getString("userName");
-	            String password = rs.getString("password");
-	            String contact = rs.getString("contact");
-	            String role = rs.getString("usertype");
-	            Timestamp userCreated = rs.getTimestamp("userCreated");
-	            Timestamp userUpdated = rs.getTimestamp("userUpdated");
-	            String editedByID = rs.getString("edited_by");
-	            if(role == UserClass.ADMIN_USER) {
-	            	user = new AdminClass(id, userName, password, contact, role, userCreated.toLocalDateTime(), userUpdated.toLocalDateTime(), editedByID);
-	            }else {
-	            	user = new RegularClass(id, userName, password, contact, role, userCreated.toLocalDateTime(), userUpdated.toLocalDateTime(), editedByID);
-		        }
-			}
-		} catch (SQLException e) {
-			System.out.println(e.getMessage());
-		}
-		return user;
-	}
-    
+	
 }
+
+	
+	
+	

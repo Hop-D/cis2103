@@ -129,30 +129,30 @@ public class AdminSingleOp {
     }
     
     // CREATE A NEW ITEM
-    public void insertSingle(int itemID, String itemName, String itemPrice) {
-        String sql = "INSERT INTO items VALUES (?, ?, ?, ?, ?, ?, ?)";
-        
-        try {
-            ps = con.prepareStatement(sql);
-            ps.setInt(1, itemID);
-            ps.setString(2, itemName);
-            ps.setString(3, itemPrice);
-            ps.setInt(4, 0);
-            ps.setInt(5, getlistMax());
-            ps.setTimestamp(6, new java.sql.Timestamp(new java.util.Date().getTime()));
-            ps.setTimestamp(7, new java.sql.Timestamp(new java.util.Date().getTime()));
-            
-            
-            if(ps.executeUpdate() > 0) {
-                addList();
-                JOptionPane.showMessageDialog(null, "New Item Added Successfully");
-            }
-            
-        } catch (SQLException ex) {
-            Logger.getLogger(AdminSingleOp.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-    }
+//    public void insertSingle(int itemID, String itemName, String itemPrice) {
+//        String sql = "INSERT INTO items VALUES (?, ?, ?, ?, ?, ?, ?)";
+//        
+//        try {
+//            ps = con.prepareStatement(sql);
+//            ps.setInt(1, itemID);
+//            ps.setString(2, itemName);
+//            ps.setString(3, itemPrice);
+//            ps.setInt(4, 0);
+//            ps.setInt(5, getlistMax());
+//            ps.setTimestamp(6, new java.sql.Timestamp(new java.util.Date().getTime()));
+//            ps.setTimestamp(7, new java.sql.Timestamp(new java.util.Date().getTime()));
+//            
+//            
+//            if(ps.executeUpdate() > 0) {
+//                addList();
+//                JOptionPane.showMessageDialog(null, "New Item Added Successfully");
+//            }
+//            
+//        } catch (SQLException ex) {
+//            Logger.getLogger(AdminSingleOp.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        
+//    }
     
     // UPDATE ITEM
     public void updateSingle(int itemID, String itemName, String itemPrice) {

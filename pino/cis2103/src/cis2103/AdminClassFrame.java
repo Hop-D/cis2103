@@ -2,6 +2,7 @@
 package cis2103;
 
 import java.awt.print.PrinterException;
+import java.sql.SQLException;
 import java.text.MessageFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -10,7 +11,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+import exceptions.MenuNotFoundException;
 import model.AdminClass;
+import model.Database;
+import model.Item;
 import model.UserClass;
 
 /**
@@ -34,14 +38,14 @@ public class AdminClassFrame extends javax.swing.JFrame {
         initComponents();
         
         tableSingleItem.setRowHeight(40);
-        tableViewItems();
+        tableViewItems("");
         inputSingleID.setEditable(false);
         inputSingleID.setText(String.valueOf(admin.getMax()));
         
         tableUsers.setRowHeight(40);
         tableViewUsers();
         inputUserID.setEditable(false);
-        inputUserID.setText(String.valueOf(admin3.getMax()));
+   //     inputUserID.setText(String.valueOf(admin3.getMax()));
         ButtonGroup userRoles = new ButtonGroup();
         userRoles.add(radioUserAdmin);
         userRoles.add(radioUserRegular);
@@ -49,7 +53,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
         user = (AdminClass) user;
         
         tablePackages.setRowHeight(30);
-        tableViewPackages();
+//        tableViewPackages();
         tablePackageSingle.setRowHeight(30);
         tableViewPackageSingle();
         tablePackageItem.setRowHeight(30);
@@ -1104,21 +1108,37 @@ public class AdminClassFrame extends javax.swing.JFrame {
         int out = JOptionPane.showConfirmDialog(this, "Do you want to log out?", "SELECT", JOptionPane.YES_NO_OPTION);
         if(out == 0) {
             this.dispose();
+            new Login().setVisible(true);
         }
     }
     
     // initial fetch data for tables
     // for Manage Single Items
-    private void tableViewItems() {
-        admin.getSingleItems(tableSingleItem, "");
-        model = (DefaultTableModel) tableSingleItem.getModel();
+    private void tableViewItems(String searchVal) {
+    	DefaultTableModel model = (DefaultTableModel) tableSingleItem.getModel();
+    	Object[] row;
+    	for(Item i: Database.getItems()) {
+    		if(i.concatDets().contains(searchVal)) {
+                row = new Object[5];
+                row[0] = i.getId();
+                row[1] = i.getName();
+                row[2] = i.getPrice();
+                row[3] = i.getDateAdded();
+                row[4] = i.getDateUpdated();
+                model.addRow(row);
+    		}
+    	}
+    	model = (DefaultTableModel) tableSingleItem.getModel();
+//    	
+//        admin.getSingleItems(tableSingleItem, "");
+//        model = (DefaultTableModel) tableSingleItem.getModel();
     }
     
     // for Manage Package Items
-    private void tableViewPackages() {
-        admin2.getPackages(tablePackages, "");
-        model = (DefaultTableModel) tablePackages.getModel();
-    }
+//    private void tableViewPackages() {
+//        admin2.getPackages(tablePackages, "");
+//        model = (DefaultTableModel) tablePackages.getModel();
+//    }
     
     private void tableViewPackageSingle() {
         admin2.getPackageSingle(tablePackageSingle, "");
@@ -1127,14 +1147,14 @@ public class AdminClassFrame extends javax.swing.JFrame {
     
     // for Manage Users
     private void tableViewUsers() {
-        admin3.getUsers(tableUsers, "");
+      //  admin3.getUsers(tableUsers, "");
         model3 = (DefaultTableModel) tableUsers.getModel();
     }
     
     // clearing input boxes
     // for Manage Single Items
     private void clearSingle() {
-        inputSingleID.setText(String.valueOf(admin.getMax()));
+        inputSingleID.setText("" + Database.getNextItemID());
         inputSingleName.setText(null);
         inputSinglePrice.setText(null);
     }
@@ -1147,7 +1167,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
     
     // for Manage Users
     private void clearUser() {
-        inputUserID.setText(String.valueOf(admin3.getMax()));
+   //     inputUserID.setText(String.valueOf(admin3.getMax()));
         inputUserName.setText(null);
         inputUserPass.setText(null);
         inputUserContact.setText(null);
@@ -1196,24 +1216,43 @@ public class AdminClassFrame extends javax.swing.JFrame {
     private void buttonSingleAddActionPerformed(java.awt.event.ActionEvent evt) {
         
         if(isEmptySingle()) {
-            
-            if(!admin.isSingleExist(inputSingleName.getText())) {
-                            
-                int itemID = admin.getMax();
-                String itemName = inputSingleName.getText();
-                String itemPrice = inputSinglePrice.getText();
-
-                admin.insertSingle(itemID, itemName, itemPrice);
-                tableSingleItem.setModel(new DefaultTableModel(null, new Object[] {
-                    "ID", "NAME", "PRICE", "DATE ADDED", "LAST UPDATED ON"
-                }));
-                admin.getSingleItems(tableSingleItem, "");
-                
-                clearSingle();         
-            } else {
-                JOptionPane.showMessageDialog(this, "Item already exists");
-                clearSingle();
-            }
+        	try {
+				@SuppressWarnings("unused")
+				Item item = Database.getItemByName(inputSingleName.getText());
+				JOptionPane.showMessageDialog(this, "Item already exists");
+				for(Item i:Database.getItems()) {
+					System.out.println(i.concatDets());
+				}
+			} catch (MenuNotFoundException e) {
+				try {
+					System.out.println("Tried");
+					Database.addItem(new Item("I" + inputSingleID.getText(), inputSingleName.getText(), Float.parseFloat(inputSinglePrice.getText())));
+					tableViewItems("");
+				} catch (NumberFormatException | SQLException e1) {
+					JOptionPane.showMessageDialog(this, e1.getMessage());
+					System.out.println(e.getMessage() + " " + e1.getClass());
+				}
+			}finally {
+				clearSingle();
+			}
+//            
+//            if(!admin.isSingleExist(inputSingleName.getText())) {
+//                            
+//                int itemID = admin.getMax();
+//                String itemName = inputSingleName.getText();
+//                String itemPrice = inputSinglePrice.getText();
+//
+//             //   admin.insertSingle(itemID, itemName, itemPrice);
+//                tableSingleItem.setModel(new DefaultTableModel(null, new Object[] {
+//                    "ID", "NAME", "PRICE", "DATE ADDED", "LAST UPDATED ON"
+//                }));
+//                admin.getSingleItems(tableSingleItem, "");
+//                
+//                clearSingle();         
+//            } else {
+//                JOptionPane.showMessageDialog(this, "Item already exists");
+//                clearSingle();
+//            }
         }
     }
     
@@ -1355,7 +1394,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
             
             if(!admin3.isUserExist(inputUserName.getText())) {
                             
-                int userID = admin3.getMax();
+     //           int userID = admin3.getMax();
                 String userName = inputUserName.getText();
                 String userPass = inputUserPass.getText();
                 String userContact = inputUserContact.getText();
@@ -1364,12 +1403,12 @@ public class AdminClassFrame extends javax.swing.JFrame {
                     userType = "admin";
                 }
 
-                admin3.insertUser(userID, userName, userPass, userContact, userType);
+     //           admin3.insertUser(userID, userName, userPass, userContact, userType);
              
                 tableUsers.setModel(new DefaultTableModel(null, new Object[] {
                     "ID", "USERNAME", "PASSWORD", "CONTACT#", "ROLE", "CREATED ON", "UPDATED ON"
                 }));
-                admin3.getUsers(tableUsers, "");
+            //    admin3.getUsers(tableUsers, "");
                 
                 clearUser();         
             } else {
@@ -1401,7 +1440,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
                 tableUsers.setModel(new DefaultTableModel(null, new Object[] {
                     "ID", "USERNAME", "PASSWORD", "CONTACT#", "ROLE", "CREATED ON", "UPDATED ON"
                 }));
-                admin3.getUsers(tableUsers, "");
+        //        admin3.getUsers(tableUsers, "");
                 
                 clearUser(); 
             } else {
@@ -1420,14 +1459,14 @@ public class AdminClassFrame extends javax.swing.JFrame {
         tableUsers.setModel(new DefaultTableModel(null, new Object[] {
             "ID", "USERNAME", "PASSWORD", "CONTACT#", "ROLE", "CREATED ON", "UPDATED ON"
         }));
-        admin3.getUsers(tableUsers, "");
+   //     admin3.getUsers(tableUsers, "");
 
         clearUser();  
     }
     
     // Clear input components
     private void buttonUserClearActionPerformed(java.awt.event.ActionEvent evt) {
-        inputUserID.setText(String.valueOf(admin3.getMax()));
+//        inputUserID.setText(String.valueOf(admin3.getMax()));
         inputUserName.setText(null);
         inputUserPass.setText(null);
         inputUserContact.setText(null);
@@ -1453,7 +1492,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
             tableUsers.setModel(new DefaultTableModel(null, new Object[] {
                 "ID", "USERNAME", "PASSWORD", "CONTACT#", "ROLE", "CREATED ON", "UPDATED ON"
             }));
-            admin3.getUsers(tableUsers, inputUserSearch.getText());
+    //        admin3.getUsers(tableUsers, inputUserSearch.getText());
         }
     }
 
@@ -1462,7 +1501,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
         tableUsers.setModel(new DefaultTableModel(null, new Object[] {
             "ID", "USERNAME", "PASSWORD", "CONTACT#", "ROLE", "CREATED ON", "UPDATED ON"
         }));
-        admin3.getUsers(tableUsers, "");
+       // admin3.getUsers(tableUsers, "");
         inputUserSearch.setText(null);
     }
 
@@ -1497,7 +1536,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
         tablePackages.setModel(new DefaultTableModel(null, new Object[] {
             "ID", "NAME", "PRICE", "# ITEMS", "CREATED ON"
         }));
-        admin2.getPackages(tablePackages, "");
+//        admin2.getPackages(tablePackages, "");
         
         inputNewPackage.setText(String.valueOf(admin2.getMax()));
         
@@ -1512,7 +1551,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
         tablePackages.setModel(new DefaultTableModel(null, new Object[] {
             "ID", "NAME", "PRICE", "# ITEMS", "CREATED ON"
         }));
-        admin2.getPackages(tablePackages, "");
+//        admin2.getPackages(tablePackages, "");
     }
     
     // Remove a package
@@ -1525,7 +1564,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
         tablePackages.setModel(new DefaultTableModel(null, new Object[] {
             "ID", "NAME", "PRICE", "# ITEMS", "CREATED ON"
         }));
-        admin2.getPackages(tablePackages, "");
+//        admin2.getPackages(tablePackages, "");
         
         inputNewPackage.setText(String.valueOf(admin2.getMax()));
         
@@ -1561,7 +1600,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
                 tablePackages.setModel(new DefaultTableModel(null, new Object[] {
                     "ID", "NAME", "PRICE", "# ITEMS", "CREATED ON"
                 }));
-                admin2.getPackages(tablePackages, "");
+//                admin2.getPackages(tablePackages, "");
                 
             } else {
                 JOptionPane.showMessageDialog(this, "Item already exists in package");
@@ -1592,7 +1631,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
             tablePackages.setModel(new DefaultTableModel(null, new Object[] {
                 "ID", "NAME", "PRICE", "# ITEMS", "CREATED ON"
             }));
-            admin2.getPackages(tablePackages, "");
+//            admin2.getPackages(tablePackages, "");
         }
     }
 
