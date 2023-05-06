@@ -99,8 +99,9 @@ public abstract class UserClass {
 	public void setId(String id) {
 		this.id = id;
 	}
-	
-	
-	
-	
+
+	public String concatDets() {
+		return getId() + " " + getUserName() + " " + getPassword() + " " + getContact() + " " + getRole();
+	}
+
 }
