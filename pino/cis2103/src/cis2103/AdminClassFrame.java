@@ -1275,9 +1275,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
 
     // Add Package
     private void buttonPackageAddActionPerformed(java.awt.event.ActionEvent evt) {
-    	try {
-    		
-    	}
+    	
 //    	
 //    	
 //    	int packageID = admin2.getMax();
