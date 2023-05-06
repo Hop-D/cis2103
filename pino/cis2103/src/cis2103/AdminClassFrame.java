@@ -4,6 +4,8 @@ package cis2103;
 import java.awt.print.PrinterException;
 import java.sql.SQLException;
 import java.text.MessageFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ButtonGroup;
@@ -12,22 +14,20 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import exceptions.MenuNotFoundException;
+import exceptions.UserNotFoundException;
 import model.AdminClass;
+import model.RegularClass;
 import model.Database;
 import model.Item;
 import model.Package;
 import model.UserClass;
 
-/**
- *
- * @author Janica Nyle Pino
- */
 public class AdminClassFrame extends javax.swing.JFrame {
     
     private DefaultTableModel model;
     private DefaultTableModel model3;
     private int rowIndex;
-    private static AdminClass user;
+    private static AdminClass temp;
     
     
     public AdminClassFrame(UserClass user) {
@@ -43,7 +43,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
         inputNewPackage.setEditable(false);
         inputPackageSingleID.setEditable(false);
         
-        tableViewUsers();
+        tableViewUsers("");
         tableViewItems("");
         tableViewPackages();
   
@@ -57,13 +57,10 @@ public class AdminClassFrame extends javax.swing.JFrame {
         userRoles.add(radioUserAdmin);
         userRoles.add(radioUserRegular);
         radioUserRegular.setSelected(true);
-        user = (AdminClass) user;
-        
-        
-//        
+        temp = (AdminClass) user;
+       
         tableViewPackageSingle();
-        
-        
+   
     }
 
 
@@ -1419,9 +1416,23 @@ public class AdminClassFrame extends javax.swing.JFrame {
     }
     
     // for Manage Users
-    private void tableViewUsers() {
+    private void tableViewUsers(String searchVal) {
       //  admin3.getUsers(tableUsers, "");
-        model3 = (DefaultTableModel) tableUsers.getModel();
+        model = (DefaultTableModel) tableUsers.getModel();
+        model.setRowCount(0);
+        Object[] row = new Object[7];
+        for(UserClass u : Database.getUsers()) {
+        	if(u.concatDets().contains(searchVal)) {
+        		row[0] = u.getId();
+            	row[1] = u.getUserName();
+            	row[2] = u.getPassword();
+            	row[3] = u.getContact();
+            	row[4] = u.getRole();
+            	row[5] = u.getUserCreated();
+            	row[6] = u.getUserUpdated();
+            	model.addRow(row);
+        	}
+        }
     }
     
     // clearing input boxes
@@ -1434,13 +1445,13 @@ public class AdminClassFrame extends javax.swing.JFrame {
     
     // for Manage Users
     private void clearUser() {
-   //     inputUserID.setText(String.valueOf(admin3.getMax()));
+        inputUserID.setText("" + Database.getLastUserID());
         inputUserName.setText(null);
         inputUserPass.setText(null);
         inputUserContact.setText(null);
-        radioUserRegular.setSelected(true);     
+        radioUserRegular.setSelected(true); 
+        tableUsers.getSelectionModel().clearSelection();
     }
-    
     
     // for Manage Users
     public boolean isEmptyUser() {
@@ -1461,7 +1472,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
     
   
     
-    // EVENTS FOR MANAGE USERS
+    ////////////MANAGE USERS////////////////////
     
     // Only numeric inputs for contact
     private void inputUserContactKeyTyped(java.awt.event.KeyEvent evt) {
@@ -1488,92 +1499,87 @@ public class AdminClassFrame extends javax.swing.JFrame {
         }
     }
 
-    // Add User
+    //```buttons ---- ADD USER//
     private void buttonUserAddActionPerformed(java.awt.event.ActionEvent evt) {
-//        if(isEmptyUser()) {
-//            
-//            if(!admin3.isUserExist(inputUserName.getText())) {
-//                            
-//     //           int userID = admin3.getMax();
-//                String userName = inputUserName.getText();
-//                String userPass = inputUserPass.getText();
-//                String userContact = inputUserContact.getText();
-//                String userType = "regular";
-//                if(radioUserAdmin.isSelected()) {
-//                    userType = "admin";
-//                }
-//
-//     //           admin3.insertUser(userID, userName, userPass, userContact, userType);
-//             
-//                tableUsers.setModel(new DefaultTableModel(null, new Object[] {
-//                    "ID", "USERNAME", "PASSWORD", "CONTACT#", "ROLE", "CREATED ON", "UPDATED ON"
-//                }));
-//            //    admin3.getUsers(tableUsers, "");
-//                
-//                clearUser();         
-//            } else {
-//                JOptionPane.showMessageDialog(this, "User already exists");
-//                clearUser();
-//            }
-//        }
+    	
+    	if(isEmptyUser()) {
+    		try {
+    			@SuppressWarnings("unused")
+				UserClass u = Database.getUserByID(inputUserName.getText());
+				JOptionPane.showMessageDialog(this, "Username already exists");
+			} catch (UserNotFoundException e) {
+				try {
+					int choice = JOptionPane.showConfirmDialog(null, "Add User?", "Add Confirmation", JOptionPane.YES_NO_OPTION);
+					if(choice == JOptionPane.NO_OPTION) {
+						return;
+					}
+					
+					if(radioUserRegular.isSelected()) {
+						Database.addUser(new RegularClass("R" + inputUserID.getText(), inputUserName.getText(), inputUserPass.getText(), inputUserContact.getText(), RegularClass.REGULAR_USER, LocalDateTime.now(), LocalDateTime.now(), temp.getId()));
+					} else if(radioUserAdmin.isSelected()) {
+						Database.addUser(new AdminClass("A" + inputUserID.getText(), inputUserName.getText(), inputUserPass.getText(), inputUserContact.getText(), AdminClass.ADMIN_USER, LocalDateTime.now(), LocalDateTime.now(), temp.getId()));
+					}
+				} catch (NumberFormatException | SQLException ex) {
+					JOptionPane.showMessageDialog(this, ex.getMessage());
+					System.out.println(ex.getMessage() + " " + ex.getClass());
+				}
+			} finally {
+				clearUser();
+			}
+    	}
+    	tableViewUsers("");
     }
 
-    // Update User 
+    //```buttons ---- UPDATE USER//
     private void buttonUserUpdateActionPerformed(java.awt.event.ActionEvent evt) {
-//        if(isEmptyUser()) {
-//        
-//            int userID = Integer.parseInt(inputUserID.getText());
-//            String oldName = model3.getValueAt(rowIndex, 1).toString();
-//
-//            String userName = inputUserName.getText();
-//            String userPass = inputUserPass.getText();
-//            String userContact = inputUserContact.getText();
-//            String userType = "";
-//            if(radioUserAdmin.isSelected()) {
-//                userType = "admin";
-//            } else if(radioUserRegular.isSelected()) {
-//                userType = "regular";
-//            }
-//
-//            if(oldName.equals(userName) && admin3.isUserExist(inputUserName.getText()) ) {
-//                admin3.updateUser(userID, userName, userPass, userContact, userType);
-//                tableUsers.setModel(new DefaultTableModel(null, new Object[] {
-//                    "ID", "USERNAME", "PASSWORD", "CONTACT#", "ROLE", "CREATED ON", "UPDATED ON"
-//                }));
-//        //        admin3.getUsers(tableUsers, "");
-//                
-//                clearUser(); 
-//            } else {
-//                JOptionPane.showMessageDialog(this, "User already exists");
-//                clearUser();
-//            }
-//        }
+    	
+        if(isEmptyUser() && noDupe() == 0) {
+        	int choice = JOptionPane.showConfirmDialog(null, "Update User?", "Add Confirmation", JOptionPane.YES_NO_OPTION);
+    		if(choice == JOptionPane.NO_OPTION) {
+    			return;
+    		} 
+        	try {
+        		if(radioUserAdmin.isSelected()) {
+        			Database.updateUser(inputUserID.getText(), inputUserName.getText(), inputUserPass.getText(), inputUserContact.getText(), AdminClass.ADMIN_USER, temp.getId());
+        		} else {
+        			Database.updateUser(inputUserID.getText(), inputUserName.getText(), inputUserPass.getText(), inputUserContact.getText(), RegularClass.REGULAR_USER, temp.getId());
+        		}
+			} catch (SQLException e) {
+				JOptionPane.showMessageDialog(this, e.getMessage());
+			}
+        } else {
+        	JOptionPane.showMessageDialog(this, "Username exists");
+        }
+        clearUser();
+        tableViewUsers("");
     }
 
-    // Remove User
+    //```buttons ---- REMOVE USER//
     private void buttonUserRemoveActionPerformed(java.awt.event.ActionEvent evt) {
-//        int userID = Integer.parseInt(inputUserID.getText());
-//        
-//        admin3.removeUser(userID);
-//        
-//        tableUsers.setModel(new DefaultTableModel(null, new Object[] {
-//            "ID", "USERNAME", "PASSWORD", "CONTACT#", "ROLE", "CREATED ON", "UPDATED ON"
-//        }));
-//   //     admin3.getUsers(tableUsers, "");
-//
-//        clearUser();  
+    	
+    	
+    	int choice = JOptionPane.showConfirmDialog(null, "Remove User?", "Add Confirmation", JOptionPane.YES_NO_OPTION);
+		if(choice == JOptionPane.NO_OPTION) {
+			return;
+		} 
+		try {
+			UserClass u = Database.getUserByID(inputUserID.getText());
+			Database.removeUser(u);
+		} catch (UserNotFoundException | SQLException e) {
+			System.out.println(e.getMessage() + " " + e.getClass());
+		} finally {
+			clearUser();
+		}
+		
+		tableViewUsers("");
     }
     
-    // Clear input components
+    //```buttons ---- CLEAR USER//
     private void buttonUserClearActionPerformed(java.awt.event.ActionEvent evt) {
-//        inputUserID.setText(String.valueOf(admin3.getMax()));
-        inputUserName.setText(null);
-        inputUserPass.setText(null);
-        inputUserContact.setText(null);
-        radioUserRegular.setSelected(true);  
+    	clearUser();
     }
 
-    // Print User List
+    //```buttons ---- PRINT USER//
     private void buttonUserPrintActionPerformed(java.awt.event.ActionEvent evt) {
         try {
             MessageFormat header = new MessageFormat("ALL USERS");
@@ -1584,25 +1590,37 @@ public class AdminClassFrame extends javax.swing.JFrame {
         }
     }
 
-    // Search User
+    //```buttons ---- SEARCH USER//
     private void buttonUserSearchActionPerformed(java.awt.event.ActionEvent evt) {
+    	    	
         if(inputUserSearch.getText().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Input is empty");
         } else {
             tableUsers.setModel(new DefaultTableModel(null, new Object[] {
                 "ID", "USERNAME", "PASSWORD", "CONTACT#", "ROLE", "CREATED ON", "UPDATED ON"
             }));
-    //        admin3.getUsers(tableUsers, inputUserSearch.getText());
+            tableViewUsers(inputUserSearch.getText());
         }
     }
 
-    // Refresh User Table
+    //```buttons ---- REFRESH USER//
     private void buttonUserRefreshActionPerformed(java.awt.event.ActionEvent evt) {
-        tableUsers.setModel(new DefaultTableModel(null, new Object[] {
-            "ID", "USERNAME", "PASSWORD", "CONTACT#", "ROLE", "CREATED ON", "UPDATED ON"
-        }));
-       // admin3.getUsers(tableUsers, "");
+        tableViewUsers("");
         inputUserSearch.setText(null);
+    }
+    
+    // USER OTHER FUNCTIONS //
+    // check it exists
+    private int noDupe() { 	
+        String id = null;
+        
+        for (UserClass user : Database.getUsers()) {
+            if (inputUserName.getText().equals(user.getUserName())) {
+                id = user.getId();
+                break;
+            }
+        }    
+        return (id != null && !id.equals(inputUserID.getText())) ? 1 : 0;
     }
 
     
