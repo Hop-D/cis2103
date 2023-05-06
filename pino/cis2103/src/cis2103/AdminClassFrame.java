@@ -50,6 +50,12 @@ public class AdminClassFrame extends javax.swing.JFrame {
         tableViewUsers("");
         tableViewItems("");
         tableViewPackages();
+  
+//        tableItems.setRowHeight(40);
+//        tableUsers.setRowHeight(40);
+//        tablePackages.setRowHeight(30);
+//        tablePackageSingle.setRowHeight(30);
+//        tablePackageItem.setRowHeight(30);
         
         ButtonGroup userRoles = new ButtonGroup();
         userRoles.add(radioUserAdmin);
@@ -1001,7 +1007,9 @@ public class AdminClassFrame extends javax.swing.JFrame {
         int out = JOptionPane.showConfirmDialog(this, "Do you want to log out?", "SELECT", JOptionPane.YES_NO_OPTION);
         if(out == 0) {
             this.dispose();
-            new Login().setVisible(true);
+            Login log = new Login();
+        	log.setVisible(true);
+        	log.setLocationRelativeTo(null);
         }
     } 
     
