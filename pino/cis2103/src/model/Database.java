@@ -195,16 +195,15 @@ public class Database {
 	    menu.clear();
 	    try {
 	        db = new Database();
-	        ResultSet rs = db.executeStatement("SELECT\r\n"
-	        		+ "  COALESCE(package.packageID, items.itemID) AS id,\r\n"
-	        		+ "  menu.menuType AS type,\r\n"
-	        		+ "  COALESCE(package.name, items.name) AS name,\r\n"
-	        		+ "  COALESCE(package.price, items.price) AS price,\r\n"
-	        		+ "  COALESCE(package.dateAdded, items.dateAdded) AS dateAdded,\r\n"
-	        		+ "  COALESCE(package.dateUpdated, items.dateUpdated) AS dateUpdated\r\n"
+	        ResultSet rs = db.executeStatement("SELECT COALESCE(package.packageID, items.itemID) AS id, \r\n"
+	        		+ "menu.menuType AS type, \r\n"
+	        		+ "COALESCE(package.name, items.name) AS name, \r\n"
+	        		+ "COALESCE(package.price, items.price) AS price,\r\n"
+	        		+ "COALESCE(package.dateAdded, items.dateAdded) AS dateAdded,\r\n"
+	        		+ "COALESCE(package.dateUpdated, items.dateUpdated) AS dateUpdated  \r\n"
 	        		+ "FROM menu\r\n"
 	        		+ "LEFT JOIN package ON menu.menuID = package.menuID\r\n"
-	        		+ "LEFT JOIN items ON menu.menuID = items.menuID");
+	        		+ "LEFT JOIN items ON menu.menuID = items.menuID;");
 	        while (rs.next()) {
 	            String id = rs.getString("id");
 	            String type = rs.getString("type");
@@ -411,7 +410,7 @@ public class Database {
 	        Statement stmt = db.getConn().createStatement();
 	        ResultSet rs = stmt.executeQuery("SELECT * FROM package");
 	        while (rs.next()) {
-	            String id = rs.getString("itemID");
+	            String id = rs.getString("packageID");
 	            String name = rs.getString("name");
 	            float price = rs.getFloat("price");
 	            Timestamp dateAdded = rs.getTimestamp("dateAdded");
@@ -431,7 +430,7 @@ public class Database {
 		Database db = new Database();
 		try {
 			db = new Database();
-			db.setPst("INSERT INTO Package (itemID, name, price,  dateAdded, dateUpdated, menuID`) \r\n"
+			db.setPst("INSERT INTO Package (packageID, name, price,  dateAdded, dateUpdated, menuID) \r\n"
 					+ "VALUES (?, ?, ?, current_timestamp(), current_timestamp(), ?)");
 			db.getPst().setString(1, packag.getId());
 			db.getPst().setString(2, packag.getName());
@@ -468,31 +467,34 @@ public class Database {
 	}
 	public static ArrayList<Item> loadPackageItemFromDatabase(String packID) throws SQLException {
 		ArrayList<Item> packItem = new ArrayList<Item>();
-//		Database db = null;
-//		try {
-//			db = new Database();
-//			db.setPst("Select * FROM packageitem WHERE packageID = ?");
-//			db.getPst().setString(1, packID);
-//		    ResultSet rs = db.getRs();
-//		    while (rs.next()) {
-//	            String id = rs.getString("itemID");
-//	            String name = rs.getString("itemName");
-//	            float price = rs.getFloat("itemPrice");
-//	            Timestamp itemAdded = rs.getTimestamp("itemUpdated");
-//	            Timestamp itemUpdated = rs.getTimestamp("userUpdated");
-//	            packItem.add(new Item(id, name, price, itemAdded.toLocalDateTime(), itemUpdated.toLocalDateTime()));
-//	            
-//	            
-//	        }
-//		} catch (SQLException e) {
-//	        throw e;
-//	    } finally {
-//	        if (db != null) {
-//	            db.closeConn();
-//	        }
-//	    }
+		Database db = null;
+		try {
+			db = new Database();
+			db.setPst("Select * FROM packageitem WHERE packageID = ?");
+			db.getPst().setString(1, packID);
+		    ResultSet rs = db.getRs();
+		    while (rs.next()) {
+	            String id = rs.getString("itemID");
+	            String name = rs.getString("itemName");
+	            float price = rs.getFloat("itemPrice");
+	            Timestamp itemAdded = rs.getTimestamp("itemUpdated");
+	            Timestamp itemUpdated = rs.getTimestamp("userUpdated");
+	            packItem.add(new Item(id, name, price, itemAdded.toLocalDateTime(), itemUpdated.toLocalDateTime()));
+	        }
+		} catch (SQLException e) {
+	        throw e;
+	    } catch(NullPointerException e1){
+	    	return packItem;
+	    }finally {
+	    
+	        if (db != null) {
+	            db.closeConn();
+	        }
+	    }
 		return packItem;
 	}
+	
+	
 	public static ArrayList<Feedbacks> getFeedback() {
 		return feedback;
 	}
