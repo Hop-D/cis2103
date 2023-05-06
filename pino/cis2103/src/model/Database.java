@@ -162,8 +162,12 @@ public class Database {
 			db.getPst().setString(4, u.getContact());
 			db.getPst().setString(5, u.getRole());
 			db.getPst().setTimestamp(6, Timestamp.valueOf(u.getUserCreated()));
-			db.getPst().setTimestamp(8, Timestamp.valueOf(u.getUserUpdated()));
+			db.getPst().setTimestamp(7, Timestamp.valueOf(u.getUserUpdated()));
+			db.getPst().setString(8, u.getEditedByID());
 			db.getPst().executeUpdate();
+			
+			users.add(u);
+			
 	    } finally {
 	        if (db != null) {
 	            db.closeConn();
@@ -187,6 +191,57 @@ public class Database {
 		}
 		return Integer.parseInt(users.get(users.size()-1).getId().substring(1))+1;
 	}
+	
+	// update a user
+	public static void updateUser(String id, String username, String password, String contact, String role, String editedByID) throws SQLException {
+		Database db = new Database();
+		try {
+			db = new Database();
+			db.setPst("UPDATE user SET name = ?, password = ?, contactNo = ?, role = ?, userUpdated = current_timestamp(), editorID = ? WHERE userID = ?");
+			db.getPst().setString(1, username);
+			db.getPst().setString(2, password);
+			db.getPst().setString(3, contact);
+			db.getPst().setString(4, role);
+			db.getPst().setString(5, editedByID);
+			db.getPst().setString(6, id);
+			db.getPst().executeUpdate();
+			
+			for(UserClass user : users) {
+				if(id.equals(user.getId())) {
+					user.setUserName(username);
+					user.setPassword(password);
+					user.setContact(contact);
+					user.setRole(role);
+					user.setUserUpdated(LocalDateTime.now());
+					user.setEditedBy(editedByID);
+					return;
+				}
+			}
+	    }finally {
+	        if (db != null) {
+	            db.closeConn();
+	        }
+	    }
+	}
+	
+	// remove a user
+	public static void removeUser(UserClass user) throws SQLException {
+		Database db = new Database();
+		try {
+			db.setPst("DELETE FROM user WHERE userID = ?");
+			db.getPst().setString(1, user.getId());
+			db.getPst().executeUpdate();
+			
+			users.remove(user);
+			
+		} finally {
+			if(db != null) {
+				db.closeConn();
+			}
+		}
+	}
+	
+	
 	
 	////////////////////MENU////////////////////
 	
@@ -525,10 +580,5 @@ public class Database {
 	public static void setNextPackageID(int nextPackageID) {
 		nextPackageID = nextPackageID;
 	}
-	
-	
-}
 
-	
-	
-	
+}
