@@ -1341,28 +1341,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
 
     // Add Item to Package
     private void buttonPackageItemAddActionPerformed(java.awt.event.ActionEvent evt) {
-//        if(inputPackageID.getText().equals("0")) {
-//            JOptionPane.showMessageDialog(null, "Choose A Package");
-//        } else {
-//            
-//            if(!admin2.isPackageItemExist(Integer.parseInt(inputPackageID.getText()), Integer.parseInt(inputPackageSingleID.getText()))) {
-//            
-//                admin2.addItemPackage(Integer.parseInt(inputPackageID.getText()), Integer.parseInt(inputPackageSingleID.getText()));
-//
-//                tablePackageItem.setModel(new DefaultTableModel(null, new Object[] {
-//                    "ITEM ID", "NAME", "PRICE"
-//                }));
-//                admin2.getPackageItem(tablePackageItem, inputPackageID.getText());
-//                
-//                tablePackages.setModel(new DefaultTableModel(null, new Object[] {
-//                    "ID", "NAME", "PRICE", "# ITEMS", "CREATED ON"
-//                }));
-////                admin2.getPackages(tablePackages, "");
-//                
-//            } else {
-//                JOptionPane.showMessageDialog(this, "Item already exists in package");
-//            }   
-//        }
+    	
     }
     
     // Fetch data of item inside package
