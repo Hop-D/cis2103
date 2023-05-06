@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 06, 2023 at 05:07 AM
+-- Generation Time: May 06, 2023 at 04:07 PM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -85,7 +85,7 @@ CREATE TABLE `items` (
 --
 
 INSERT INTO `items` (`itemID`, `name`, `price`, `count`, `dateAdded`, `dateUpdated`, `menuID`) VALUES
-('I1', 'Juice', '10.00', -1, '2023-05-05 16:11:11', '2023-05-05 19:17:00', 1);
+('I1', 'Juice', '34.00', -1, '2023-05-06 13:30:25', '2023-05-06 13:30:25', 3);
 
 --
 -- Triggers `items`
@@ -113,7 +113,8 @@ CREATE TABLE `menu` (
 --
 
 INSERT INTO `menu` (`menuID`, `menuType`) VALUES
-(1, 'Item');
+(3, 'Item'),
+(4, 'Package');
 
 -- --------------------------------------------------------
 
@@ -123,6 +124,7 @@ INSERT INTO `menu` (`menuID`, `menuType`) VALUES
 
 CREATE TABLE `orderitems` (
   `orderItemsID` int(11) NOT NULL,
+  `orderID` int(11) NOT NULL,
   `quantity` int(11) NOT NULL,
   `notes` varchar(255) NOT NULL,
   `menuID` int(11) NOT NULL
@@ -148,6 +150,7 @@ DELIMITER ;
 
 CREATE TABLE `orders` (
   `orderID` int(11) NOT NULL,
+  `menuID` int(10) NOT NULL,
   `orderMethod` varchar(10) NOT NULL,
   `deliveryMethod` varchar(10) NOT NULL,
   `status` varchar(10) NOT NULL,
@@ -164,11 +167,18 @@ CREATE TABLE `package` (
   `packageID` varchar(10) NOT NULL,
   `name` varchar(50) NOT NULL,
   `price` decimal(10,2) NOT NULL,
-  `count` int(11) NOT NULL,
+  `count` int(11) NOT NULL DEFAULT -1,
   `dateAdded` date NOT NULL DEFAULT current_timestamp(),
   `dateUpdated` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `menuID` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `package`
+--
+
+INSERT INTO `package` (`packageID`, `name`, `price`, `count`, `dateAdded`, `dateUpdated`, `menuID`) VALUES
+('P1', 'Package P1', '0.00', -1, '2023-05-06', '2023-05-06 13:58:22', 4);
 
 --
 -- Triggers `package`
@@ -187,10 +197,10 @@ DELIMITER ;
 --
 
 CREATE TABLE `packageitem` (
-  `packageItemID` int(11) NOT NULL,
+  `packageItemID` int(10) NOT NULL,
   `quantity` int(11) NOT NULL,
-  `itemID` int(11) NOT NULL,
-  `packageID` int(11) NOT NULL
+  `itemID` varchar(10) NOT NULL,
+  `packageID` varchar(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -266,7 +276,7 @@ ALTER TABLE `invoice`
 --
 ALTER TABLE `items`
   ADD PRIMARY KEY (`itemID`),
-  ADD KEY `fk_items_menuID` (`menuID`);
+  ADD KEY `menuID` (`menuID`);
 
 --
 -- Indexes for table `menu`
@@ -280,20 +290,22 @@ ALTER TABLE `menu`
 --
 ALTER TABLE `orderitems`
   ADD PRIMARY KEY (`orderItemsID`),
-  ADD KEY `fk_menuID` (`menuID`);
+  ADD KEY `idx_order_id` (`orderID`),
+  ADD KEY `menuID` (`menuID`);
 
 --
 -- Indexes for table `orders`
 --
 ALTER TABLE `orders`
-  ADD PRIMARY KEY (`orderID`);
+  ADD PRIMARY KEY (`orderID`),
+  ADD KEY `idx_menuID` (`menuID`);
 
 --
 -- Indexes for table `package`
 --
 ALTER TABLE `package`
   ADD PRIMARY KEY (`packageID`),
-  ADD KEY `fk_package_menuID` (`menuID`);
+  ADD KEY `menuID` (`menuID`);
 
 --
 -- Indexes for table `packageitem`
@@ -360,13 +372,70 @@ ALTER TABLE `orders`
 -- AUTO_INCREMENT for table `packageitem`
 --
 ALTER TABLE `packageitem`
-  MODIFY `packageItemID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `packageItemID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `vouchers`
 --
 ALTER TABLE `vouchers`
   MODIFY `voucherID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `employee feedback`
+--
+ALTER TABLE `employee feedback`
+  ADD CONSTRAINT `employee feedback_ibfk_1` FOREIGN KEY (`userID`) REFERENCES `user` (`userID`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `invoice`
+--
+ALTER TABLE `invoice`
+  ADD CONSTRAINT `invoice_ibfk_1` FOREIGN KEY (`orderID`) REFERENCES `orders` (`orderID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `invoice_ibfk_2` FOREIGN KEY (`voucherID`) REFERENCES `vouchers` (`voucherID`) ON DELETE NO ACTION ON UPDATE CASCADE,
+  ADD CONSTRAINT `invoice_ibfk_3` FOREIGN KEY (`billingID`) REFERENCES `billingaddress` (`billingID`) ON DELETE NO ACTION ON UPDATE CASCADE,
+  ADD CONSTRAINT `invoice_ibfk_4` FOREIGN KEY (`userID`) REFERENCES `user` (`userID`) ON DELETE NO ACTION ON UPDATE CASCADE;
+
+--
+-- Constraints for table `items`
+--
+ALTER TABLE `items`
+  ADD CONSTRAINT `items_ibfk_1` FOREIGN KEY (`menuID`) REFERENCES `menu` (`menuID`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `orderitems`
+--
+ALTER TABLE `orderitems`
+  ADD CONSTRAINT `orderitems_ibfk_1` FOREIGN KEY (`orderID`) REFERENCES `orders` (`orderID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `orderitems_ibfk_2` FOREIGN KEY (`menuID`) REFERENCES `menu` (`menuID`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `orders`
+--
+ALTER TABLE `orders`
+  ADD CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`menuID`) REFERENCES `menu` (`menuID`) ON DELETE NO ACTION ON UPDATE CASCADE;
+
+--
+-- Constraints for table `package`
+--
+ALTER TABLE `package`
+  ADD CONSTRAINT `package_ibfk_1` FOREIGN KEY (`menuID`) REFERENCES `menu` (`menuID`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `packageitem`
+--
+ALTER TABLE `packageitem`
+  ADD CONSTRAINT `packageitem_ibfk_1` FOREIGN KEY (`itemID`) REFERENCES `items` (`itemID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `packageitem_ibfk_2` FOREIGN KEY (`packageID`) REFERENCES `package` (`packageID`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `user`
+--
+ALTER TABLE `user`
+  ADD CONSTRAINT `user_ibfk_1` FOREIGN KEY (`editorID`) REFERENCES `user` (`userID`) ON DELETE NO ACTION ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
