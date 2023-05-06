@@ -11,7 +11,7 @@ public class Package extends Menu{
 		this.packageitems = packageitems;
 	}
 	
-	public Package(String id, String type, String name, float price) {
+	public Package(String id, String name, float price) {
 		super(id, Menu.PACKAGE_TYPE, name, price);
 	}
 
@@ -36,6 +36,9 @@ public class Package extends Menu{
 	}
 
 	public int getNumberOfItems() {
+		if(packageitems == null) {
+			return 0;
+		}
 		return this.packageitems.size();
 	}
 	
