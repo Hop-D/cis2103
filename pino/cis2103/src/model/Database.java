@@ -518,49 +518,7 @@ public class Database {
 	    }
 	}
 	
-	public static void updatePackage(String id, String name, float price, ArrayList<Item> packageItems) throws SQLException {
-		Database db = new Database();
-		try {
-			db = new Database();
-			db.setPst("UPDATE package SET name = ?, price = ?, dateUpdated = current_timestamp() WHERE packageID = ?");
-			db.getPst().setString(1, name);
-			db.getPst().setFloat(2, price);
-			db.getPst().executeUpdate();
-			
-			for(Item item: items) {
-				if(id.equals(item.getId())) {
-					item.setName(name);
-					item.setPrice(price);
-					db.getPst().setString(3, id);
-					item.setDateUpdated(LocalDateTime.now());
-					return;
-				}
-			}
-	    }finally {
-	        if (db != null) {
-	            db.closeConn();
-	        }
-	    }
-	}
 	
-	public static void  removeMenu(Package packag) throws SQLException {
-		Database db = new Database();
-		try {
-			db = new Database();
-			db.setPst("DELETE FROM menu WHERE menuID = (SELECT menuID FROM package WHERE packageID = ?)");
-			db.getPst().setString(1, packag.getId());
-			db.getPst().executeUpdate();
-			pack.remove(packag);
-			menu.remove(packag);
-			
-	    } finally {
-	        if (db != null) {
-	            db.closeConn();
-	        }
-	    }
-		
-		
-	}
 	
 	public static void updatePackage(String id, String name, float price, ArrayList<Item> packageItems) throws SQLException {
 		Database db = new Database();
