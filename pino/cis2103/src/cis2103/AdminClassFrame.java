@@ -1388,7 +1388,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
         inputUserName.setText(model.getValueAt(rowIndex, 1).toString());
         inputUserPass.setText(model.getValueAt(rowIndex, 2).toString());
         inputUserContact.setText(model.getValueAt(rowIndex, 3).toString());
-        if(model.getValueAt(rowIndex, 4).toString().equals("admin")) {
+        if(model.getValueAt(rowIndex, 4).toString().equals("ADMIN")) {
             radioUserAdmin.setSelected(true);
             radioUserRegular.setSelected(false);
         } else {
