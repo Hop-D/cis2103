@@ -26,10 +26,7 @@ public class Database {
 	private static ArrayList<Feedbacks> feedback = new ArrayList<Feedbacks>();
 	private static ArrayList<Vouchers> vouchers = new ArrayList<Vouchers>();
 	private static ArrayList<Invoice> invoice = new ArrayList<Invoice>();
-	private static int nextItemID = 1;
-	private static int nextPackageID = 1;
-	private static int nextFeedbackID = 1;
-	
+
 	public Database () throws SQLException {
 		conn = null;
         try {
@@ -258,7 +255,7 @@ public class Database {
 	        		+ "COALESCE(package.dateUpdated, items.dateUpdated) AS dateUpdated  \r\n"
 	        		+ "FROM menu\r\n"
 	        		+ "LEFT JOIN package ON menu.menuID = package.menuID\r\n"
-	        		+ "LEFT JOIN items ON menu.menuID = items.menuID;");
+	        		+ "LEFT JOIN items ON menu.menuID = items.menuID");
 	        while (rs.next()) {
 	            String id = rs.getString("id");
 	            String type = rs.getString("type");
@@ -304,27 +301,27 @@ public class Database {
 	        }
 	    }
 	}
-	public static void removeMenu(String id, String type) throws SQLException {	
-		Database db = new Database();
-		try {
-			if(type.equals(Menu.ITEM_TYPE)) {
-				db = new Database();
-				db.setPst("DELETE FROM menu WHERE menuID = (SELECT menuID FROM items WHERE itemID = ?)");
-				db.getPst().setString(1, id);
-				db.getPst().executeUpdate();
-			}else {
-				db = new Database();
-				db.setPst("DELETE FROM menu WHERE menuID = (SELECT menuID FROM package WHERE packageID = ?)");
-				db.getPst().setString(1, id);
-				db.getPst().executeUpdate();
-			}
-	    } finally {
-	        if (db != null) {
-	            db.closeConn();
-	        }
-	    }
-	}
-	
+//	public static void removeMenu(String id, String type) throws SQLException {	
+//		Database db = new Database();
+//		try {
+//			if(type.equals(Menu.ITEM_TYPE)) {
+//				db = new Database();
+//				db.setPst("DELETE FROM menu WHERE menuID = (SELECT menuID FROM items WHERE itemID = ?)");
+//				db.getPst().setString(1, id);
+//				db.getPst().executeUpdate();
+//			}else {
+//				db = new Database();
+//				db.setPst("DELETE FROM menu WHERE menuID = (SELECT menuID FROM package WHERE packageID = ?)");
+//				db.getPst().setString(1, id);
+//				db.getPst().executeUpdate();
+//			}
+//	    } finally {
+//	        if (db != null) {
+//	            db.closeConn();
+//	        }
+//	    }
+//	}
+//	
 	public static int getLastMenuID() throws SQLException {
 		Database db = new Database();
 		int ret = 1;
@@ -374,17 +371,17 @@ public class Database {
 	public static void addItem(Item item) throws SQLException {
 		Database db = new Database();
 		try {
+			addMenu(item.getType());
 			db = new Database();
 			db.setPst("INSERT INTO items (itemID, name, price,  dateAdded, dateUpdated, menuID) \r\n"
 					+ "VALUES (?, ?, ?, current_timestamp(), current_timestamp(), ?)");
 			db.getPst().setString(1, item.getId());
 			db.getPst().setString(2, item.getName());
 			db.getPst().setFloat(3, item.getPrice());
-			db.getPst().setInt(4, getLastMenuID()+1);
+			db.getPst().setInt(4, getLastMenuID());
 			db.getPst().executeUpdate();
 			
 			items.add(item);
-			addMenu(item.getType());
 			menu.add(item);
 			
 	    } finally {
@@ -395,16 +392,15 @@ public class Database {
 		
 	}
 	
-	public static void removeItem(Item item) throws SQLException {
+	public static void removeMenu(Item item) throws SQLException {
 		Database db = new Database();
 		try {
 			db = new Database();
-			db.setPst("DELETE FROM items WHERE items.itemID = ?");
+			db.setPst("DELETE FROM items WHERE itemID = ?");
 			db.getPst().setString(1, item.getId());
 			db.getPst().executeUpdate();
 			
 			items.remove(item);
-			removeMenu(item.getId(), item.getType());
 			menu.remove(item);
 			
 	    } finally {
@@ -419,9 +415,10 @@ public class Database {
 		Database db = new Database();
 		try {
 			db = new Database();
-			db.setPst("UPDATE items SET name = ?, price = ?, dateUpdated = current_timestamp()");
+			db.setPst("UPDATE items SET name = ?, price = ?, dateUpdated = current_timestamp() WHERE itemID = ?");
 			db.getPst().setString(1, name);
 			db.getPst().setFloat(2, price);
+			db.getPst().setString(3, id);
 			db.getPst().executeUpdate();
 			
 			for(Item item: items) {
@@ -461,6 +458,7 @@ public class Database {
 	public static void loadPackageFromDatabase() throws SQLException {
 	    Database db = null;
 	    try {
+	    	pack.clear();
 	        db = new Database();
 	        Statement stmt = db.getConn().createStatement();
 	        ResultSet rs = stmt.executeQuery("SELECT * FROM package");
@@ -484,17 +482,16 @@ public class Database {
 	public static void addPackage(Package packag) throws SQLException {
 		Database db = new Database();
 		try {
+			addMenu(packag.getType());
 			db = new Database();
 			db.setPst("INSERT INTO Package (packageID, name, price,  dateAdded, dateUpdated, menuID) \r\n"
 					+ "VALUES (?, ?, ?, current_timestamp(), current_timestamp(), ?)");
 			db.getPst().setString(1, packag.getId());
 			db.getPst().setString(2, packag.getName());
 			db.getPst().setFloat(3, packag.getPrice());
-			db.getPst().setInt(4, getLastMenuID()+1);
+			db.getPst().setInt(4, getLastMenuID());
 			db.getPst().executeUpdate();
 			pack.add(packag);
-			
-			addMenu(packag.getType());
 			menu.add(packag);
 			
 	    } finally {
@@ -503,6 +500,50 @@ public class Database {
 	        }
 	    }
 		
+	}
+	
+	public static void  removeMenu(Package packag) throws SQLException {
+		Database db = new Database();
+		try {
+			db = new Database();
+			db.setPst("DELETE FROM menu WHERE menuID = (SELECT menuID FROM package WHERE packageID = ?)");
+			db.getPst().setString(1, packag.getId());
+			db.getPst().executeUpdate();
+			pack.remove(packag);
+			menu.remove(packag);
+			
+	    } finally {
+	        if (db != null) {
+	            db.closeConn();
+	        }
+	    }
+		
+		
+	}
+	
+	public static void updatePackage(String id, String name, float price, ArrayList<Item> packageItems) throws SQLException {
+		Database db = new Database();
+		try {
+			db = new Database();
+			db.setPst("UPDATE package SET name = ?, price = ?, dateUpdated = current_timestamp() WHERE packageID = ?");
+			db.getPst().setString(1, name);
+			db.getPst().setFloat(2, price);
+			db.getPst().executeUpdate();
+			
+			for(Item item: items) {
+				if(id.equals(item.getId())) {
+					item.setName(name);
+					item.setPrice(price);
+					db.getPst().setString(3, id);
+					item.setDateUpdated(LocalDateTime.now());
+					return;
+				}
+			}
+	    }finally {
+	        if (db != null) {
+	            db.closeConn();
+	        }
+	    }
 	}
 	
 	public static Package getPackageByID(String id) throws MenuNotFoundException {
@@ -568,17 +609,4 @@ public class Database {
 	public static void setInvoice(ArrayList<Invoice> invoice) {
 		Database.invoice = invoice;
 	}
-	public static int getNextItemID() {
-		return nextItemID;
-	}
-	public static void setNextItemID(int nextItemID) {
-		nextItemID = nextItemID;
-	}
-	public static int getNextPackageID() {
-		return nextPackageID;
-	}
-	public static void setNextPackageID(int nextPackageID) {
-		nextPackageID = nextPackageID;
-	}
-
 }

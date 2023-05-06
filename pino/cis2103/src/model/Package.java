@@ -36,6 +36,9 @@ public class Package extends Menu{
 	}
 
 	public int getNumberOfItems() {
+		if(packageitems == null) {
+			return 0;
+		}
 		return this.packageitems.size();
 	}
 	

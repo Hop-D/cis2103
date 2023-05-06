@@ -5,7 +5,6 @@ import java.awt.print.PrinterException;
 import java.sql.SQLException;
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ButtonGroup;
@@ -152,6 +151,9 @@ public class AdminClassFrame extends javax.swing.JFrame {
         radioUserAdmin = new javax.swing.JRadioButton();
         radioUserRegular = new javax.swing.JRadioButton();
 
+        radioUserAdmin.setOpaque(false);
+        radioUserRegular.setOpaque(false);
+        
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
 
@@ -163,7 +165,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
                 buttonLogOutActionPerformed(evt);
             }
         });
-
+        
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -1159,7 +1161,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
     private void buttonItemRemoveActionPerformed(java.awt.event.ActionEvent evt) {
         try {
         	Item item = Database.getItemByID(inputItemID.getText());
-			Database.removeItem(item);
+			Database.removeMenu(item);
 			tableViewItems("");
 		} catch (SQLException | MenuNotFoundException e) {
 			JOptionPane.showMessageDialog(this, e.getMessage());
@@ -1290,30 +1292,18 @@ public class AdminClassFrame extends javax.swing.JFrame {
 	        try {
 				Database.addPackage(new Package(id, "Package " + id, Float.parseFloat("0")));
 				inputNewPackage.setText("" + Database.getLastPackageID());
+				tableViewPackages();
+				inputNewPackage.setText(""+Database.getLastPackageID());;
 	        } catch (NumberFormatException | SQLException e1) {
 				JOptionPane.showMessageDialog(this, e1.getMessage());
 			}
     	}
-//    	
-//    	
-//    	int packageID = admin2.getMax();
-//        String packageName = "Package " + packageID;
-//        String packagePrice = "0";
-//        int packageCount = 0;
-//        
-//        admin2.insertPackage(packageID, packageName, packagePrice, packageCount);
-//
-//        tablePackages.setModel(new DefaultTableModel(null, new Object[] {
-//            "ID", "NAME", "PRICE", "# ITEMS", "CREATED ON"
-//        }));
-////        admin2.getPackages(tablePackages, "");
-//        
-//        inputNewPackage.setText(String.valueOf(admin2.getMax()));
         
     }
 
     // Update a package
     private void buttonPackageUpdateActionPerformed(java.awt.event.ActionEvent evt) {
+    	
 //        int packageID = Integer.parseInt(inputPackageID.getText());
 //        String packagePrice = inputPackagePrice.getText();
 //        
@@ -1326,22 +1316,19 @@ public class AdminClassFrame extends javax.swing.JFrame {
     
     // Remove a package
     private void buttonPackageRemoveActionPerformed(java.awt.event.ActionEvent evt) {
-//        int packageID = Integer.parseInt(inputPackageID.getText());
-//        
-//        admin2.removeAllItems(packageID);
-//        admin2.removePackage(packageID);
-//        
-//        tablePackages.setModel(new DefaultTableModel(null, new Object[] {
-//            "ID", "NAME", "PRICE", "# ITEMS", "CREATED ON"
-//        }));
-////        admin2.getPackages(tablePackages, "");
-//        
-//        inputNewPackage.setText(String.valueOf(admin2.getMax()));
-//        
-//        tablePackageItem.setModel(new DefaultTableModel(null, new Object[] {
-//            "ITEM ID", "NAME", "PRICE"
-//        }));
-//        admin2.getPackageItem(tablePackageItem, inputPackageID.getText());
+    	try {
+        	Package pack = Database.getPackageByID(inputPackageID.getText());
+			Database.removeMenu(pack);
+			tableViewPackages();
+			inputNewPackage.setText(""+Database.getLastPackageID());
+		} catch (SQLException | MenuNotFoundException e) {
+			JOptionPane.showMessageDialog(this, e.getMessage());
+		}finally {
+			clearSingle();
+		}
+    	
+    
+    
     }
     
     // Fetch data of selected item
