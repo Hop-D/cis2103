@@ -5,8 +5,8 @@ import java.time.LocalDateTime;
 public class Item extends Menu{
 
 	
-	public Item(String id, String name, float price,  LocalDateTime dateAdded, LocalDateTime dateUpdated) {
-		super(id, Menu.ITEM_TYPE, name, price, dateAdded, dateUpdated);
+	public Item(String id, String name, float price,  LocalDateTime dateAdded, LocalDateTime dateUpdated, int menuID) {
+		super(id, Menu.ITEM_TYPE, name, price, dateAdded, dateUpdated, menuID);
 		// TODO Auto-generated constructor stub
 	}
 	public Item(String id, String name, float price) {

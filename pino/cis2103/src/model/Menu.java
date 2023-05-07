@@ -9,17 +9,19 @@ public abstract class Menu {
 	private float price;
 	private LocalDateTime dateAdded;
 	private LocalDateTime dateUpdated;
+	private int menuID;
 	
 	public static final String PACKAGE_TYPE = "Package";
 	public static final String ITEM_TYPE = "Item";
 
-	public Menu(String id, String type, String name, float price, LocalDateTime dateAdded, LocalDateTime dateUpdated) {
+	public Menu(String id, String type, String name, float price, LocalDateTime dateAdded, LocalDateTime dateUpdated, int menuID) {
 		this.id = id;
 		this.type = type;
 		this.name = name;
 		this.price = price;
 		this.dateAdded = dateAdded;
 		this.dateUpdated = dateUpdated;
+		this.menuID = menuID;
 	}
 	
 	public Menu(String id, String type, String name, float price) {
@@ -29,6 +31,14 @@ public abstract class Menu {
 		this.price = price;
 		this.dateAdded = LocalDateTime.now();
 		this.dateUpdated = LocalDateTime.now();
+	}
+
+	public int getMenuID() {
+		return menuID;
+	}
+
+	public void setMenuID(int menuID) {
+		this.menuID = menuID;
 	}
 
 	public String getId() {

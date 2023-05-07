@@ -23,6 +23,7 @@ public class Database {
 	private static ArrayList<Menu> menu = new ArrayList<Menu>();
 	private static ArrayList<Item> items = new ArrayList<Item>();
 	private static ArrayList<Package> pack = new ArrayList<Package>();
+	private static ArrayList<Order> orders = new ArrayList<Order>();
 	private static ArrayList<Feedbacks> feedback = new ArrayList<Feedbacks>();
 	private static ArrayList<Vouchers> vouchers = new ArrayList<Vouchers>();
 	private static ArrayList<Invoice> invoice = new ArrayList<Invoice>();
@@ -253,6 +254,7 @@ public class Database {
 	        		+ "COALESCE(package.price, items.price) AS price,\r\n"
 	        		+ "COALESCE(package.dateAdded, items.dateAdded) AS dateAdded,\r\n"
 	        		+ "COALESCE(package.dateUpdated, items.dateUpdated) AS dateUpdated  \r\n"
+	        		+ "menu.menuID  \r\n"
 	        		+ "FROM menu\r\n"
 	        		+ "LEFT JOIN package ON menu.menuID = package.menuID\r\n"
 	        		+ "LEFT JOIN items ON menu.menuID = items.menuID");
@@ -263,10 +265,11 @@ public class Database {
 	            float price = rs.getFloat("price");
 	            Timestamp dateAdded = rs.getTimestamp("dateAdded");
 	            Timestamp dateUpdated = rs.getTimestamp("dateUpdated");
+	            int menuID = rs.getInt("menuID");
 	            if(type.equals(Menu.PACKAGE_TYPE)) {
-				    menu.add(new Package(id, name, price, dateAdded.toLocalDateTime(), dateUpdated.toLocalDateTime(), loadPackageItemFromDatabase(id)));    
+				    menu.add(new Package(id, name, price, dateAdded.toLocalDateTime(), dateUpdated.toLocalDateTime(), loadPackageItemFromDatabase(id), menuID));    
 				}else if(type.equals(Menu.ITEM_TYPE)) {
-					menu.add(new Item(id, name, price, dateAdded.toLocalDateTime(), dateUpdated.toLocalDateTime()));
+					menu.add(new Item(id, name, price, dateAdded.toLocalDateTime(), dateUpdated.toLocalDateTime(), menuID));
 				}
 	        }
 	    } finally {
@@ -359,7 +362,8 @@ public class Database {
 	            float price = rs.getFloat("price");
 	            Timestamp dateAdded = rs.getTimestamp("dateAdded");
 	            Timestamp dateUpdated = rs.getTimestamp("dateUpdated");
-				items.add(new Item(id, name, price, dateAdded.toLocalDateTime(), dateUpdated.toLocalDateTime()));
+	            int menuID = rs.getInt("menuID");
+				items.add(new Item(id, name, price, dateAdded.toLocalDateTime(), dateUpdated.toLocalDateTime(), menuID));
 	        }
 	    } finally {
 	        if (db != null) {
@@ -468,7 +472,8 @@ public class Database {
 	            float price = rs.getFloat("price");
 	            Timestamp dateAdded = rs.getTimestamp("dateAdded");
 	            Timestamp dateUpdated = rs.getTimestamp("dateUpdated");
-				pack.add(new Package(id, name, price, dateAdded.toLocalDateTime(), dateUpdated.toLocalDateTime(), loadPackageItemFromDatabase(id)));
+	            int menuID = rs.getInt("menuID");
+				pack.add(new Package(id, name, price, dateAdded.toLocalDateTime(), dateUpdated.toLocalDateTime(), loadPackageItemFromDatabase(id), menuID));
 	        }
 	    } catch (SQLException e) {
 	        throw e;
@@ -575,7 +580,8 @@ public class Database {
 	            float price = rs.getFloat("itemPrice");
 	            Timestamp itemAdded = rs.getTimestamp("itemUpdated");
 	            Timestamp itemUpdated = rs.getTimestamp("userUpdated");
-	            packItem.add(new Item(id, name, price, itemAdded.toLocalDateTime(), itemUpdated.toLocalDateTime()));
+	            int menuID = rs.getInt("menuID");
+	            packItem.add(new Item(id, name, price, itemAdded.toLocalDateTime(), itemUpdated.toLocalDateTime(), menuID));
 	        }
 		} catch (SQLException e) {
 	        throw e;
@@ -589,6 +595,115 @@ public class Database {
 	    }
 		return packItem;
 	}
+	
+	public static void loadOrdersFromDatabase() throws SQLException{
+		 Database db = null;
+		 try {
+		   	orders.clear();
+		   	db = new Database();
+		   	Statement stmt = db.getConn().createStatement();
+		   	ResultSet rs = stmt.executeQuery("SELECT * FROM orders");
+		    while (rs.next()) {
+		    	int id = rs.getInt("orderID");
+		        int menuID = rs.getInt("menuID");
+		        String orderMethod = rs.getString("orderMethod");
+		        String deliveryMethod = rs.getString("deliveryMethod");
+		        float total = rs.getFloat("total");
+		        orders.add(new Order(id, orderMethod, deliveryMethod, total, loadOrderItems(menuID)));
+		    }
+		 } finally {
+		     if (db != null) {
+		    	 db.closeConn();
+		     }
+		 }
+	}
+	
+	public static ArrayList<Menu> loadOrderItems(int id) throws SQLException{
+		Database db = null;
+		ArrayList<Menu> oi = new ArrayList<Menu>();
+	    try {
+	        db = new Database();
+	        Statement stmt = db.getConn().createStatement();
+	        ResultSet rs = stmt.executeQuery("SELECT menuID FROM orderitems WHERE orderID = ?");
+	        while (rs.next()) {
+	            oi.add(getMenuBymenuID(rs.getInt("menuID")));
+	        }
+	    } catch (MenuNotFoundException e) {
+			e.printStackTrace();
+		} finally {
+	   
+	        if (db != null) {
+	            db.closeConn();
+	        }
+	    }
+	    return oi;
+	}
+	public static Menu getMenuBymenuID(int menuID) throws MenuNotFoundException{
+		for(Menu m: menu) {
+			if(m.getMenuID() == menuID) {
+				return m;
+			}
+		}
+		throw new MenuNotFoundException();
+	}
+	
+	public static void addOrder(Order order) throws SQLException {
+		Database db = new Database();
+		try {
+			orders.add(order);
+			db = new Database();
+			db.setPst("INSERT INTO orders (orderID, orderMethod, deliveryMethod, total) VALUES (?, ?, ?, ?, ?);");
+			db.getPst().setInt(1, order.getId());
+			db.getPst().setString(2, order.getOrderMethod());
+			db.getPst().setString(3, order.getDeliveryMethod());
+			db.getPst().setFloat(4, order.getTotal());
+			db.getPst().executeUpdate();
+			
+	    } finally {
+	        if (db != null) {
+	            db.closeConn();
+	        }
+	    }
+	}
+	
+	public static void addOrderItems(Order order, int menuID) throws SQLException {
+		Database db = new Database();
+		try {
+			
+			db = new Database();
+			db.setPst("INSERT INTO orderitems (orderItemsID, orderID, quantity, notes, menuID) VALUES (?, ?, ?, ?, ?)");
+			db.getPst().setInt(1, getNextOIID());
+			db.getPst().setString(2, order.getOrderMethod());
+			db.getPst().setString(3, order.getDeliveryMethod());
+			db.getPst().setFloat(4, order.getTotal());
+			db.getPst().setInt(5, menuID);
+			db.getPst().executeUpdate();
+			
+	    } finally {
+	        if (db != null) {
+	            db.closeConn();
+	        }
+	    }
+	}
+	
+	public static int getNextOIID() throws SQLException {
+		Database db = new Database();
+		try {
+			db = new Database();
+		   	Statement stmt = db.getConn().createStatement();
+		   	ResultSet rs = stmt.executeQuery("SELECT MAX(orderItemsID) AS nextID FROM orderitems");
+		    if (rs.next()) {
+		    	return rs.getInt("nextID")+1;
+		    }else {
+		    	return 1;
+		    }
+	    } finally {
+	        if (db != null) {
+	            db.closeConn();
+	        }
+	    }
+	}
+	
 	
 	public static ArrayList<Feedbacks> getFeedback() {
 		return feedback;
