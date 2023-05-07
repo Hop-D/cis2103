@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import exceptions.MenuNotFoundException;
+import exceptions.NameExistsInArrayException;
 import exceptions.UserNotFoundException;
 
 public class Database {
@@ -148,14 +149,14 @@ public class Database {
 	}
 	
 	//add a user
-	public static void addUser(UserClass u) throws SQLException {
+	public static void addUser(UserClass u) throws SQLException, NameExistsInArrayException {
 		Database db = null;
 		try {
 			db = new Database();
 			db.setPst("INSERT INTO user (userID, name, password, contactNo, role, userCreated, userUpdated, editorID) \r\n"
 					+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
 			db.getPst().setString(1, u.getId());
-			db.getPst().setString(2, u.getUserName());
+			db.getPst().setString(2, nameExist(u.getUserName(), "USER"));
 			db.getPst().setString(3, u.getPassword());
 			db.getPst().setString(4, u.getContact());
 			db.getPst().setString(5, u.getRole());
@@ -171,6 +172,31 @@ public class Database {
 	            db.closeConn();
 	        }
 	    }
+	}
+	
+	public static String nameExist(String name, String array) throws NameExistsInArrayException {
+		if(array.equals("USER")) {
+			for(UserClass n: users) {
+				if(name.equals(n.getUserName())) {
+					throw new NameExistsInArrayException();
+				}
+			}
+		}else if(array.equals("ITEMS")) {
+			for(Item n: items) {
+				if(name.equals(n.getName())) {
+					throw new NameExistsInArrayException();
+				}
+			}
+		}else if(array.equals("PACKAGE")) {
+			for(Package n: pack) {
+				if(name.equals(n.getName())) {
+					throw new NameExistsInArrayException();
+				}
+			}
+		}
+			
+		
+		return name;
 	}
 	
 	//get a user from array
@@ -304,26 +330,6 @@ public class Database {
 	        }
 	    }
 	}
-//	public static void removeMenu(String id, String type) throws SQLException {	
-//		Database db = new Database();
-//		try {
-//			if(type.equals(Menu.ITEM_TYPE)) {
-//				db = new Database();
-//				db.setPst("DELETE FROM menu WHERE menuID = (SELECT menuID FROM items WHERE itemID = ?)");
-//				db.getPst().setString(1, id);
-//				db.getPst().executeUpdate();
-//			}else {
-//				db = new Database();
-//				db.setPst("DELETE FROM menu WHERE menuID = (SELECT menuID FROM package WHERE packageID = ?)");
-//				db.getPst().setString(1, id);
-//				db.getPst().executeUpdate();
-//			}
-//	    } finally {
-//	        if (db != null) {
-//	            db.closeConn();
-//	        }
-//	    }
-//	}
 //	
 	public static int getLastMenuID() throws SQLException {
 		Database db = new Database();
@@ -372,7 +378,7 @@ public class Database {
 	    }
 	}
 	
-	public static void addItem(Item item) throws SQLException {
+	public static void addItem(Item item) throws SQLException, NameExistsInArrayException {
 		Database db = new Database();
 		try {
 			addMenu(item.getType());
@@ -380,7 +386,7 @@ public class Database {
 			db.setPst("INSERT INTO items (itemID, name, price,  dateAdded, dateUpdated, menuID) \r\n"
 					+ "VALUES (?, ?, ?, current_timestamp(), current_timestamp(), ?)");
 			db.getPst().setString(1, item.getId());
-			db.getPst().setString(2, item.getName());
+			db.getPst().setString(2, nameExist(item.getName(), "ITEMS"));
 			db.getPst().setFloat(3, item.getPrice());
 			db.getPst().setInt(4, getLastMenuID());
 			db.getPst().executeUpdate();
@@ -395,6 +401,7 @@ public class Database {
 	    }
 		
 	}
+	
 	
 	public static void removeMenu(Item item) throws SQLException {
 		Database db = new Database();
@@ -415,7 +422,7 @@ public class Database {
 		
 	}
 	
-	public static void updateItem(String id, String name, float price) throws SQLException {
+	public static void updateItem(String id, String name, float price) throws SQLException, NameExistsInArrayException {
 		Database db = new Database();
 		try {
 			db = new Database();
@@ -484,7 +491,7 @@ public class Database {
 	    }
 	}
 		
-	public static void addPackage(Package packag) throws SQLException {
+	public static void addPackage(Package packag) throws SQLException, NameExistsInArrayException {
 		Database db = new Database();
 		try {
 			addMenu(packag.getType());
@@ -492,7 +499,7 @@ public class Database {
 			db.setPst("INSERT INTO Package (packageID, name, price, count, dateAdded, dateUpdated, menuID) \r\n"
 					+ "VALUES (?, ?, ?, ?, current_timestamp(), current_timestamp(), ?)");
 			db.getPst().setString(1, packag.getId());
-			db.getPst().setString(2, packag.getName());
+			db.getPst().setString(2, nameExist(packag.getName(), "PACKAGE"));
 			db.getPst().setFloat(3, packag.getPrice());
 			db.getPst().setInt(4, Integer.parseInt("0"));
 			db.getPst().setInt(5, getLastMenuID());
@@ -507,25 +514,27 @@ public class Database {
 	    }
 	}
 	
-	public static void updatePackage(String id, String name, float price, ArrayList<Item> packageItems) throws SQLException {
+	public static void updatePackage(String id, String name, float price, int count) throws SQLException, NameExistsInArrayException {
 		Database db = new Database();
 		try {
-			db = new Database();
-			db.setPst("UPDATE package SET name = ?, price = ?, dateUpdated = current_timestamp() WHERE packageID = ?");
-			db.getPst().setString(1, name);
-			db.getPst().setFloat(2, price);
-			db.getPst().setString(3, id);
-			db.getPst().executeUpdate();
 			
 			for(Package p: pack) {
 				if(id.equals(p.getId())) {
-					p.setId(id);
+					db = new Database();
+					db.setPst("UPDATE package SET name = ?, price = ?, count = ?, dateUpdated = current_timestamp() WHERE packageID = ?");
+					db.getPst().setString(1, name);
+					db.getPst().setFloat(2, price);
+					db.getPst().setFloat(3, count);
+					db.getPst().setString(4, id);
+					db.getPst().executeUpdate();
+					
 					p.setName(name);
 					p.setPrice(price);
 					p.setDateUpdated(LocalDateTime.now());
 					return;
 				}
 			}
+			
 	    }finally {
 	        if (db != null) {
 	            db.closeConn();
@@ -574,7 +583,6 @@ public class Database {
 
 	
 	
-	public static void updatePackage(String id, String name, float price, ArrayList<Item> packageItems) throws SQLException {
 	public static void addPackageItem(int id, Package p, Item i) throws SQLException {
 		Database db = new Database();
 		
@@ -587,7 +595,7 @@ public class Database {
 			db.getPst().setString(4, p.getId());
 			db.getPst().executeUpdate();
 			p.getPackageitems().add(i);
-	
+			
 		} finally {
 	        if (db != null) {
 	            db.closeConn();
@@ -649,27 +657,19 @@ public class Database {
 		return id + 1;
 	}
 	
-	public static ArrayList<Item> loadPackageItemFromDatabase(String id) {
+	public static ArrayList<Item> loadPackageItemFromDatabase(String idd) {
 		ArrayList<Item> packItem = new ArrayList<Item>();
 		Database db = null;
 		
 		try {
-			Package temp = Database.getPackageByID(id);
+			Package temp = Database.getPackageByID(idd);
 			db = new Database();
-			db.setPst("Select * FROM packageitem WHERE packageID = ?");
-			db.getPst().setString(1, id);
+			db.setPst("Select itemID FROM packageitem WHERE packageID = ?");
+			db.getPst().setString(1, idd);
 		    ResultSet rs = db.getPst().executeQuery();
 		    while (rs.next()) {
-	            String id = rs.getString("itemID");
-	            String name = rs.getString("itemName");
-	            float price = rs.getFloat("itemPrice");
-	            Timestamp itemAdded = rs.getTimestamp("itemUpdated");
-	            Timestamp itemUpdated = rs.getTimestamp("userUpdated");
-	            int menuID = rs.getInt("menuID");
-	            packItem.add(new Item(id, name, price, itemAdded.toLocalDateTime(), itemUpdated.toLocalDateTime(), menuID));
-		    	String itemID = rs.getString("itemID");
-		    	Item i = Database.getItemByID(itemID);
-		    	packItem.add(i);
+	            String itemID = rs.getString("itemID");
+		    	packItem.add(getItemByID(itemID));
 	        }
 		    temp.setPackageitems(packItem);
 		} catch (SQLException | MenuNotFoundException e) {
@@ -724,6 +724,7 @@ public class Database {
 	    }
 	    return oi;
 	}
+	
 	public static Menu getMenuBymenuID(int menuID) throws MenuNotFoundException{
 		for(Menu m: menu) {
 			if(m.getMenuID() == menuID) {

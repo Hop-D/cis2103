@@ -1,6 +1,8 @@
 
 package cis2103;
 
+import java.awt.Color;
+import java.awt.event.KeyEvent;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
 import com.formdev.flatlaf.FlatIntelliJLaf;
@@ -19,7 +21,6 @@ public class Login extends javax.swing.JFrame {
 		while (!connected) {
 	        try {
 	            Database.loadUsersFromDatabase();
-	            //Database.loadMenuFromDatabase();
 	            Database.loadItemsFromDatabase();
 	            Database.loadPackageFromDatabase();
 	            connected = true;
@@ -34,7 +35,8 @@ public class Login extends javax.swing.JFrame {
 	    }
 		
         initComponents();
-        
+
+        buttonLogin.requestFocus();
         labelUN.setVisible(false);
         labelUP.setVisible(false);
 
@@ -42,7 +44,6 @@ public class Login extends javax.swing.JFrame {
 
 
     private void initComponents() {
-
         jPanel3 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -89,11 +90,34 @@ public class Login extends javax.swing.JFrame {
                 buttonLoginActionPerformed(evt);
             }
         });
+        
+        inputLoginUN.setForeground(java.awt.Color.lightGray);
+        inputLoginUN.setText("Username");
+        inputLoginUN.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        inputLoginUN.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+            	inputLoginUNFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+            	inputLoginUNFocusLost(evt);
+            }
+        });
+        
+        inputLoginUP.setForeground(java.awt.Color.lightGray);
+        inputLoginUP.setText("password");
+        inputLoginUP.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        inputLoginUP.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+            	inputLoginUPFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+            	inputLoginUPFocusLost(evt);
+            }
+        });
 
         labelUN.setText("Username is empty");
 
         labelUP.setText("Password is empty");
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -179,8 +203,43 @@ public class Login extends javax.swing.JFrame {
         );
 
         pack();
+        
+    }
+    
+    private void inputLoginUPFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_passWordFieldFocusGained
+        // TODO add your handling code here:
+        String pass = new String(inputLoginUP.getPassword());
+        if (pass.equals("password")) {
+        	inputLoginUP.setText("");
+        	inputLoginUP.setForeground(Color.BLACK);
+            
+        }
     }
 
+    private void inputLoginUPFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_passWordFieldFocusLost
+        // TODO add your handling code here:
+        String pass = new String(inputLoginUP.getPassword());
+        if (pass.isEmpty()) {
+        	inputLoginUP.setText("password");
+            inputLoginUP.setForeground(Color.GRAY);
+        }   
+    }
+    
+    private void inputLoginUNFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_userNameFieldFocusGained
+        // TODO add your handling code here:
+        if (inputLoginUN.getText().equals("Username")) {
+        	inputLoginUN.setText("");
+        	inputLoginUN.setForeground(Color.BLACK);
+        }
+    }//GEN-LAST:event_userNameFieldFocusGained
+
+    private void inputLoginUNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_userNameFieldFocusLost
+        // TODO add your handling code here:
+        if (inputLoginUN.getText().isEmpty()) {
+        	inputLoginUN.setText("Username");
+        	inputLoginUN.setForeground(Color.GRAY);
+        }   
+    }//GEN-LAST:event_userNameFieldFocusLost
     
     private void buttonLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonLoginActionPerformed
         

@@ -21,7 +21,7 @@ public class RegularClassFrame extends javax.swing.JFrame {
 //        
 //        tableViewRegSingle();
 //        tableViewRegPackage();
-        //tableViewRegItem();
+        tableViewRegItem();
         
         ButtonGroup custOrderBG = new ButtonGroup();
         custOrderBG.add(radioRegDigital);
@@ -33,7 +33,6 @@ public class RegularClassFrame extends javax.swing.JFrame {
     //    inputRegTrans.setText(String.valueOf(reg.getMax()));
         inputRegTotal.setEditable(false);
         inputRegChange.setEditable(false);
-        
     }
 
 
@@ -49,7 +48,7 @@ public class RegularClassFrame extends javax.swing.JFrame {
         jPanel5 = new javax.swing.JPanel();
         jPanel6 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
-        tableRegItems = new javax.swing.JTable();
+        tableItems = new javax.swing.JTable();
         inputRegtemp = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         buttonRegUpdate = new javax.swing.JButton();
@@ -90,8 +89,9 @@ public class RegularClassFrame extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(1400, 700));
+        setResizable(false);
 
         jPanel2.setBackground(new java.awt.Color(0, 102, 102));
 
@@ -125,7 +125,7 @@ public class RegularClassFrame extends javax.swing.JFrame {
 
         jPanel6.setBackground(new java.awt.Color(51, 51, 51));
 
-        tableRegItems.setModel(new javax.swing.table.DefaultTableModel(
+        tableItems.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -141,12 +141,12 @@ public class RegularClassFrame extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        tableRegItems.addMouseListener(new java.awt.event.MouseAdapter() {
+        tableItems.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tableRegItemsMouseClicked(evt);
+                tableItemsMouseClicked(evt);
             }
         });
-        jScrollPane3.setViewportView(tableRegItems);
+        jScrollPane3.setViewportView(tableItems);
 
         inputRegtemp.setText("jTextField4");
 
@@ -578,9 +578,9 @@ public class RegularClassFrame extends javax.swing.JFrame {
 //    }
     
     private void tableViewRegItem() {
-        //reg.getRegItem(tableRegItems, "");
+        //reg.getRegItem(tableItems, "");
         
-//        model = (DefaultTableModel) tableRegItems.getModel();
+//        model = (DefaultTableModel) tableItems.getModel();
 //        Object[] rowData = new Object[3];
 //        for(int i = 0; i < saleitems.size(); i++) {
 //            rowData[0] = saleitems.get(i).itemName;
@@ -601,7 +601,7 @@ public class RegularClassFrame extends javax.swing.JFrame {
         inputRegPackage.setText("");
         spinnerPackage.setValue(0);
         tableRegPackage.clearSelection();
-        tableRegItems.clearSelection();
+        tableItems.clearSelection();
     }                                           
 
     private void tableRegPackageMouseClicked(java.awt.event.MouseEvent evt) {                                             
@@ -614,14 +614,14 @@ public class RegularClassFrame extends javax.swing.JFrame {
         inputRegSingle.setText("");
         spinnerSingle.setValue(0);
         tableRegSingle.clearSelection();
-        tableRegItems.clearSelection();
+        tableItems.clearSelection();
     }                                            
 
-    private void tableRegItemsMouseClicked(java.awt.event.MouseEvent evt) {                                           
+    private void tableItemsMouseClicked(java.awt.event.MouseEvent evt) {                                           
         // TODO add your handling code here:
         
-        model = (DefaultTableModel) tableRegItems.getModel();
-        rowIndex3 = tableRegItems.getSelectedRow();
+        model = (DefaultTableModel) tableItems.getModel();
+        rowIndex3 = tableItems.getSelectedRow();
         
         jSpinner1.setValue(model.getValueAt(rowIndex3, 1));
         
@@ -660,7 +660,7 @@ public class RegularClassFrame extends javax.swing.JFrame {
 //            saleitems.add(si);
 //        }
 //
-//        model = (DefaultTableModel) tableRegItems.getModel();
+//        model = (DefaultTableModel) tableItems.getModel();
 //        model.setRowCount(0);
 //        Object[] rowData = new Object[3];
 //        for(i = 0; i < saleitems.size(); i++) {
@@ -674,7 +674,7 @@ public class RegularClassFrame extends javax.swing.JFrame {
 //        inputRegChange.setText(Float.toString(showChange()));
 //        tableRegSingle.clearSelection();
 //        tableRegPackage.clearSelection();
-//        tableRegItems.clearSelection();
+//        tableItems.clearSelection();
         
     }                                             
 
@@ -705,7 +705,7 @@ public class RegularClassFrame extends javax.swing.JFrame {
 //            saleitems.add(si);
 //        }
 //
-//        model = (DefaultTableModel) tableRegItems.getModel();
+//        model = (DefaultTableModel) tableItems.getModel();
 //        model.setRowCount(0);
 //        Object[] rowData = new Object[3];
 //        for(i = 0; i < saleitems.size(); i++) {
@@ -719,7 +719,7 @@ public class RegularClassFrame extends javax.swing.JFrame {
 //        inputRegChange.setText(Float.toString(showChange()));
 //        tableRegSingle.clearSelection();
 //        tableRegPackage.clearSelection();
-//        tableRegItems.clearSelection(); 
+//        tableItems.clearSelection(); 
     }                                             
 
     private void buttonRegUpdateActionPerformed(java.awt.event.ActionEvent evt) {                                                
@@ -735,7 +735,7 @@ public class RegularClassFrame extends javax.swing.JFrame {
 //            }
 //        }
 //        
-//        model = (DefaultTableModel) tableRegItems.getModel();
+//        model = (DefaultTableModel) tableItems.getModel();
 //        model.setRowCount(0);
 //        Object[] rowData = new Object[3];
 //        for(i = 0; i < saleitems.size(); i++) {
@@ -753,7 +753,7 @@ public class RegularClassFrame extends javax.swing.JFrame {
     private void buttonRegRemoveActionPerformed(java.awt.event.ActionEvent evt) {                                                
         
 //        int i;
-//        model = (DefaultTableModel) tableRegItems.getModel();
+//        model = (DefaultTableModel) tableItems.getModel();
 //        String tempName = model.getValueAt(rowIndex3, 0).toString();
 //        
 //        int choice = JOptionPane.showConfirmDialog(this, "Remove item?");
@@ -808,7 +808,7 @@ public class RegularClassFrame extends javax.swing.JFrame {
 //        reg.insertSaleItem(saleitems, saleID);
 //
 //        saleitems.clear();
-//        model = (DefaultTableModel) tableRegItems.getModel();
+//        model = (DefaultTableModel) tableItems.getModel();
 //        model.setRowCount(0);
         
     }                                            
@@ -946,7 +946,7 @@ public class RegularClassFrame extends javax.swing.JFrame {
     private javax.swing.JRadioButton radioRegPickup;
     private javax.swing.JSpinner spinnerPackage;
     private javax.swing.JSpinner spinnerSingle;
-    private javax.swing.JTable tableRegItems;
+    private javax.swing.JTable tableItems;
     private javax.swing.JTable tableRegPackage;
     private javax.swing.JTable tableRegSingle;                  
 }

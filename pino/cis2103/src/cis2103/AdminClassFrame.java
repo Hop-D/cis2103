@@ -16,6 +16,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import exceptions.MenuNotFoundException;
+import exceptions.NameExistsInArrayException;
 import exceptions.UserNotFoundException;
 import model.AdminClass;
 import model.RegularClass;
@@ -148,7 +149,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
         radioUserAdmin.setOpaque(false);
         radioUserRegular.setOpaque(false);
         
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setMaximumSize(new java.awt.Dimension(1720, 880));
         setMinimumSize(new java.awt.Dimension(1720, 880));
         setPreferredSize(new java.awt.Dimension(1720, 880));
@@ -634,12 +635,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
         buttonPackageUpdate.setText("UPDATE");
         buttonPackageUpdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                try {
-					buttonPackageUpdateActionPerformed(evt);
-				} catch (MenuNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+                buttonPackageUpdateActionPerformed(evt);
             }
         });
 
@@ -1038,9 +1034,8 @@ public class AdminClassFrame extends javax.swing.JFrame {
 			        	return;
 			        }
 					Database.addItem(new Item("I" + inputItemID.getText(), inputSingleName.getText(), Float.parseFloat(inputSinglePrice.getText())));
-				} catch (NumberFormatException | SQLException e1) {
+				} catch (NumberFormatException | SQLException | NameExistsInArrayException e1) {
 					JOptionPane.showMessageDialog(this, e1.getMessage());
-					System.out.println(e.getMessage() + " " + e1.getClass());
 				}
 			}finally {
 				clearSingle();
@@ -1069,7 +1064,6 @@ public class AdminClassFrame extends javax.swing.JFrame {
         	Item item = Database.getItemByID(inputItemID.getText());
 			Database.removeMenu(item);
 			tableViewItems("");
-			Database.removeItem(item);
 		} catch (SQLException | MenuNotFoundException e) {
 			JOptionPane.showMessageDialog(this, e.getMessage());
 		}finally {
@@ -1168,13 +1162,6 @@ public class AdminClassFrame extends javax.swing.JFrame {
         return true;
     }
     
-    //clears inputs for items
-    private void clearSingle() {
-		inputItemID.setText("" + Database.getLastItemID());
-	    inputSingleName.setText(null);
-	    inputSinglePrice.setText(null);
-    }
-    
 	////////////MANAGE PACKAGES////////////////////
     
     // clear input boxes and table selections 
@@ -1232,10 +1219,10 @@ public class AdminClassFrame extends javax.swing.JFrame {
 	        	return;
 	        }
 	        try {
-				Database.addPackage(new Package(id, "Package " + id, Float.parseFloat("0")));
+				Database.addPackage(new Package(id, inputNewPackageName.getText(), 0));
 				inputNewPackage.setText("" + Database.getLastPackageID());
 				inputNewPackage.setText(""+Database.getLastPackageID());;
-	        } catch (NumberFormatException | SQLException e1) {
+	        } catch (SQLException | NameExistsInArrayException e1) {
 				JOptionPane.showMessageDialog(this, e1.getMessage());
 			}
     	} finally {
@@ -1246,40 +1233,19 @@ public class AdminClassFrame extends javax.swing.JFrame {
 
     }
 
-    // Update a package
-    private void buttonPackageUpdateActionPerformed(java.awt.event.ActionEvent evt) {
-    	
-//        int packageID = Integer.parseInt(inputPackageID.getText());
-//        String packagePrice = inputPackagePrice.getText();
-//        
-//        admin2.updatePackage(packageID, packagePrice);
-//        tablePackages.setModel(new DefaultTableModel(null, new Object[] {
-//            "ID", "NAME", "PRICE", "# ITEMS", "CREATED ON"
-//        }));
-////        admin2.getPackages(tablePackages, "");
-
-    }
 
     //```buttons ---- UPDATE PACKAGE//
-    private void buttonPackageUpdateActionPerformed(java.awt.event.ActionEvent evt) throws MenuNotFoundException {
+    private void buttonPackageUpdateActionPerformed(java.awt.event.ActionEvent evt) {
     	
     	if(isEmptyPackage()) {
         	int choice = JOptionPane.showConfirmDialog(null, "Update Package?", "Add Confirmation", JOptionPane.YES_NO_OPTION);
     		if(choice == JOptionPane.NO_OPTION) {
     			return;
     		}
-    		try {
-    			Package temp = Database.getPackageByID(inputPackageID.getText());
-				Database.updatePackage(inputPackageID.getText(), inputPackageName.getText(), Float.parseFloat(inputPackagePrice.getText().toString()), temp.getPackageitems());
-			} catch (NumberFormatException | SQLException e) {
-				JOptionPane.showMessageDialog(this, e.getMessage());
-			}
+    		updatePackage();
     	} else {
     		JOptionPane.showMessageDialog(this, "Package Name already exists");
     	}
-    	
-    	clearPackages();
-    	tableViewPackages();
 
     }
     
@@ -1289,8 +1255,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
 		if(choice == JOptionPane.NO_OPTION) {
 			return;
 		}
-		
-    	try {
+		try {
         	Package pack = Database.getPackageByID(inputPackageID.getText());
 			Database.removePackage(pack);
 			inputNewPackage.setText("" + Database.getLastPackageID());
@@ -1300,6 +1265,16 @@ public class AdminClassFrame extends javax.swing.JFrame {
 			clearPackages();
 			tableViewPackages();
 		}
+    }
+    
+    private void updatePackage() {
+    	try {
+			Package temp = Database.getPackageByID(inputPackageID.getText());
+			Database.updatePackage(inputPackageID.getText(), inputPackageName.getText(), Float.parseFloat(inputPackagePrice.getText().toString()), tablePackageItem.getRowCount());
+		} catch (NumberFormatException | SQLException | MenuNotFoundException | NameExistsInArrayException e) {
+			JOptionPane.showMessageDialog(this, e.getMessage());
+		}
+    	tableViewPackages();
     }
     
     // check if package input boxes are empty
@@ -1320,37 +1295,52 @@ public class AdminClassFrame extends javax.swing.JFrame {
         model = (DefaultTableModel) tablePackageSingle.getModel();
         rowIndex = tablePackageSingle.getSelectedRow();
         
-        inputPackageSingleID.setText(model.getValueAt(rowIndex, 0).toString());
+        String itemID = model.getValueAt(rowIndex, 0).toString();
+        inputPackageSingleID.setText(itemID);
+        Item i;
+		try {
+	        Package p = Database.getPackageByID(inputPackageID.getText());
+			i = Database.getItemByID(inputPackageSingleID.getText());
+			inputPackagePrice.setText("" + (p.getPrice() + i.getPrice()));
+		} catch (MenuNotFoundException e) {
+			
+		}
+        
     }
     
 
     //```buttons ---- ADD ITEM TO PACKAGE//
     private void buttonPackageItemAddActionPerformed(java.awt.event.ActionEvent evt) {
-    	
-
+    	int choice = JOptionPane.showConfirmDialog(null, "Add item to package?", "Add Confirmation", JOptionPane.YES_NO_OPTION);
+		if(choice == JOptionPane.NO_OPTION) {
+			return;
+		}
     	int id = Database.getLastPackageItemID();	
-		int choice = JOptionPane.showConfirmDialog(null, "Add item to package?", "Add Confirmation", JOptionPane.YES_NO_OPTION);
-        if(choice == JOptionPane.NO_OPTION) {
-        	return;
-        }
+    	
+  // WHEN A QUANTITY IS ADDED
+//    	model = (DefaultTableModel) tablePackageItem.getModel();
+//    	int column = 0;
+//    	int rowCount = model.getRowCount();
+//    	for (int row = 0; row < rowCount; row++) {
+//    	    Object data = model.getValueAt(row, column);
+//    	    // Do something with the data, such as printing it to the console
+//    	    System.out.println(data);
+//    	}
+    	
+    	
     	try {
-    		Database.loadPackageItemFromDatabase(inputPackageID.getText());
 			Package p = Database.getPackageByID(inputPackageID.getText());
 			Item i = Database.getItemByID(inputPackageSingleID.getText());
 			try {
 				Database.addPackageItem(id, p, i);
-				
+		    	tableViewPackageItem(inputPackageID.getText());
+				updatePackage();
 			} catch (SQLException e) {
 				System.out.println(e.getMessage());
 			}
 		} catch (MenuNotFoundException e) {
 			System.out.println(e.getMessage());
 		}
-    	
-    	tableViewPackageItem(inputPackageID.getText());
-    	clearPackages();
-    	
-
     }
     
     // Fetch data of item inside package
@@ -1363,17 +1353,23 @@ public class AdminClassFrame extends javax.swing.JFrame {
 
     //```buttons ---- REMOVE ITEM FROM PACKAGE//
     private void buttonPackageItemRemoveActionPerformed(java.awt.event.ActionEvent evt) {
-    		
-		int choice = JOptionPane.showConfirmDialog(null, "Remove item from package?", "Add Confirmation", JOptionPane.YES_NO_OPTION);
-        if(choice == JOptionPane.NO_OPTION) {
-        	return;
-        }
+    	int choice = JOptionPane.showConfirmDialog(null, "Remove item from pacakage?", "Add Confirmation", JOptionPane.YES_NO_OPTION);
+		if(choice == JOptionPane.NO_OPTION) {
+			return;
+		}
     	try {
 			Package p = Database.getPackageByID(inputPackageID.getText());
 			Item i = Database.getItemByID(inputPackageSingleID2.getText());
 			try {
+				inputPackagePrice.setText("" + (p.getPrice() - i.getPrice()));
+				if(inputPackagePrice.getText().substring(0, 1).equals("-")) {
+					inputPackagePrice.setText("0");
+				}
+
 				Database.removePackageItem(p, i);
-				
+				tableViewPackageItem(inputPackageID.getText());
+				updatePackage();
+
 			} catch (SQLException e) {
 				System.out.println(e.getMessage());
 			}
@@ -1381,8 +1377,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
 			System.out.println(e.getMessage());
 		}
     	
-    	tableViewPackageItem(inputPackageID.getText());
-    	clearPackages();
+    	
     	
     }
 
@@ -1528,7 +1523,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
 					} else if(radioUserAdmin.isSelected()) {
 						Database.addUser(new AdminClass("A" + inputUserID.getText(), inputUserName.getText(), inputUserPass.getText(), inputUserContact.getText(), AdminClass.ADMIN_USER, LocalDateTime.now(), LocalDateTime.now(), temp.getId()));
 					}
-				} catch (NumberFormatException | SQLException ex) {
+				} catch (NumberFormatException | SQLException | NameExistsInArrayException ex) {
 					JOptionPane.showMessageDialog(this, ex.getMessage());
 					System.out.println(ex.getMessage() + " " + ex.getClass());
 				}

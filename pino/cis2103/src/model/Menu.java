@@ -1,6 +1,7 @@
 package model;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public abstract class Menu {
 	private String id;
@@ -74,16 +75,16 @@ public abstract class Menu {
 	}
 
 	
-	public LocalDateTime getDateAdded() {
-		return dateAdded;
+	public String getDateAdded() {
+		return dateAdded.format(DateTimeFormatter.ofPattern("E, MMM dd yyyy HH:mm a"));
 	}
 
 	public void setDateAdded(LocalDateTime dateAdded) {
 		this.dateAdded = dateAdded;
 	}
 
-	public LocalDateTime getDateUpdated() {
-		return dateUpdated;
+	public String getDateUpdated() {
+		return dateUpdated.format(DateTimeFormatter.ofPattern("E, MMM dd yyyy HH:mm a"));
 	}
 
 	public void setDateUpdated(LocalDateTime dateUpdated) {
