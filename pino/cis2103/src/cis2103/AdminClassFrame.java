@@ -20,6 +20,7 @@ import exceptions.UserNotFoundException;
 import model.AdminClass;
 import model.RegularClass;
 import model.Database;
+import model.Feedbacks;
 import model.Item;
 import model.Package;
 import model.UserClass;
@@ -52,6 +53,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
         tableViewItems("");
         tableViewPackages();
         tableViewPackageSingle();
+        tableViewFeedbacks();
         
         ButtonGroup userRoles = new ButtonGroup();
         userRoles.add(radioUserAdmin);
@@ -142,6 +144,16 @@ public class AdminClassFrame extends javax.swing.JFrame {
         buttonUserRemove = new javax.swing.JButton();
         buttonUserClear = new javax.swing.JButton();
         buttonUserPrint = new javax.swing.JButton();
+        jPanel13 = new javax.swing.JPanel();
+        labelFeedID = new javax.swing.JLabel();
+        labelFeedSender = new javax.swing.JLabel();
+        labelFeedDate = new javax.swing.JLabel();
+        jLabel22 = new javax.swing.JLabel();
+        jScrollPane6 = new javax.swing.JScrollPane();
+        textFeedArea = new javax.swing.JTextArea();
+        jPanel14 = new javax.swing.JPanel();
+        jScrollPane7 = new javax.swing.JScrollPane();
+        tableFeedback = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMaximumSize(new java.awt.Dimension(1720, 880));
@@ -973,6 +985,108 @@ public class AdminClassFrame extends javax.swing.JFrame {
         jPanel5.setLayout(jPanel5Layout);
 
         jTabbedPane1.addTab("MANAGE USERS", jPanel5);
+        
+        jPanel13.setBackground(new java.awt.Color(255, 255, 255));
+
+        labelFeedID.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        labelFeedID.setText("FEEDBACK ID :");
+
+        labelFeedSender.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        labelFeedSender.setText("FEEDBACK SENDER :");
+
+        labelFeedDate.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        labelFeedDate.setText("SENT ON :");
+
+        jLabel22.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jLabel22.setText("MESSAGE :");
+
+        textFeedArea.setColumns(20);
+        textFeedArea.setRows(5);
+        textFeedArea.setEditable(false);
+        jScrollPane6.setViewportView(textFeedArea);
+
+        jPanel14.setBackground(new java.awt.Color(20, 30, 97));
+
+        tableFeedback.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "ID", "MESSAGE", "DATE", "SENT BY"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tableFeedback.setRowHeight(40);
+        tableFeedback.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tableFeedbackMouseClicked(evt);
+            }
+        });
+        jScrollPane7.setViewportView(tableFeedback);
+
+        javax.swing.GroupLayout jPanel14Layout = new javax.swing.GroupLayout(jPanel14);
+        jPanel14Layout.setHorizontalGroup(
+        	jPanel14Layout.createParallelGroup(Alignment.LEADING)
+        		.addGroup(jPanel14Layout.createSequentialGroup()
+        			.addGap(18)
+        			.addComponent(jScrollPane7, GroupLayout.PREFERRED_SIZE, 664, GroupLayout.PREFERRED_SIZE)
+        			.addContainerGap(18, Short.MAX_VALUE))
+        );
+        jPanel14Layout.setVerticalGroup(
+        	jPanel14Layout.createParallelGroup(Alignment.LEADING)
+        		.addGroup(jPanel14Layout.createSequentialGroup()
+        			.addGap(22)
+        			.addComponent(jScrollPane7, GroupLayout.PREFERRED_SIZE, 513, GroupLayout.PREFERRED_SIZE)
+        			.addContainerGap(20, Short.MAX_VALUE))
+        );
+        jPanel14.setLayout(jPanel14Layout);
+
+        javax.swing.GroupLayout jPanel13Layout = new javax.swing.GroupLayout(jPanel13);
+        jPanel13Layout.setHorizontalGroup(
+        	jPanel13Layout.createParallelGroup(Alignment.LEADING)
+        		.addGroup(jPanel13Layout.createSequentialGroup()
+        			.addGap(223)
+        			.addGroup(jPanel13Layout.createParallelGroup(Alignment.LEADING)
+        				.addComponent(labelFeedID)
+        				.addGroup(jPanel13Layout.createSequentialGroup()
+        					.addGroup(jPanel13Layout.createParallelGroup(Alignment.LEADING)
+        						.addComponent(jScrollPane6, GroupLayout.PREFERRED_SIZE, 450, GroupLayout.PREFERRED_SIZE)
+        						.addComponent(jLabel22)
+        						.addComponent(labelFeedDate)
+        						.addComponent(labelFeedSender))
+        					.addGap(82)
+        					.addComponent(jPanel14, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+        			.addContainerGap(260, Short.MAX_VALUE))
+        );
+        jPanel13Layout.setVerticalGroup(
+        	jPanel13Layout.createParallelGroup(Alignment.LEADING)
+        		.addGroup(jPanel13Layout.createSequentialGroup()
+        			.addGap(61)
+        			.addComponent(labelFeedID)
+        			.addGap(18)
+        			.addGroup(jPanel13Layout.createParallelGroup(Alignment.LEADING)
+        				.addComponent(jPanel14, GroupLayout.PREFERRED_SIZE, 555, GroupLayout.PREFERRED_SIZE)
+        				.addGroup(jPanel13Layout.createSequentialGroup()
+        					.addComponent(labelFeedSender)
+        					.addGap(18)
+        					.addComponent(labelFeedDate)
+        					.addGap(18)
+        					.addComponent(jLabel22)
+        					.addGap(18)
+        					.addComponent(jScrollPane6, GroupLayout.PREFERRED_SIZE, 400, GroupLayout.PREFERRED_SIZE)))
+        			.addContainerGap(69, Short.MAX_VALUE))
+        );
+        jPanel13.setLayout(jPanel13Layout);
+
+        jTabbedPane1.addTab("FEEDBACK", jPanel13);
+        
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -1606,8 +1720,47 @@ public class AdminClassFrame extends javax.swing.JFrame {
         }    
         return (id != null && !id.equals(inputUserID.getText())) ? 1 : 0;
     }
- 
+    
+    
+    
+	////////////MANAGE FEEDBACK////////////////////
+    
+    private void tableViewFeedbacks() {
+    	model = (DefaultTableModel) tableFeedback.getModel();
+    	model.setRowCount(0);
+    	Object[] row = new Object[4];
+    	for(Feedbacks f : Database.getFeedback()) {     	
+    		row[0] = f.getId();
+    		row[1] = f.getMessage();
+    		row[2] = f.getDateAdded();
+    		row[3] = f.getUserID();
+    		model.addRow(row);
+    	}
+    }
+    
+    
+    private void tableFeedbackMouseClicked(java.awt.event.MouseEvent evt) {
+    	model = (DefaultTableModel) tableFeedback.getModel();
+    	rowIndex = tableFeedback.getSelectedRow();
+    	UserClass u;
+		try {
+			u = Database.getUserByID(model.getValueAt(rowIndex, 3).toString());
+	    	
+	    	labelFeedID.setText("FEEDBACK ID :              " + model.getValueAt(rowIndex, 0));
+	    	labelFeedSender.setText("FEEDBACK SENDER :   " + model.getValueAt(rowIndex, 3).toString() + " | " + u.getUserName());
+	    	labelFeedDate.setText("SENT ON :                   " + model.getValueAt(rowIndex, 2));
+	    	textFeedArea.setText(model.getValueAt(rowIndex, 1).toString());
+	    	
+		} catch (UserNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
 
+    
+    
+    
+ 
     private javax.swing.JButton buttonAddNewItem;
     private javax.swing.JButton buttonClearInputItem;
     private javax.swing.JButton buttonItemPrint;
@@ -1655,6 +1808,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -1666,6 +1820,8 @@ public class AdminClassFrame extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel11;
     private javax.swing.JPanel jPanel12;
+    private javax.swing.JPanel jPanel13;
+    private javax.swing.JPanel jPanel14;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
@@ -1679,12 +1835,19 @@ public class AdminClassFrame extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
+    private javax.swing.JScrollPane jScrollPane6;
+    private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JLabel labelFeedDate;
+    private javax.swing.JLabel labelFeedID;
+    private javax.swing.JLabel labelFeedSender;
     private javax.swing.JRadioButton radioUserAdmin;
     private javax.swing.JRadioButton radioUserRegular;
+    private javax.swing.JTable tableFeedback;
     private javax.swing.JTable tableItems;
     private javax.swing.JTable tablePackageItem;
     private javax.swing.JTable tablePackageSingle;
     private javax.swing.JTable tablePackages;
     private javax.swing.JTable tableUsers;
+    private javax.swing.JTextArea textFeedArea;
 }
