@@ -6,8 +6,8 @@ import java.util.ArrayList;
 public class Package extends Menu{
 	private ArrayList<Item> packageitems;
 	
-	public Package(String id, String name, float price, LocalDateTime dateAdded, LocalDateTime dateUpdated, ArrayList<Item> packageitems) {
-		super(id, Menu.PACKAGE_TYPE, name, price, dateAdded, dateUpdated);
+	public Package(String id, String name, float price, LocalDateTime dateAdded, LocalDateTime dateUpdated, ArrayList<Item> packageitems, int menuID) {
+		super(id, Menu.PACKAGE_TYPE, name, price, dateAdded, dateUpdated, menuID);
 		this.packageitems = packageitems;
 	}
 	
