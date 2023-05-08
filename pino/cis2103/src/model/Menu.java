@@ -1,25 +1,29 @@
 package model;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public abstract class Menu {
 	private String id;
 	private String type;
 	private String name;
 	private float price;
+	private int quantity;
 	private LocalDateTime dateAdded;
 	private LocalDateTime dateUpdated;
+	private int menuID;
 	
 	public static final String PACKAGE_TYPE = "Package";
 	public static final String ITEM_TYPE = "Item";
 
-	public Menu(String id, String type, String name, float price, LocalDateTime dateAdded, LocalDateTime dateUpdated) {
+	public Menu(String id, String type, String name, float price, LocalDateTime dateAdded, LocalDateTime dateUpdated, int menuID) {
 		this.id = id;
 		this.type = type;
 		this.name = name;
 		this.price = price;
 		this.dateAdded = dateAdded;
 		this.dateUpdated = dateUpdated;
+		this.menuID = menuID;
 	}
 	
 	public Menu(String id, String type, String name, float price) {
@@ -29,6 +33,14 @@ public abstract class Menu {
 		this.price = price;
 		this.dateAdded = LocalDateTime.now();
 		this.dateUpdated = LocalDateTime.now();
+	}
+
+	public int getMenuID() {
+		return menuID;
+	}
+
+	public void setMenuID(int menuID) {
+		this.menuID = menuID;
 	}
 
 	public String getId() {
@@ -62,18 +74,26 @@ public abstract class Menu {
 	public void setPrice(float price) {
 		this.price = price;
 	}
+	
+	public int getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+	}
 
 	
-	public LocalDateTime getDateAdded() {
-		return dateAdded;
+	public String getDateAdded() {
+		return dateAdded.format(DateTimeFormatter.ofPattern("E, MMM dd yyyy HH:mm a"));
 	}
 
 	public void setDateAdded(LocalDateTime dateAdded) {
 		this.dateAdded = dateAdded;
 	}
 
-	public LocalDateTime getDateUpdated() {
-		return dateUpdated;
+	public String getDateUpdated() {
+		return dateUpdated.format(DateTimeFormatter.ofPattern("E, MMM dd yyyy HH:mm a"));
 	}
 
 	public void setDateUpdated(LocalDateTime dateUpdated) {
