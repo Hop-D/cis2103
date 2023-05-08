@@ -709,7 +709,6 @@ public class Database {
 		return packItem;
 	}
 	
-	/////////////////////REGULAR SIDE////////////////////////////////
 	
 	/////////////////////ORDERS////////////////////////////////
 	
@@ -845,6 +844,70 @@ public class Database {
 			}
 		}
 		return name;
+	}
+	
+	
+	/////////////////////FEEDBACK////////////////////////////////
+	
+	public static void loadFeedbackFromDatabase() throws SQLException {
+	    Database db = null;
+	    feedback.clear();
+	    try {
+	        db = new Database();
+	        ResultSet rs = db.executeStatement("SELECT * FROM `employee feedback`");
+	        while (rs.next()) {
+	            int id = rs.getInt("feedbackID");
+	            String message = rs.getString("message");
+	            Timestamp dateAdded = rs.getTimestamp("dateAdded");
+	            String userID = rs.getString("userID");
+				feedback.add(new Feedbacks(id,userID, message, dateAdded.toLocalDateTime()));
+	        }
+	    } finally {
+	        if (db != null) {
+	            db.closeConn();
+	        }
+	    }
+	}
+	
+	public static int getLastFeedbackID() throws SQLException {
+		Database db = new Database();
+		int ret = 1;
+		try {
+			db = new Database();
+			ResultSet rs = db.executeStatement("SELECT MAX(feedbackID) FROM `employee feedback`");
+			
+			if(rs.next()) {
+				ret = rs.getInt("MAX(feedbackID)");
+			}
+	    } finally {
+	        if (db != null) {
+	            db.closeConn();
+	        }
+	    }
+		return ret + 1;
+	}
+	
+	public static void addFeedback(Feedbacks f) throws SQLException  {
+		
+		Database db = new Database();
+		
+		try {
+			db = new Database();
+			db.setPst("INSERT INTO `employee feedback` (feedbackID, message, dateAdded, userID) \r\n"
+					+ "VALUES (?, ?, current_timestamp(), ?)");
+			
+			db.getPst().setInt(1, f.getId());
+			db.getPst().setString(2, f.getMessage());
+			db.getPst().setString(3, f.getUserID());
+			db.getPst().executeUpdate();
+			feedback.add(f);
+			
+	    } finally {
+	        if (db != null) {
+	            db.closeConn();
+	        }
+	    }
+	
 	}
 	
 	public static ArrayList<Menu> getMenu() {
