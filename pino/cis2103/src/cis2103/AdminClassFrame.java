@@ -1203,8 +1203,12 @@ public class AdminClassFrame extends javax.swing.JFrame {
 
     //```buttons ---- ADD PACKAGE//
     private void buttonPackageAddActionPerformed(java.awt.event.ActionEvent evt) {
-
+    	
     	String id = "P" + inputNewPackage.getText();
+    	 if(inputNewPackageName.getText().isEmpty()) {
+             JOptionPane.showMessageDialog(this, "Package Name is missing");
+             return;
+         }
     	try {
     		Package pack = Database.getPackageByID(id);
 			JOptionPane.showMessageDialog(this, "Package already exists");
@@ -1225,6 +1229,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
         	clearPackages();
 			tableViewPackages();
     	}
+
 
 
     }
@@ -1276,11 +1281,11 @@ public class AdminClassFrame extends javax.swing.JFrame {
     // check if package input boxes are empty
     public boolean isEmptyPackage() {
         if(inputPackageName.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "User Name is missing");
+            JOptionPane.showMessageDialog(this, "Package Name is missing");
             return false;
         }
         if(inputPackagePrice.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "User Password is missing");
+            JOptionPane.showMessageDialog(this, "Package Price is missing");
             return false;
         }      
         return true;
