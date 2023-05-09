@@ -1048,6 +1048,11 @@ public class AdminClassFrame extends javax.swing.JFrame {
     //```buttons ---- UPDATE ITEM//
     private void buttonItemUpdateActionPerformed(java.awt.event.ActionEvent evt) throws SQLException {
 		try {
+			int choice = JOptionPane.showConfirmDialog(null, "Update item?", "Update Confirmation", JOptionPane.YES_NO_OPTION);
+	        
+	        if(choice != JOptionPane.YES_OPTION) {
+	        	return;
+	        }
 			Database.updateItem(inputItemID.getText(), inputSingleName.getText(), Float.parseFloat(inputSinglePrice.getText()));
 		} catch (Exception e) {
 			JOptionPane.showInputDialog(this, e.getMessage());
@@ -1061,6 +1066,11 @@ public class AdminClassFrame extends javax.swing.JFrame {
     //```buttons ---- REMOVE ITEM//
     private void buttonItemRemoveActionPerformed(java.awt.event.ActionEvent evt) {
         try {
+			int choice = JOptionPane.showConfirmDialog(null, "Remove item?", "Remove Confirmation", JOptionPane.YES_NO_OPTION);
+	        
+	        if(choice != JOptionPane.YES_OPTION) {
+	        	return;
+	        }
         	Item item = Database.getItemByID(inputItemID.getText());
 			Database.removeMenu(item);
 			tableViewItems("");
