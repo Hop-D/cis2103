@@ -20,6 +20,18 @@ public class Order {
 		
 	}
 	
+	public Order() {
+		
+	}
+	
+	public Order(int id, String orderMethod, String deliveryMethod, float total, ArrayList<Menu> menuOrders) {
+		this.id = id;
+		this.orderMethod = orderMethod;
+		this.deliveryMethod = deliveryMethod;
+		this.total = total;
+		this.menuOrders = menuOrders;
+	}
+	
 	public int getId() {
 		return id;
 	}

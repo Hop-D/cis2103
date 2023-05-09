@@ -30,6 +30,8 @@ public class Login extends javax.swing.JFrame {
 	            Database.loadUsersFromDatabase();
 	            Database.loadItemsFromDatabase();
 	            Database.loadPackageFromDatabase();
+	            Database.loadMenuFromDatabase();
+	            Database.loadFeedbackFromDatabase();
 	            connected = true;
 	        } catch (SQLException e) {
 	            String[] options = {"Try Again", "Exit"};
@@ -294,7 +296,9 @@ public class Login extends javax.swing.JFrame {
 					a.setLocationRelativeTo(null);
 					this.dispose();
 				}else {
-					new RegularClassFrame().setVisible(true);
+					RegularClassFrame r = new RegularClassFrame(temp);
+					r.setVisible(true);
+					r.setLocationRelativeTo(null);
 					this.dispose();
 				}
 			} catch (UserNotFoundException e) {

@@ -1,6 +1,7 @@
 package model;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Feedbacks {
 	private int id;
@@ -33,12 +34,10 @@ public class Feedbacks {
 	public void setMessage(String message) {
 		this.message = message;
 	}
-	public LocalDateTime getDateAdded() {
-		return dateAdded;
+	public String getDateAdded() {
+		return dateAdded.format(DateTimeFormatter.ofPattern("E, MMM dd yyyy HH:mm a"));
 	}
 	public void setDateAdded(LocalDateTime dateAdded) {
 		this.dateAdded = dateAdded;
 	}
-	
-	
 }

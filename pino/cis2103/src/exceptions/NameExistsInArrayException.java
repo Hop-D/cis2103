@@ -1,3 +1,4 @@
+
 package exceptions;
 
 public class NameExistsInArrayException extends Exception {
@@ -8,3 +9,4 @@ public class NameExistsInArrayException extends Exception {
 		super("Name already exists.");
 	}
 }
+
