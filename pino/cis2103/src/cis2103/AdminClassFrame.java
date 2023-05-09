@@ -6,8 +6,6 @@ import java.sql.SQLException;
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
 
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ButtonGroup;
@@ -24,7 +22,6 @@ import model.Database;
 import model.Item;
 import model.Package;
 import model.UserClass;
-import java.awt.Color;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.GroupLayout;
 import javax.swing.LayoutStyle.ComponentPlacement;
@@ -32,7 +29,6 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 public class AdminClassFrame extends javax.swing.JFrame {
     
     private DefaultTableModel model;
-    private DefaultTableModel model3;
     private int rowIndex;
     private static AdminClass temp;
     
@@ -1048,11 +1044,6 @@ public class AdminClassFrame extends javax.swing.JFrame {
     //```buttons ---- UPDATE ITEM//
     private void buttonItemUpdateActionPerformed(java.awt.event.ActionEvent evt) throws SQLException {
 		try {
-			int choice = JOptionPane.showConfirmDialog(null, "Update item?", "Update Confirmation", JOptionPane.YES_NO_OPTION);
-	        
-	        if(choice != JOptionPane.YES_OPTION) {
-	        	return;
-	        }
 			Database.updateItem(inputItemID.getText(), inputSingleName.getText(), Float.parseFloat(inputSinglePrice.getText()));
 		} catch (Exception e) {
 			JOptionPane.showInputDialog(this, e.getMessage());
@@ -1066,11 +1057,6 @@ public class AdminClassFrame extends javax.swing.JFrame {
     //```buttons ---- REMOVE ITEM//
     private void buttonItemRemoveActionPerformed(java.awt.event.ActionEvent evt) {
         try {
-			int choice = JOptionPane.showConfirmDialog(null, "Remove item?", "Remove Confirmation", JOptionPane.YES_NO_OPTION);
-	        
-	        if(choice != JOptionPane.YES_OPTION) {
-	        	return;
-	        }
         	Item item = Database.getItemByID(inputItemID.getText());
 			Database.removeMenu(item);
 			tableViewItems("");
@@ -1141,7 +1127,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
     	model.setRowCount(0);
     	Object[] row;
     	for(Item i: Database.getItems()) {
-    		if(i.concatDets().contains(searchVal)) {
+    		if(i.concatDets().toLowerCase().contains(searchVal.toLowerCase())) {
                 row = new Object[5];
                 row[0] = i.getId();
                 row[1] = i.getName();
@@ -1481,7 +1467,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
         model.setRowCount(0);
         Object[] row = new Object[8];
         for(UserClass u : Database.getUsers()) {
-        	if(u.concatDets().contains(searchVal)) {
+        	if(u.concatDets().toLowerCase().contains(searchVal.toLowerCase())) {
         		row[0] = u.getId();
             	row[1] = u.getUserName();
             	row[2] = u.getPassword();
