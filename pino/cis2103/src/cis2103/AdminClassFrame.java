@@ -1951,10 +1951,10 @@ public class AdminClassFrame extends javax.swing.JFrame {
 	////////////WELCOME PAGE////////////////////
     private void initWelcome() {
     	welcomeName.setText("Welcome, Admin " + "'" + temp.getUserName() + "'");
-    	welcomeItem.setText(String.valueOf(Database.getItems().size()) + " item(s)");
-    	welcomePack.setText(String.valueOf(Database.getPack().size()) + " pack(s)");
-    	welcomeUser.setText(String.valueOf(Database.getUsers().size()) + " user(s)");
-    	welcomeMess.setText(String.valueOf(Database.getFeedback().size()) + " feed(s)");
+    	welcomeItem.setText(String.valueOf(Database.getItems().size()));
+    	welcomePack.setText(String.valueOf(Database.getPack().size()) );
+    	welcomeUser.setText(String.valueOf(Database.getUsers().size()) );
+    	welcomeMess.setText(String.valueOf(Database.getFeedback().size()) );
     	
     	}
     
