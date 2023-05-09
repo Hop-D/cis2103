@@ -1354,7 +1354,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
 
     //```buttons ---- REMOVE ITEM FROM PACKAGE//
     private void buttonPackageItemRemoveActionPerformed(java.awt.event.ActionEvent evt) {
-    	int choice = JOptionPane.showConfirmDialog(null, "Remove item from pacakage?", "Add Confirmation", JOptionPane.YES_NO_OPTION);
+    	int choice = JOptionPane.showConfirmDialog(null, "Remove item from pacakage?", "Remove Confirmation", JOptionPane.YES_NO_OPTION);
 		if(choice != JOptionPane.YES_OPTION) {
 			return;
 		}
