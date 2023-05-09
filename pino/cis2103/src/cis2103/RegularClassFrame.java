@@ -3,17 +3,22 @@ package cis2103;
 
 import java.awt.event.KeyEvent;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import javax.swing.ButtonGroup;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 import exceptions.MenuNotFoundException;
+import model.AdminClass;
 import model.Database;
+import model.Feedbacks;
 import model.Item;
 import model.Menu;
 import model.Order;
 import model.Package;
+import model.RegularClass;
+import model.UserClass;
 
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.GroupLayout;
@@ -27,15 +32,17 @@ public class RegularClassFrame extends javax.swing.JFrame {
     private DefaultTableModel model;
     int rowIndex1, rowIndex2, rowIndex3;
     Order o = new Order();
+    private static RegularClass temp;
 
     
-    public RegularClassFrame() {
+    public RegularClassFrame(UserClass user) {
         initComponents();
 //        
 
         tableViewRegOne();
         tableViewRegTwo();
         tableViewRegItem();
+        tableViewFeedbacks();
         
         
         ButtonGroup custOrderBG = new ButtonGroup();
@@ -54,6 +61,7 @@ public class RegularClassFrame extends javax.swing.JFrame {
         inputRegTotal.setEditable(false);
         inputRegChange.setEditable(false); 
         
+        temp = (RegularClass) user;
     }
 
 
@@ -75,7 +83,6 @@ public class RegularClassFrame extends javax.swing.JFrame {
         buttonRegRemove = new javax.swing.JButton();
         inputRegTemp = new javax.swing.JTextField();
         jSpinner1 = new javax.swing.JSpinner();
-        jSpinner1.setModel(new SpinnerNumberModel(Integer.valueOf(1), Integer.valueOf(1), null, Integer.valueOf(1)));
         jPanel6 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tableRegOne = new javax.swing.JTable();
@@ -105,13 +112,19 @@ public class RegularClassFrame extends javax.swing.JFrame {
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
         inputRegTotal = new javax.swing.JTextField();
-        inputRegTotal.setText("0.00");
         inputRegAmount = new javax.swing.JTextField();
-        inputRegAmount.setText("0.00");
         inputRegChange = new javax.swing.JTextField();
-        inputRegChange.setText("0.00");
         buttonRegPay = new javax.swing.JButton();
         buttonRegPrint = new javax.swing.JButton();
+        jPanel7 = new javax.swing.JPanel();
+        jLabel11 = new javax.swing.JLabel();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        textFeedArea = new javax.swing.JTextArea();
+        jPanel8 = new javax.swing.JPanel();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        tableFeedbacks = new javax.swing.JTable();
+        jLabel12 = new javax.swing.JLabel();
+        buttonFeedSend = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMaximumSize(new java.awt.Dimension(1720, 880));
@@ -394,6 +407,12 @@ public class RegularClassFrame extends javax.swing.JFrame {
 
         jLabel10.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel10.setText("CHANGE");
+        
+        inputRegTotal.setText("0.00");
+
+        inputRegAmount.setText("0.00");
+
+        inputRegChange.setText("0.00");
 
         buttonRegPay.setText("PAY");
         buttonRegPay.addActionListener(new java.awt.event.ActionListener() {
@@ -544,6 +563,99 @@ public class RegularClassFrame extends javax.swing.JFrame {
         jPanel4.setLayout(jPanel4Layout);
 
         jTabbedPane1.addTab("SYSTEM", jPanel4);
+        
+        
+        jPanel7.setBackground(new java.awt.Color(255, 255, 255));
+
+        jLabel11.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
+        jLabel11.setText("SEND A FEEDBACK");
+
+        textFeedArea.setColumns(20);
+        textFeedArea.setRows(5);
+        jScrollPane4.setViewportView(textFeedArea);
+
+        jPanel8.setBackground(new java.awt.Color(20, 30, 97));
+
+        tableFeedbacks.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "ID", "MESSAGE", "SENT ON"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tableFeedbacks.setRowHeight(40);
+        jScrollPane5.setViewportView(tableFeedbacks);
+
+        javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
+        jPanel8.setLayout(jPanel8Layout);
+        jPanel8Layout.setHorizontalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel8Layout.createSequentialGroup()
+                .addGap(16, 16, 16)
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 568, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(16, Short.MAX_VALUE))
+        );
+        jPanel8Layout.setVerticalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel8Layout.createSequentialGroup()
+                .addGap(19, 19, 19)
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(19, Short.MAX_VALUE))
+        );
+
+        jLabel12.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jLabel12.setText("ENTER YOUR MESSAGE :");
+
+        buttonFeedSend.setText("SEND");
+        buttonFeedSend.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonFeedSendActionPerformed(evt);
+            }
+        });
+        
+
+        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
+        jPanel7.setLayout(jPanel7Layout);
+        jPanel7Layout.setHorizontalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addGap(224, 224, 224)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel12)
+                    .addComponent(jLabel11)
+                    .addComponent(buttonFeedSend, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(88, 88, 88)
+                .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(308, Short.MAX_VALUE))
+        );
+        jPanel7Layout.setVerticalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addGap(75, 75, 75)
+                .addComponent(jLabel11)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel7Layout.createSequentialGroup()
+                        .addComponent(jLabel12)
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(buttonFeedSend, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(91, Short.MAX_VALUE))
+        );
+
+        jTabbedPane1.addTab("SEND FEEDBACK", jPanel7);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -580,10 +692,10 @@ public class RegularClassFrame extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
     	int out = JOptionPane.showConfirmDialog(this, "Do you want to log out?", "SELECT", JOptionPane.YES_NO_OPTION);
         if(out == 0) {
-            this.dispose();
             Login log = new Login();
         	log.setVisible(true);
         	log.setLocationRelativeTo(null);
+        	this.dispose();
         }
     }
     
@@ -830,10 +942,6 @@ public class RegularClassFrame extends javax.swing.JFrame {
 //			e.printStackTrace();
 //		}
 //        
-	    
-	Billing bill = new Billing();
-        bill.setVisible(true);
-        bill.setLocationRelativeTo(null);
     }                                            
 
     private void buttonRegPrintActionPerformed(java.awt.event.ActionEvent evt) {                                              
@@ -887,7 +995,41 @@ public class RegularClassFrame extends javax.swing.JFrame {
         return change;
     }
     
+    
+    
+	////////////SEND A FEEDBACK////////////////////
+    
+    private void tableViewFeedbacks() {
+    	model = (DefaultTableModel) tableFeedbacks.getModel();
+    	model.setRowCount(0);
+    	Object[] row = new Object[3];
+    	for(Feedbacks f : Database.getFeedback()) {     	
+    		row[0] = f.getId();
+    		row[1] = f.getMessage();
+    		row[2] = f.getDateAdded();
+    		model.addRow(row);
+    	}
+    	
+    }
+    
+    private void buttonFeedSendActionPerformed(java.awt.event.ActionEvent evt) {  
+    	Feedbacks feed;
+		try {
+	    	int choice = JOptionPane.showConfirmDialog(null, "Send Message?", "Add Confirmation", JOptionPane.YES_NO_OPTION);
+			if(choice == JOptionPane.NO_OPTION) {
+				return;
+			} 
+			feed = new Feedbacks(Database.getLastFeedbackID(), temp.getId(), textFeedArea.getText(), LocalDateTime.now());
+	    	Database.addFeedback(feed);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		tableViewFeedbacks();
+    } 
+    
                    
+    private javax.swing.JButton buttonFeedSend;
     private javax.swing.JButton buttonRegAddOne;
     private javax.swing.JButton buttonRegAddTwo;
     private javax.swing.JButton buttonRegPay;
@@ -907,6 +1049,8 @@ public class RegularClassFrame extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -921,18 +1065,24 @@ public class RegularClassFrame extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
+    private javax.swing.JPanel jPanel8;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JSpinner jSpinner1;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTable tableRegItems;
     private javax.swing.JRadioButton radioRegDeliver;
     private javax.swing.JRadioButton radioRegDigital;
     private javax.swing.JRadioButton radioRegPhysical;
     private javax.swing.JRadioButton radioRegPickup;
     private javax.swing.JSpinner spinnerOne;
     private javax.swing.JSpinner spinnerTwo;
+    private javax.swing.JTable tableFeedbacks;
+    private javax.swing.JTable tableRegItems;
     private javax.swing.JTable tableRegOne;
-    private javax.swing.JTable tableRegTwo;             
+    private javax.swing.JTable tableRegTwo;
+    private javax.swing.JTextArea textFeedArea;            
 }
