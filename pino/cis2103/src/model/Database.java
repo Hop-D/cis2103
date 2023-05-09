@@ -10,6 +10,9 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
+import org.jfree.*;
+import org.jfree.data.general.DefaultPieDataset;
+
 import exceptions.MenuNotFoundException;
 import exceptions.NameExistsInArrayException;
 import exceptions.UserNotFoundException;
@@ -43,6 +46,7 @@ public class Database {
         conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/cis2103", "root", "");
         
 	}
+	
 	//Getters and setters
 	public Connection getConn() {
 		return conn;
@@ -92,15 +96,41 @@ public class Database {
 		Database.items = items;
 	}
 	
-	
-	//Getters and setters
-	
 	public static ArrayList<Package> getPack() {
 		return pack;
 	}
 	public static void setPack(ArrayList<Package> pack) {
 		Database.pack = pack;
 	}
+	
+	public static ArrayList<Menu> getMenu() {
+		return menu;
+	}
+	public static void setMenu(ArrayList<Menu> menu) {
+		Database.menu = menu;
+	}
+	
+	public static ArrayList<Feedbacks> getFeedback() {
+		return feedback;
+	}
+	public static void setFeedback(ArrayList<Feedbacks> feedback) {
+		Database.feedback = feedback;
+	}
+	public static ArrayList<Vouchers> getVouchers() {
+		return vouchers;
+	}
+	public static void setVouchers(ArrayList<Vouchers> vouchers) {
+		Database.vouchers = vouchers;
+	}
+	public static ArrayList<Invoice> getInvoice() {
+		return invoice;
+	}
+	public static void setInvoice(ArrayList<Invoice> invoice) {
+		Database.invoice = invoice;
+	}
+	
+	
+	
 	//Additional codes for database
 	public void closeConn() {
 		try {
@@ -907,33 +937,6 @@ public class Database {
 	            db.closeConn();
 	        }
 	    }
-	
 	}
-	
-	public static ArrayList<Menu> getMenu() {
-		return menu;
-	}
-	public static void setMenu(ArrayList<Menu> menu) {
-		Database.menu = menu;
-	}
-	
-	public static ArrayList<Feedbacks> getFeedback() {
-		return feedback;
-	}
-	public static void setFeedback(ArrayList<Feedbacks> feedback) {
-		Database.feedback = feedback;
-	}
-	public static ArrayList<Vouchers> getVouchers() {
-		return vouchers;
-	}
-	public static void setVouchers(ArrayList<Vouchers> vouchers) {
-		Database.vouchers = vouchers;
-	}
-	public static ArrayList<Invoice> getInvoice() {
-		return invoice;
-	}
-	public static void setInvoice(ArrayList<Invoice> invoice) {
-		Database.invoice = invoice;
-	}
-	
+
 }
