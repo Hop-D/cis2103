@@ -36,9 +36,8 @@ public class RegularClassFrame extends javax.swing.JFrame {
     }
 
 
-    @SuppressWarnings("unchecked")
-                         
-    private void initComponents() {
+    @SuppressWarnings("serial")
+	private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();

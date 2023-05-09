@@ -104,5 +104,13 @@ public abstract class UserClass {
 	public String concatDets() {
 		return getId() + " " + getUserName() + " " + getPassword() + " " + getContact() + " " + getRole();
 	}
+	
+	public LocalDateTime getUserUpdatedLDT() {
+		return userUpdated;
+	}
+	
+	public LocalDateTime getUserCreatedLDT() {
+		return userUpdated;
+	}
 
 }

@@ -160,8 +160,8 @@ public class Database {
 			db.getPst().setString(3, u.getPassword());
 			db.getPst().setString(4, u.getContact());
 			db.getPst().setString(5, u.getRole());
-			db.getPst().setTimestamp(6, Timestamp.valueOf(u.getUserCreated()));
-			db.getPst().setTimestamp(7, Timestamp.valueOf(u.getUserUpdated()));
+			db.getPst().setTimestamp(6, Timestamp.valueOf(u.getUserCreatedLDT()));
+			db.getPst().setTimestamp(7, Timestamp.valueOf(u.getUserUpdatedLDT()));
 			db.getPst().setString(8, u.getEditedByID());
 			db.getPst().executeUpdate();
 			
@@ -673,7 +673,7 @@ public class Database {
 	        }
 		    temp.setPackageitems(packItem);
 		} catch (SQLException | MenuNotFoundException e) {
-	        System.out.println(e.getMessage());
+	       
 	    }finally {
 	        if (db != null) {
 	            db.closeConn();

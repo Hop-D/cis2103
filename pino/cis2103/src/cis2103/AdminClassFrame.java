@@ -1030,7 +1030,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
 				try {
 					int choice = JOptionPane.showConfirmDialog(null, "Add item?", "Add Confirmation", JOptionPane.YES_NO_OPTION);
 			        
-			        if(choice == JOptionPane.NO_OPTION) {
+			        if(choice != JOptionPane.YES_OPTION) {
 			        	return;
 			        }
 					Database.addItem(new Item("I" + inputItemID.getText(), inputSingleName.getText(), Float.parseFloat(inputSinglePrice.getText())));
@@ -1215,7 +1215,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
     	}catch(MenuNotFoundException e) {
     		int choice = JOptionPane.showConfirmDialog(null, "Add package?", "Add Confirmation", JOptionPane.YES_NO_OPTION);
 	        
-	        if(choice == JOptionPane.NO_OPTION) {
+	        if(choice != JOptionPane.YES_OPTION) {
 	        	return;
 	        }
 	        try {
@@ -1239,7 +1239,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
     	
     	if(isEmptyPackage()) {
         	int choice = JOptionPane.showConfirmDialog(null, "Update Package?", "Add Confirmation", JOptionPane.YES_NO_OPTION);
-    		if(choice == JOptionPane.NO_OPTION) {
+    		if(choice != JOptionPane.YES_OPTION) {
     			return;
     		}
     		updatePackage();
@@ -1252,7 +1252,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
     //```buttons ---- REMOVE PACKAGE//
     private void buttonPackageRemoveActionPerformed(java.awt.event.ActionEvent evt) {
     	int choice = JOptionPane.showConfirmDialog(null, "Remove Package?", "Add Confirmation", JOptionPane.YES_NO_OPTION);
-		if(choice == JOptionPane.NO_OPTION) {
+		if(choice != JOptionPane.YES_OPTION) {
 			return;
 		}
 		try {
@@ -1312,7 +1312,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
     //```buttons ---- ADD ITEM TO PACKAGE//
     private void buttonPackageItemAddActionPerformed(java.awt.event.ActionEvent evt) {
     	int choice = JOptionPane.showConfirmDialog(null, "Add item to package?", "Add Confirmation", JOptionPane.YES_NO_OPTION);
-		if(choice == JOptionPane.NO_OPTION) {
+		if(choice != JOptionPane.YES_OPTION) {
 			return;
 		}
     	int id = Database.getLastPackageItemID();	
@@ -1354,7 +1354,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
     //```buttons ---- REMOVE ITEM FROM PACKAGE//
     private void buttonPackageItemRemoveActionPerformed(java.awt.event.ActionEvent evt) {
     	int choice = JOptionPane.showConfirmDialog(null, "Remove item from pacakage?", "Add Confirmation", JOptionPane.YES_NO_OPTION);
-		if(choice == JOptionPane.NO_OPTION) {
+		if(choice != JOptionPane.YES_OPTION) {
 			return;
 		}
     	try {
@@ -1514,7 +1514,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
 			} catch (UserNotFoundException e) {
 				try {
 					int choice = JOptionPane.showConfirmDialog(null, "Add User?", "Add Confirmation", JOptionPane.YES_NO_OPTION);
-					if(choice == JOptionPane.NO_OPTION) {
+					if(choice != JOptionPane.YES_OPTION) {
 						return;
 					}
 					
@@ -1539,7 +1539,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
     	
         if(isEmptyUser() && noDupe() == 0) {
         	int choice = JOptionPane.showConfirmDialog(null, "Update User?", "Add Confirmation", JOptionPane.YES_NO_OPTION);
-    		if(choice == JOptionPane.NO_OPTION) {
+    		if(choice != JOptionPane.YES_OPTION) {
     			return;
     		} 
         	try {
@@ -1563,7 +1563,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
     	
     	
     	int choice = JOptionPane.showConfirmDialog(null, "Remove User?", "Add Confirmation", JOptionPane.YES_NO_OPTION);
-		if(choice == JOptionPane.NO_OPTION) {
+		if(choice != JOptionPane.YES_OPTION) {
 			return;
 		} 
 		try {
