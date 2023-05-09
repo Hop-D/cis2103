@@ -830,6 +830,10 @@ public class RegularClassFrame extends javax.swing.JFrame {
 //			e.printStackTrace();
 //		}
 //        
+	    
+	Billing bill = new Billing();
+        bill.setVisible(true);
+        bill.setLocationRelativeTo(null);
     }                                            
 
     private void buttonRegPrintActionPerformed(java.awt.event.ActionEvent evt) {                                              
