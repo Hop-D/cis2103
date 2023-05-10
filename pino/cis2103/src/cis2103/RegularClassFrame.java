@@ -60,6 +60,7 @@ public class RegularClassFrame extends javax.swing.JFrame {
         inputRegChange.setEditable(false); 
         
         temp = (RegularClass) user;
+        initWelcome();
     }
 
 
@@ -1055,6 +1056,16 @@ public class RegularClassFrame extends javax.swing.JFrame {
 		}
 		tableViewFeedbacks();
     } 
+	
+        
+    ////////////WELCOME PAGE////////////////////
+    private void initWelcome() {
+    	welcomeName.setText("Welcome, Admin " + "'" + temp.getUserName() + "'");
+    	welcomeItem.setText(String.valueOf(Database.getItems().size()));
+    	welcomePack.setText(String.valueOf(Database.getPack().size()));
+    	welcomeUser.setText(String.valueOf(Database.getUsers().size()));
+    	welcomeMess.setText(String.valueOf(Database.getFeedback().size()));    	
+    }
     
                    
     private javax.swing.JButton buttonFeedSend;
