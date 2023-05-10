@@ -31,6 +31,7 @@ import javax.swing.GroupLayout.Alignment;
 import javax.swing.GroupLayout;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import java.awt.Dimension;
+import javax.swing.SpinnerNumberModel;
 
 
 public class AdminClassFrame extends javax.swing.JFrame {
@@ -66,6 +67,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
         userRoles.add(radioUserAdmin);
         userRoles.add(radioUserRegular);
         radioUserRegular.setSelected(true);
+        jSpinner1.setValue(0);
         
         initWelcome();
         
@@ -73,7 +75,8 @@ public class AdminClassFrame extends javax.swing.JFrame {
 
     private void initComponents() {
     	
-    	jPanel1 = new javax.swing.JPanel();
+
+        jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         buttonLogOut = new javax.swing.JButton();
@@ -127,6 +130,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
         jLabel10 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
+        jSpinner1 = new javax.swing.JSpinner();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         inputNewPackage = new javax.swing.JTextField();
@@ -676,17 +680,17 @@ public class AdminClassFrame extends javax.swing.JFrame {
 
         tablePackageItem.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
             },
             new String [] {
-                "ID", "NAME", "PRICE"
+                "ID", "NAME", "QUANTITY", "PRICE"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false
+                false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -738,15 +742,17 @@ public class AdminClassFrame extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel16Layout.createSequentialGroup()
                 .addGap(20, 20, 20)
                 .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 490, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel14))
                     .addGroup(jPanel16Layout.createSequentialGroup()
                         .addComponent(jLabel9)
                         .addGap(18, 18, 18)
                         .addComponent(inputPackageSingleID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(21, 21, 21)
-                        .addComponent(buttonPackageItemAdd))
-                    .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 490, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel14)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(buttonPackageItemAdd)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
                 .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -778,7 +784,8 @@ public class AdminClassFrame extends javax.swing.JFrame {
                         .addComponent(inputPackageSingleID, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel9)
                         .addComponent(inputPackageSingleID2, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel10))
+                        .addComponent(jLabel10)
+                        .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(buttonPackageItemRemove, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(63, Short.MAX_VALUE))
         );
@@ -790,11 +797,6 @@ public class AdminClassFrame extends javax.swing.JFrame {
         jLabel8.setText("ENTER PACKAGE NAME :");
 
         buttonPackageAdd.setText("CREATE");
-        buttonPackageAdd.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonPackageAddActionPerformed(evt);
-            }
-        });
 
         tablePackages.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -805,7 +807,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, true, true
+                false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -1536,10 +1538,11 @@ public class AdminClassFrame extends javax.swing.JFrame {
 	    	Package temp = Database.getPackageByID(id);
 			Database.loadPackageItemFromDatabase(id);
 	    	for(Item i : temp.getPackageitems()) {
-	    		row = new Object[3];
+	    		row = new Object[4];
 	    		row[0] = i.getId();
 	    		row[1] = i.getName();
-	    		row[2] = i.getPrice();
+	    		row[2] = i.getQuantity();
+	    		row[3] = i.getPrice();
 	    		model.addRow(row);
 	    	}
 		} catch (MenuNotFoundException e) {
@@ -1564,6 +1567,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
         rowIndex = tablePackageSingle.getSelectedRow();
         
         inputPackageSingleID.setText(model.getValueAt(rowIndex, 0).toString());
+    	jSpinner1.setValue(1);
     }
     
     // Fetch data of selected package item
@@ -1658,6 +1662,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
     		Database.loadPackageItemFromDatabase(inputPackageID.getText());
 			Package p = Database.getPackageByID(inputPackageID.getText());
 			Item i = Database.getItemByID(inputPackageSingleID.getText());
+			i.setQuantity(Integer.parseInt(jSpinner1.getValue().toString()));
 			try {
 				Database.addPackageItem(id, p, i);
 				updatePackage();
@@ -1966,7 +1971,6 @@ public class AdminClassFrame extends javax.swing.JFrame {
 	    	textFeedArea.setText(model.getValueAt(rowIndex, 1).toString());
 	    	
 		} catch (UserNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     }
@@ -2069,6 +2073,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JScrollPane jScrollPane8;
+    private javax.swing.JSpinner jSpinner1;
     private javax.swing.JTabbedPane jTabbedPane2;
     private javax.swing.JLabel labelFeedDate;
     private javax.swing.JLabel labelFeedID;
