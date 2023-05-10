@@ -8,6 +8,10 @@ public class AdminClass extends UserClass {
 		super(id, userName, password, contact, UserClass.ADMIN_USER);
 		// TODO Auto-generated constructor stub
 	}
+	
+	public AdminClass(String id, String userName, String password, String contact, String role, String editedByID) {
+		super(id, userName, password, contact, UserClass.REGULAR_USER, editedByID);
+	}
 
 	public AdminClass(String id, String userName, String password, String contact, String role, LocalDateTime userCreated, LocalDateTime userUpdated, String editedByID) {
 		super(id, userName, password, contact, UserClass.ADMIN_USER, userCreated, userUpdated, editedByID);
