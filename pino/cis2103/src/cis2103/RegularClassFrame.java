@@ -804,7 +804,8 @@ public class RegularClassFrame extends javax.swing.JFrame {
     }
     
     private void tableViewRegTwo() {
-        model = (DefaultTableModel) tableRegTwo.getModel();   
+        model = (DefaultTableModel) tableRegTwo.getModel();  
+        model.setRowCount(0);
     	Object[] row = new Object[3];
     	
     	for(Package p : Database.getPack()) {
@@ -1001,7 +1002,7 @@ public class RegularClassFrame extends javax.swing.JFrame {
     }                                             
     
     private void inputRegAmountKeyTyped(java.awt.event.KeyEvent evt) {
-	if(!Character.isDigit(evt.getKeyChar())) {
+        if(!Character.isDigit(evt.getKeyChar())) {
             evt.consume();
         }
     }
@@ -1012,16 +1013,16 @@ public class RegularClassFrame extends javax.swing.JFrame {
     }
     
     private void buttonRegProceedActionPerformed(java.awt.event.ActionEvent evt) {
-    	Billing bill = new Billing();
-    	bill.setVisible(true);
-    	bill.setLocationRelativeTo(null);	
+//     	Billing bill = new Billing(Integer.parseInt(inputRegTrans.getText().toString()), oi, Float.parseFloat(inputRegTotal.getText()), Float.parseFloat(inputRegAmount.getText()), temp.getId());
+//     	bill.setVisible(true);
+//     	bill.setLocationRelativeTo(null);	
     }
     
     public float currentTotal() {
         int i;
         float total = 0;
         for(i = 0; i < oi.size(); i++) {
-            total += oi.get(i).getPrice();
+            total += (oi.get(i).getPrice() * oi.get(i).getQuantity()) ;
         }
         return total;
     } 
@@ -1056,9 +1057,9 @@ public class RegularClassFrame extends javax.swing.JFrame {
 		}
 		tableViewFeedbacks();
     } 
-	
-        
-    ////////////WELCOME PAGE////////////////////
+    
+    
+	////////////WELCOME PAGE////////////////////
     private void initWelcome() {
     	welcomeName.setText("Welcome, Admin " + "'" + temp.getUserName() + "'");
     	welcomeItem.setText(String.valueOf(Database.getItems().size()));
