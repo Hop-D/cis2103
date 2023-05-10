@@ -12,6 +12,7 @@ import javax.swing.table.DefaultTableModel;
 import exceptions.MenuNotFoundException;
 import model.Database;
 import model.Feedbacks;
+import model.Item;
 import model.Menu;
 import model.Order;
 import model.Package;
@@ -48,7 +49,7 @@ public class RegularClassFrame extends javax.swing.JFrame {
 //        custModeBG.add(radioRegDeliver);
         
         try {
-			inputRegTrans.setText(String.valueOf(Database.getNextOIID()));
+			inputRegTrans.setText(String.valueOf(Database.getLastOIID()));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -782,13 +783,13 @@ public class RegularClassFrame extends javax.swing.JFrame {
     	model = (DefaultTableModel) tableRegOne.getModel();
     	Object[] row = new Object[3];
     	    	
-//    	for(Item i : Database.getItems()) {
-//    		row[0] = i.getId();
-//			row[1] = i.getName();
-//			row[2] = i.getPrice();
-//			model.addRow(row);
-//		}
-//    }
+    	for(Item i : Database.getItems()) {
+    		row[0] = i.getId();
+			row[1] = i.getName();
+			row[2] = i.getPrice();
+			model.addRow(row);
+		}
+    }
     
     private void tableViewRegTwo() {
     	
@@ -955,7 +956,7 @@ public class RegularClassFrame extends javax.swing.JFrame {
     }
     
     private void buttonRegProceedActionPerformed(java.awt.event.ActionEvent evt) {
-    	Billing bill = new Billing(Integer.parseInt(inputRegTrans.getText().toString()), oi, Float.parseFloat(inputRegTotal.getText()), Float.parseFloat(inputRegAmount.getText()), temp.getId());
+    	Billing bill = new Billing();
     	bill.setVisible(true);
     	bill.setLocationRelativeTo(null);	
     }
