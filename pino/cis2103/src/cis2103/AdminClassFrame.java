@@ -1600,7 +1600,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
     private void buttonPackageUpdateActionPerformed(java.awt.event.ActionEvent evt) {
     	
     	if(isEmptyPackage()) {
-        	int choice = JOptionPane.showConfirmDialog(null, "Update Package?", "Add Confirmation", JOptionPane.YES_NO_OPTION);
+        	int choice = JOptionPane.showConfirmDialog(null, "Update Package?", "Update Confirmation", JOptionPane.YES_NO_OPTION);
     		if(choice != JOptionPane.YES_OPTION) {
     			return;
     		}
@@ -1623,7 +1623,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
     
     //```buttons ---- REMOVE PACKAGE//
     private void buttonPackageRemoveActionPerformed(java.awt.event.ActionEvent evt) {
-    	int choice = JOptionPane.showConfirmDialog(null, "Remove Package?", "Add Confirmation", JOptionPane.YES_NO_OPTION);
+    	int choice = JOptionPane.showConfirmDialog(null, "Remove Package?", "Remove Confirmation", JOptionPane.YES_NO_OPTION);
 		if(choice != JOptionPane.YES_OPTION) {
 			return;
 		}
@@ -1728,7 +1728,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
 
     //```buttons ---- REMOVE ITEM FROM PACKAGE//
     private void buttonPackageItemRemoveActionPerformed(java.awt.event.ActionEvent evt) {
-    	int choice = JOptionPane.showConfirmDialog(null, "Remove item from pacakage?", "Add Confirmation", JOptionPane.YES_NO_OPTION);
+    	int choice = JOptionPane.showConfirmDialog(null, "Remove item from pacakage?", "Remove Confirmation", JOptionPane.YES_NO_OPTION);
 		if(choice != JOptionPane.YES_OPTION) {
 			return;
 		}
