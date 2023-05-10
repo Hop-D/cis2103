@@ -25,9 +25,6 @@ import model.Package;
 import model.UserClass;
 
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.GroupLayout;
 import javax.swing.LayoutStyle.ComponentPlacement;
@@ -1310,7 +1307,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
     }
     
 
-    // LOG OUT
+    // LOG OUT //AnotherClass //AnotherClass
     private void buttonLogOutActionPerformed(java.awt.event.ActionEvent evt) {
         
         int out = JOptionPane.showConfirmDialog(this, "Do you want to log out?", "SELECT", JOptionPane.YES_NO_OPTION);
@@ -1324,7 +1321,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
     
     ////////////MANAGE SINGLE ITEMS////////////////////
     
-    //```buttons ---- ADD NEW//
+    //```buttons ---- ADD NEW// //AnotherClass
     private void buttonAddNewItemActionPerformed(java.awt.event.ActionEvent evt) {
         if(isEmptyItems()) {
         	try {
@@ -1350,7 +1347,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
         }
     }
     
-    //```buttons ---- UPDATE ITEM//
+    //```buttons ---- UPDATE ITEM// //AnotherClass
     private void buttonItemUpdateActionPerformed(java.awt.event.ActionEvent evt) throws SQLException {
 		try {
 			Database.updateItem(inputItemID.getText(), inputSingleName.getText(), Float.parseFloat(inputSinglePrice.getText()));
@@ -1363,7 +1360,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
 		}
     }
     
-    //```buttons ---- REMOVE ITEM//
+    //```buttons ---- REMOVE ITEM// //AnotherClass
     private void buttonItemRemoveActionPerformed(java.awt.event.ActionEvent evt) {
         try {
         	int choice = JOptionPane.showConfirmDialog(null, "Remove item?", "Add Confirmation", JOptionPane.YES_NO_OPTION);
@@ -1382,7 +1379,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
 		}
     }
     
-    //```buttons ---- PRINT ITEM//
+    //```buttons ---- PRINT ITEM// //AnotherClass
     private void buttonItemPrintActionPerformed(java.awt.event.ActionEvent evt) {
         try {
             MessageFormat header = new MessageFormat("ALL ITEMS");
@@ -1393,7 +1390,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
         }
     }
 
-    //```buttons ---- SEARCH ITEM//
+    //```buttons ---- SEARCH ITEM// //AnotherClass
     private void buttonItemSearchActionPerformed(java.awt.event.ActionEvent evt) {   
         if(inputSingleSearch.getText().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Input is empty");
@@ -1405,26 +1402,26 @@ public class AdminClassFrame extends javax.swing.JFrame {
         }
     }
 
-    //```buttons ---- CLEAR//    
+    //```buttons ---- CLEAR//     //AnotherClass
     private void buttonClearInputItemActionPerformed(java.awt.event.ActionEvent evt) {   
         tableItems.clearSelection();
     	clearSingle();
     }
 
-    //```buttons ---- REFRESH ITEM//
+    //```buttons ---- REFRESH ITEM// //AnotherClass
     private void buttonItemTableRefreshActionPerformed(java.awt.event.ActionEvent evt) {
     	clearSingle();
 		tableViewItems("");
     }
     
-    // clear input boxes
+    // clear input boxes //AnotherClass
     private void clearSingle() {
 		inputItemID.setText("" + Database.getLastItemID());
 	    inputSingleName.setText(null);
 	    inputSinglePrice.setText(null);
     }
 
-    // display data of clicked row in MANAGE SINGLE ITEMS
+    // display data of clicked row in MANAGE SINGLE ITEMS //AnotherClass
     private void tableItemsMouseClicked(java.awt.event.MouseEvent evt) {      
         model = (DefaultTableModel) tableItems.getModel();
         rowIndex = tableItems.getSelectedRow();  
@@ -1433,7 +1430,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
         inputSinglePrice.setText(model.getValueAt(rowIndex, 2).toString());
     }
     
-    // put data of items in a table
+    // put data of items in a table //AnotherClass
     private void tableViewItems(String searchVal) {
     	DefaultTableModel model = (DefaultTableModel) tableItems.getModel();
     	model.setRowCount(0);
@@ -1451,7 +1448,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
     	}
     }
 
-    //Check if all fields are filled
+    //Check if all fields are filled //AnotherClass
     public boolean isEmptyItems() {
         
         if(inputItemID.getText().isEmpty()) {
@@ -1473,7 +1470,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
     
     // -- CRUD -- //
     
-    // display data to table
+    // display data to table //AnotherClass
 	private void tableViewPackages() {
 		model = (DefaultTableModel) tablePackages.getModel();
     	model.setRowCount(0);
@@ -1490,7 +1487,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
     }
   
 	
-	// display data to table
+	// display data to table //AnotherClass
     private void tableViewPackageSingle() {
     	DefaultTableModel model = (DefaultTableModel) tablePackageSingle.getModel();
     	model.setRowCount(0);
@@ -1504,7 +1501,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
     	}
     }
     
-    // display data to table
+    // display data to table //AnotherClass
     private void tableViewPackageItem(String id) {
     	DefaultTableModel model = (DefaultTableModel) tablePackageItem.getModel();
     	model.setRowCount(0);
@@ -1526,7 +1523,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
     }
     
     
-    // Fetch data of selected package
+    // Fetch data of selected package //AnotherClass
     private void tablePackagesMouseClicked(java.awt.event.MouseEvent evt) {
         
         model = (DefaultTableModel) tablePackages.getModel();
@@ -1551,7 +1548,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
     
     
     
-    //```buttons ---- ADD PACKAGE//
+    //```buttons ---- ADD PACKAGE// //AnotherClass
     private void buttonPackageAddActionPerformed(java.awt.event.ActionEvent evt) {
     	
     	String id = "P" + inputNewPackage.getText();
@@ -1590,13 +1587,10 @@ public class AdminClassFrame extends javax.swing.JFrame {
         	clearPackages();
 			tableViewPackages();
     	}
-
-
-
     }
 
 
-    //```buttons ---- UPDATE PACKAGE//
+    //```buttons ---- UPDATE PACKAGE// //AnotherClass
     private void buttonPackageUpdateActionPerformed(java.awt.event.ActionEvent evt) {
     	
     	if(isEmptyPackage()) {
@@ -1610,7 +1604,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
     	}
 
     }
-    
+    //AnotherClass
     private void updatePackage() {
     	try {
 			Package temp = Database.getPackageByID(inputPackageID.getText());
@@ -1621,7 +1615,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
     	tableViewPackages();
     }
     
-    //```buttons ---- REMOVE PACKAGE//
+    //```buttons ---- REMOVE PACKAGE// //AnotherClass
     private void buttonPackageRemoveActionPerformed(java.awt.event.ActionEvent evt) {
     	int choice = JOptionPane.showConfirmDialog(null, "Remove Package?", "Remove Confirmation", JOptionPane.YES_NO_OPTION);
 		if(choice != JOptionPane.YES_OPTION) {
@@ -1640,7 +1634,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
     }
 
     
-    // check if package input boxes are empty
+    // check if package input boxes are empty //AnotherClass
     public boolean isEmptyPackage() {
         if(inputPackageName.getText().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Package Name is missing");
@@ -1653,7 +1647,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
         return true;
     } 
     
-    // Fetch data of selected item
+    // Fetch data of selected item //AnotherClass
     private void tablePackageSingleMouseClicked(java.awt.event.MouseEvent evt) {
         model = (DefaultTableModel) tablePackageSingle.getModel();
         rowIndex = tablePackageSingle.getSelectedRow();
@@ -1677,7 +1671,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
     }
     
 
-    //```buttons ---- ADD ITEM TO PACKAGE//
+    //```buttons ---- ADD ITEM TO PACKAGE// //AnotherClass
     private void buttonPackageItemAddActionPerformed(java.awt.event.ActionEvent evt) {
     	
     	int id = Database.getLastPackageItemID();	
@@ -1718,7 +1712,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
 
     }
     
-    // Fetch data of item inside package
+    // Fetch data of item inside package //AnotherClass
     private void tablePackageItemMouseClicked(java.awt.event.MouseEvent evt) {
         model = (DefaultTableModel) tablePackageItem.getModel();
         rowIndex = tablePackageItem.getSelectedRow();
@@ -1727,7 +1721,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
 //        tableViewPackageItem(inputPackageID.getText());
     }
 
-    //```buttons ---- REMOVE ITEM FROM PACKAGE//
+    //```buttons ---- REMOVE ITEM FROM PACKAGE// //AnotherClass
     private void buttonPackageItemRemoveActionPerformed(java.awt.event.ActionEvent evt) {
     	int choice = JOptionPane.showConfirmDialog(null, "Remove item from pacakage?", "Remove Confirmation", JOptionPane.YES_NO_OPTION);
 		if(choice != JOptionPane.YES_OPTION) {
@@ -1762,7 +1756,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
 
     // PACKAGE OTHER FUNCTIONS //
         
-    // clear input boxes and table selections 
+    // clear input boxes and table selections  //AnotherClass
     private void clearPackages() {
     	inputNewPackage.setText("" + Database.getLastPackageID());
     	inputNewPackageName.setText("");
@@ -1786,7 +1780,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
     
 	////////////MANAGE USERS////////////////////
     
-    // clear input boxes and table selections
+    // clear input boxes and table selections //AnotherClass
     private void clearUser() {
         inputUserID.setText("" + Database.getLastUserID());
         inputUserName.setText(null);
@@ -1798,7 +1792,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
     
     
     
-    // Only numeric inputs for price
+    // Only numeric inputs for price //AnotherClass
     private void inputSinglePriceKeyTyped(java.awt.event.KeyEvent evt) {
         if(!Character.isDigit(evt.getKeyChar())) {
             evt.consume();
@@ -1809,7 +1803,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
 	////////////MANAGE USERS////////////////////
     // -- CRUD -- //
         
-    // display data to table
+    // display data to table //AnotherClass
     private void tableViewUsers(String searchVal) {
         model = (DefaultTableModel) tableUsers.getModel();
         model.setRowCount(0);
@@ -1829,7 +1823,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
         }
     }
     
-    // fetch data of selected table row
+    // fetch data of selected table row //AnotherClass
     private void tableUsersMouseClicked(java.awt.event.MouseEvent evt) {
         model = (DefaultTableModel) tableUsers.getModel();
         rowIndex = tableUsers.getSelectedRow();
@@ -1847,7 +1841,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
         }
     }
 
-    //```buttons ---- ADD USER//
+    //```buttons ---- ADD USER// //AnotherClass
     private void buttonUserAddActionPerformed(java.awt.event.ActionEvent evt) {
     	
     	if(isEmptyUser()) {
@@ -1878,7 +1872,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
     	}
     }
 
-    //```buttons ---- UPDATE USER//
+    //```buttons ---- UPDATE USER// //AnotherClass
     private void buttonUserUpdateActionPerformed(java.awt.event.ActionEvent evt) {
     	
         if(isEmptyUser() && noDupe() == 0) {
@@ -1902,7 +1896,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
         tableViewUsers("");
     }
 
-    //```buttons ---- REMOVE USER//
+    //```buttons ---- REMOVE USER// //AnotherClass
     private void buttonUserRemoveActionPerformed(java.awt.event.ActionEvent evt) {
     	
     	
@@ -1921,12 +1915,12 @@ public class AdminClassFrame extends javax.swing.JFrame {
 		}
     }
     
-    //```buttons ---- CLEAR USER//
+    //```buttons ---- CLEAR USER// //AnotherClass
     private void buttonUserClearActionPerformed(java.awt.event.ActionEvent evt) {
     	clearUser();
     }
 
-    //```buttons ---- PRINT USER//
+    //```buttons ---- PRINT USER// //AnotherClass
     private void buttonUserPrintActionPerformed(java.awt.event.ActionEvent evt) {
         try {
             MessageFormat header = new MessageFormat("ALL USERS");
@@ -1937,7 +1931,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
         }
     }
 
-    //```buttons ---- SEARCH USER//
+    //```buttons ---- SEARCH USER// //AnotherClass
     private void buttonUserSearchActionPerformed(java.awt.event.ActionEvent evt) {
     	    	
         if(inputUserSearch.getText().isEmpty()) {
@@ -1948,7 +1942,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
         clearUser();
     }
 
-    //```buttons ---- REFRESH USER//
+    //```buttons ---- REFRESH USER// //AnotherClass
     private void buttonUserRefreshActionPerformed(java.awt.event.ActionEvent evt) {
         tableViewUsers("");
         inputUserSearch.setText(null);
@@ -1957,9 +1951,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
     
     
     // USER OTHER FUNCTIONS //
-    
-    
-    // check if input boxes are empty
+    // check if input boxes are empty //AnotherClass
     public boolean isEmptyUser() {
         if(inputUserName.getText().isEmpty()) {
             JOptionPane.showMessageDialog(this, "User Name is missing");
@@ -1976,14 +1968,14 @@ public class AdminClassFrame extends javax.swing.JFrame {
         return true;
     } 
     
-    // Only numeric inputs for contact
+    // Only numeric inputs for contact //AnotherClass
     private void inputUserContactKeyTyped(java.awt.event.KeyEvent evt) {
         if(!Character.isDigit(evt.getKeyChar())) {
             evt.consume();
         }
     }
     
-    // check it exists
+    // check it exists //AnotherClass
     private int noDupe() { 	
         String id = null;
         
@@ -1999,7 +1991,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
     
     
 	////////////MANAGE FEEDBACK////////////////////
-    
+    //AnotherClass
     private void tableViewFeedbacks() {
     	model = (DefaultTableModel) tableFeedback.getModel();
     	model.setRowCount(0);
@@ -2013,7 +2005,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
     	}
     }
     
-    
+    //AnotherClass
     private void tableFeedbackMouseClicked(java.awt.event.MouseEvent evt) {
     	model = (DefaultTableModel) tableFeedback.getModel();
     	rowIndex = tableFeedback.getSelectedRow();
@@ -2034,6 +2026,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
     
     
 	////////////WELCOME PAGE////////////////////
+    //AnotherClass
     private void initWelcome() {
     	welcomeName.setText("Welcome, Admin " + "'" + temp.getUserName() + "'");
     	welcomeItem.setText(String.valueOf(Database.getItems().size()));
@@ -2041,7 +2034,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
     	welcomeUser.setText(String.valueOf(Database.getUsers().size()) );
     	welcomeMess.setText(String.valueOf(Database.getFeedback().size()) );
     	
-    	}
+    }
     
     private javax.swing.JButton buttonAddNewItem;
     private javax.swing.JButton buttonClearInputItem;

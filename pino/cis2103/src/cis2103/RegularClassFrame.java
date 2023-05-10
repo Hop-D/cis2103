@@ -10,10 +10,8 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 import exceptions.MenuNotFoundException;
-import model.AdminClass;
 import model.Database;
 import model.Feedbacks;
-import model.Item;
 import model.Menu;
 import model.Order;
 import model.Package;
@@ -23,7 +21,6 @@ import model.UserClass;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.GroupLayout;
 import javax.swing.LayoutStyle.ComponentPlacement;
-import javax.swing.SpinnerNumberModel;
 
 
 public class RegularClassFrame extends javax.swing.JFrame {

@@ -2,9 +2,7 @@
 package cis2103;
 
 import java.awt.Color;
-import java.awt.event.KeyEvent;
 import java.sql.SQLException;
-
 import javax.swing.JOptionPane;
 import com.formdev.flatlaf.FlatIntelliJLaf;
 import javax.swing.UIManager;
@@ -17,7 +15,6 @@ import model.UserClass;
 public class Login extends javax.swing.JFrame {
 
     public Login() {
-
 		boolean connected = false;
 		while (!connected) {
 	        try {
@@ -28,19 +25,17 @@ public class Login extends javax.swing.JFrame {
 	            Database.loadFeedbackFromDatabase();
 	            connected = true;
 	        } catch (SQLException e) {
-	        	e.printStackTrace();
 	            String[] options = {"Try Again", "Exit"};
 	            int choice = javax.swing.JOptionPane.showOptionDialog(null, "Database Error. Try again once connected.", "Database Error", javax.swing.JOptionPane.DEFAULT_OPTION, javax.swing.JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+	            System.out.println(e.getMessage());
 	            if (choice == 1) {
-	                System.exit(1);
-	                
+	                return;
 	            }
 	        }
 	    }
 		
         initComponents();
-
-        buttonLogin.requestFocus();
+        
         labelUN.setVisible(false);
         labelUP.setVisible(false);
 
@@ -48,6 +43,7 @@ public class Login extends javax.swing.JFrame {
 
 
     private void initComponents() {
+
         jPanel3 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -89,28 +85,18 @@ public class Login extends javax.swing.JFrame {
         jLabel4.setText("Password :");
 
         buttonLogin.setText("LOGIN");
-        
-        
-        inputLoginUN.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                	buttonLogin.doClick();
-                }
+        buttonLogin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonLoginActionPerformed(evt);
             }
         });
-        
-        
-        inputLoginUP.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                	buttonLogin.doClick();
-                }
-            }
-        });
-        
-        
+
+        labelUN.setText("Username is empty");
+
+        labelUP.setText("Password is empty");
+
         inputLoginUN.setForeground(java.awt.Color.lightGray);
-        inputLoginUN.setText("Username");
+        inputLoginUN.setText("username");
         inputLoginUN.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         inputLoginUN.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -120,7 +106,7 @@ public class Login extends javax.swing.JFrame {
             	inputLoginUNFocusLost(evt);
             }
         });
-        
+
         inputLoginUP.setForeground(java.awt.Color.lightGray);
         inputLoginUP.setText("password");
         inputLoginUP.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -132,17 +118,7 @@ public class Login extends javax.swing.JFrame {
             	inputLoginUPFocusLost(evt);
             }
         });
-
         
-        
-        buttonLogin.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonLoginActionPerformed(evt);
-            }
-        });
-        labelUN.setText("Username is empty");
-
-        labelUP.setText("Password is empty");
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -228,31 +204,12 @@ public class Login extends javax.swing.JFrame {
         );
 
         pack();
-        
     }
     
-    private void inputLoginUPFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_passWordFieldFocusGained
-        // TODO add your handling code here:
-        String pass = new String(inputLoginUP.getPassword());
-        if (pass.equals("password")) {
-        	inputLoginUP.setText("");
-        	inputLoginUP.setForeground(Color.BLACK);
-            
-        }
-    }
 
-    private void inputLoginUPFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_passWordFieldFocusLost
-        // TODO add your handling code here:
-        String pass = new String(inputLoginUP.getPassword());
-        if (pass.isEmpty()) {
-        	inputLoginUP.setText("password");
-            inputLoginUP.setForeground(Color.GRAY);
-        }   
-    }
-    
     private void inputLoginUNFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_userNameFieldFocusGained
         // TODO add your handling code here:
-        if (inputLoginUN.getText().equals("Username")) {
+        if (inputLoginUN.getText().equals("username")) {
         	inputLoginUN.setText("");
         	inputLoginUN.setForeground(Color.BLACK);
         }
@@ -261,10 +218,30 @@ public class Login extends javax.swing.JFrame {
     private void inputLoginUNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_userNameFieldFocusLost
         // TODO add your handling code here:
         if (inputLoginUN.getText().isEmpty()) {
-        	inputLoginUN.setText("Username");
+        	inputLoginUN.setText("username");
         	inputLoginUN.setForeground(Color.GRAY);
         }   
     }//GEN-LAST:event_userNameFieldFocusLost
+
+    private void inputLoginUPFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_passWordFieldFocusGained
+        // TODO add your handling code here:
+        String pass = new String(inputLoginUP.getPassword());
+        if (pass.equals("password")) {
+        	inputLoginUP.setText("");
+        	inputLoginUP.setForeground(Color.BLACK);
+            
+        }
+    }//GEN-LAST:event_passWordFieldFocusGained
+
+    private void inputLoginUPFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_passWordFieldFocusLost
+        // TODO add your handling code here:
+        String pass = new String(inputLoginUP.getPassword());
+        if (pass.isEmpty()) {
+        	inputLoginUP.setText("password");
+        	inputLoginUP.setForeground(Color.GRAY);
+        }   
+    }//GEN-LAST:event_passWordFieldFocusLost
+
     
     private void buttonLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonLoginActionPerformed
         

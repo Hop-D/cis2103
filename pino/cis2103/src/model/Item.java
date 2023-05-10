@@ -19,7 +19,7 @@ public class Item extends Menu{
 		
 	}
 	public String concatDets() {
-		return super.getId() + " " + super.getType() + " " + super.getName() + " " + super.getPrice() + " " + super.getDateAdded() + " " + super.getDateUpdated();
+		return super.getId() + " " + super.getType() + " " + super.getName() + " " + super.getPrice();
 	}
 	
 	
