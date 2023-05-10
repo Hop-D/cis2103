@@ -97,11 +97,9 @@ public class RegularClassFrame extends javax.swing.JFrame {
         buttonRegAddOne = new javax.swing.JButton();
         spinnerOne = new javax.swing.JSpinner();
         inputRegOne = new javax.swing.JTextField();
-        spinnerTwo = new javax.swing.JSpinner();
-        inputRegTwo = new javax.swing.JTextField();
-        buttonRegAddTwo = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
         jPanel7 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tableRegItems = new javax.swing.JTable();
@@ -413,13 +411,6 @@ public class RegularClassFrame extends javax.swing.JFrame {
             }
         });
 
-        buttonRegAddTwo.setText("ADD");
-        buttonRegAddTwo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonRegAddTwoActionPerformed(evt);
-            }
-        });
-
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
         jLabel6.setText("PACKAGES");
@@ -427,6 +418,9 @@ public class RegularClassFrame extends javax.swing.JFrame {
         jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(255, 255, 255));
         jLabel7.setText("SINGLE ITEMS");
+
+        jLabel10.setText("jLabel10");
+        jLabel10.setVisible(false);
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
@@ -436,27 +430,27 @@ public class RegularClassFrame extends javax.swing.JFrame {
                 .addGap(20, 20, 20)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addComponent(jLabel7)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(jPanel6Layout.createSequentialGroup()
-                                .addComponent(inputRegOne, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(spinnerOne, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 410, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(buttonRegAddOne, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 410, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel6)
-                            .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 409, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
-                                    .addComponent(inputRegTwo, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(18, 18, 18)
-                                    .addComponent(spinnerTwo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addComponent(buttonRegAddTwo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(18, 18, 18))))
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 409, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18))
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel7)
+                            .addGroup(jPanel6Layout.createSequentialGroup()
+                                .addGap(239, 239, 239)
+                                .addComponent(jLabel10)
+                                .addGap(18, 18, 18)
+                                .addComponent(inputRegOne, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(spinnerOne, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(buttonRegAddOne, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(379, 379, 379))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -469,18 +463,14 @@ public class RegularClassFrame extends javax.swing.JFrame {
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 515, Short.MAX_VALUE)
                     .addComponent(jScrollPane3))
+                .addGap(37, 37, 37)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(spinnerOne, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(inputRegOne, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel10))
                 .addGap(18, 18, 18)
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(spinnerTwo, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(inputRegTwo, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(spinnerOne)
-                    .addComponent(inputRegOne))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(buttonRegAddOne, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
-                    .addComponent(buttonRegAddTwo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(68, 68, 68))
+                .addComponent(buttonRegAddOne, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(57, 57, 57))
         );
 
         jPanel7.setBackground(new java.awt.Color(1, 18, 68));
@@ -804,7 +794,8 @@ public class RegularClassFrame extends javax.swing.JFrame {
     }
     
     private void tableViewRegTwo() {
-        model = (DefaultTableModel) tableRegTwo.getModel();  
+    	
+        model = (DefaultTableModel) tableRegTwo.getModel(); 
         model.setRowCount(0);
     	Object[] row = new Object[3];
     	
@@ -833,11 +824,10 @@ public class RegularClassFrame extends javax.swing.JFrame {
     private void tableRegOneMouseClicked(java.awt.event.MouseEvent evt) {                                            
         model = (DefaultTableModel) tableRegOne.getModel();
         rowIndex1 = tableRegOne.getSelectedRow();
+        jLabel10.setText(model.getValueAt(rowIndex1, 0).toString());
 
         inputRegOne.setText(model.getValueAt(rowIndex1, 1).toString());
         spinnerOne.setValue(1);        
-        inputRegTwo.setText("");
-        spinnerTwo.setValue(0);
         tableRegTwo.clearSelection();
         tableRegOne.clearSelection();
     }                                           
@@ -845,11 +835,10 @@ public class RegularClassFrame extends javax.swing.JFrame {
     private void tableRegTwoMouseClicked(java.awt.event.MouseEvent evt) {                                             
         model = (DefaultTableModel) tableRegTwo.getModel();
         rowIndex2 = tableRegTwo.getSelectedRow();
+        jLabel10.setText(model.getValueAt(rowIndex2, 0).toString());
         
-        inputRegTwo.setText(model.getValueAt(rowIndex2, 1).toString());
-        spinnerTwo.setValue(1);       
-        inputRegOne.setText("");
-        spinnerOne.setValue(0);
+        inputRegOne.setText(model.getValueAt(rowIndex2, 1).toString());
+        spinnerOne.setValue(1);          
         tableRegOne.clearSelection();
         tableRegItems.clearSelection();
     }                                            
@@ -861,8 +850,6 @@ public class RegularClassFrame extends javax.swing.JFrame {
         
         jSpinner1.setValue(model.getValueAt(rowIndex3, 1));
         inputRegTemp.setText(model.getValueAt(rowIndex3, 0).toString());   
-        inputRegTwo.setText("");
-        spinnerTwo.setValue(0);
         inputRegOne.setText("");
         spinnerOne.setValue(0);
         tableRegOne.clearSelection();
@@ -871,8 +858,6 @@ public class RegularClassFrame extends javax.swing.JFrame {
     
     private void clearReg() {
     	
-        inputRegTwo.setText("");
-        spinnerTwo.setValue(0);
         inputRegOne.setText("");
         spinnerOne.setValue(0);
         inputRegTemp.setText("");
@@ -884,14 +869,12 @@ public class RegularClassFrame extends javax.swing.JFrame {
 
     private void buttonRegAddOneActionPerformed(java.awt.event.ActionEvent evt) {                                              
 
-    	model = (DefaultTableModel) tableRegOne.getModel();
     	int i, exist = 0;
     	int tempQty = Integer.parseInt(spinnerOne.getValue().toString());
     	try {
-    	    
        		o.setId(Integer.parseInt(inputRegTrans.getText()));
     		o.setMenuOrders(oi);			
-    		Menu temp = Database.getItemByID((model.getValueAt(rowIndex1, 0).toString()));
+    		Menu temp = Database.getMenuByID(jLabel10.getText());
     		
             for(i = 0; i < oi.size(); i++) {
                 if(temp.getName().equals(oi.get(i).getName())) {
@@ -912,49 +895,11 @@ public class RegularClassFrame extends javax.swing.JFrame {
 		} catch (NumberFormatException | MenuNotFoundException e) {
 			e.printStackTrace();
 		}
-    	
-    	tableViewRegItem();
-	    inputRegTotal.setText(Float.toString(currentTotal()));
-	    clearReg();
-	
-    }                                             
 
-    private void buttonRegAddTwoActionPerformed(java.awt.event.ActionEvent evt) {                                              
-    	
-    	model = (DefaultTableModel) tableRegTwo.getModel();
-    	int i, exist = 0;
-    	int tempQty = Integer.parseInt(spinnerTwo.getValue().toString());
-    	try {
-    	    
-       		o.setId(Integer.parseInt(inputRegTrans.getText()));
-    		o.setMenuOrders(oi);			
-    		Menu temp = Database.getPackageByID((model.getValueAt(rowIndex2, 0).toString()));
-    		
-            for(i = 0; i < oi.size(); i++) {
-                if(temp.getName().equals(oi.get(i).getName())) {
-                    exist = 1;
-                    break;
-                } else {
-                    exist = 0;
-                }
-            }
-            
-            if(exist == 1) {
-            	oi.get(i).setQuantity(oi.get(i).getQuantity() + tempQty);
-            } else {
-            	temp.setQuantity(tempQty);
-            	oi.add(temp);
-            }
-           
-		} catch (NumberFormatException | MenuNotFoundException e) {
-			e.printStackTrace();
-		}
-    	
     	tableViewRegItem();
 	    inputRegTotal.setText(Float.toString(currentTotal()));
 	    clearReg();
-    	
-    }                                             
+    }                                                                                   
 
     private void buttonRegUpdateActionPerformed(java.awt.event.ActionEvent evt) {                                                
         
@@ -1013,9 +958,9 @@ public class RegularClassFrame extends javax.swing.JFrame {
     }
     
     private void buttonRegProceedActionPerformed(java.awt.event.ActionEvent evt) {
-//     	Billing bill = new Billing(Integer.parseInt(inputRegTrans.getText().toString()), oi, Float.parseFloat(inputRegTotal.getText()), Float.parseFloat(inputRegAmount.getText()), temp.getId());
-//     	bill.setVisible(true);
-//     	bill.setLocationRelativeTo(null);	
+    	Billing bill = new Billing(Integer.parseInt(inputRegTrans.getText().toString()), oi, Float.parseFloat(inputRegTotal.getText()), Float.parseFloat(inputRegAmount.getText()), temp.getId());
+    	bill.setVisible(true);
+    	bill.setLocationRelativeTo(null);	
     }
     
     public float currentTotal() {
@@ -1085,6 +1030,7 @@ public class RegularClassFrame extends javax.swing.JFrame {
     private javax.swing.JTextField inputRegTwo;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
