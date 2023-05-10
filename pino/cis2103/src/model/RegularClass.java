@@ -9,6 +9,10 @@ public class RegularClass extends UserClass {
 		// TODO Auto-generated constructor stub
 	}
 	
+	public RegularClass(String id, String userName, String password, String contact, String role, String editedByID) {
+		super(id, userName, password, contact, UserClass.REGULAR_USER, editedByID);
+	}
+	
 	public RegularClass(String id, String userName, String password, String contact, String role, LocalDateTime userCreated, LocalDateTime userUpdated, String editedByID) {
 		super(id, userName, password, contact, UserClass.REGULAR_USER, userCreated, userUpdated, editedByID);
 	}
@@ -26,9 +30,6 @@ public class RegularClass extends UserClass {
 			}
 		}
 		return "R" + (Integer.parseInt(id.substring(1))+1);
-	}
-	
-	
-	
+	}	
 }
 

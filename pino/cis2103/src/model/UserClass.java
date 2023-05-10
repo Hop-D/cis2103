@@ -24,6 +24,15 @@ public abstract class UserClass {
 		this.role = role;
 	}
 	
+	public UserClass(String id, String userName, String password, String contact, String role, String editedByID) {
+		this.id = id;
+		this.userName = userName;
+		this.password = password;
+		this.contact = contact;
+		this.role = role;
+		this.editedByID = editedByID;
+	}
+	
 	public UserClass(String id, String userName, String password, String contact, String role, LocalDateTime userCreated, LocalDateTime userUpdated, String editedByID) {
 		this.id = id;
 		this.userName = userName;
