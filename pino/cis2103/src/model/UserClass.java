@@ -1,6 +1,7 @@
 package model;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public abstract class UserClass {
 	private String id;
@@ -21,6 +22,15 @@ public abstract class UserClass {
 		this.password = password;
 		this.contact = contact;
 		this.role = role;
+	}
+	
+	public UserClass(String id, String userName, String password, String contact, String role, String editedByID) {
+		this.id = id;
+		this.userName = userName;
+		this.password = password;
+		this.contact = contact;
+		this.role = role;
+		this.editedByID = editedByID;
 	}
 	
 	public UserClass(String id, String userName, String password, String contact, String role, LocalDateTime userCreated, LocalDateTime userUpdated, String editedByID) {
@@ -73,16 +83,16 @@ public abstract class UserClass {
 		this.role = role;
 	}
 
-	public LocalDateTime getUserCreated() {
-		return userCreated;
+	public String getUserCreated() {
+		return userCreated.format(DateTimeFormatter.ofPattern("E, MMM dd yyyy HH:mm a"));
 	}
 
 	public void setUserCreated(LocalDateTime userCreated) {
 		this.userCreated = userCreated;
 	}
 
-	public LocalDateTime getUserUpdated() {
-		return userUpdated;
+	public String getUserUpdated() {
+		return userUpdated.format(DateTimeFormatter.ofPattern("E, MMM dd yyyy HH:mm a"));
 	}
 
 	public void setUserUpdated(LocalDateTime userUpdated) {
