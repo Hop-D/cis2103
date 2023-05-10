@@ -10,8 +10,6 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-import org.jfree.*;
-import org.jfree.data.general.DefaultPieDataset;
 
 import exceptions.MenuNotFoundException;
 import exceptions.NameExistsInArrayException;
@@ -285,13 +283,13 @@ public class Database {
 	    menu.clear();
 	    try {
 	        db = new Database();
-	        ResultSet rs = db.executeStatement("SELECT COALESCE(package.packageID, items.itemID) AS id, \r\n"
+	        ResultSet rs = db.executeStatement("SELECT COALESCE(package.packageID, items.itemID) AS id,\r\n"
 	        		+ "menu.menuType AS type,\r\n"
 	        		+ "COALESCE(package.name, items.name) AS name,\r\n"
 	        		+ "COALESCE(package.price, items.price) AS price,\r\n"
 	        		+ "COALESCE(package.dateAdded, items.dateAdded) AS dateAdded,\r\n"
-	        		+ "COALESCE(package.dateUpdated, items.dateUpdated) AS dateUpdated, \r\n"
-	        		+ "menu.menuID \r\n"
+	        		+ "COALESCE(package.dateUpdated, items.dateUpdated) AS dateUpdated,\r\n"
+	        		+ "menu.menuID\r\n"
 	        		+ "FROM menu\r\n"
 	        		+ "LEFT JOIN package ON menu.menuID = package.menuID\r\n"
 	        		+ "LEFT JOIN items ON menu.menuID = items.menuID;");
@@ -302,7 +300,7 @@ public class Database {
 	            float price = rs.getFloat("price");
 	            Timestamp dateAdded = rs.getTimestamp("dateAdded");
 	            Timestamp dateUpdated = rs.getTimestamp("dateUpdated");
-	            int menuID = rs.getInt("menuID");
+	            int menuID = rs.getInt("menu.menuID");
 	            if(type.equals(Menu.PACKAGE_TYPE)) {
 				    menu.add(new Package(id, name, price, dateAdded.toLocalDateTime(), dateUpdated.toLocalDateTime(), loadPackageItemFromDatabase(id), menuID));    
 				}else if(type.equals(Menu.ITEM_TYPE)) {
@@ -342,26 +340,6 @@ public class Database {
 	    }
 	}
 
-	public static void removeMenu(String id, String type) throws SQLException {	
-		Database db = new Database();
-		try {
-			if(type.equals(Menu.ITEM_TYPE)) {
-				db = new Database();
-				db.setPst("DELETE FROM menu WHERE menuID = (SELECT menuID FROM items WHERE itemID = ?)");
-				db.getPst().setString(1, id);
-				db.getPst().executeUpdate();
-			}else {
-				db = new Database();
-				db.setPst("DELETE FROM menu WHERE menuID = (SELECT menuID FROM package WHERE packageID = ?)");
-				db.getPst().setString(1, id);
-				db.getPst().executeUpdate();
-			}
-	    } finally {
-	        if (db != null) {
-	            db.closeConn();
-	        }
-	    }
-	}
 	
 	public static void  removeMenu(Package packag) throws SQLException {
 		Database db = new Database();
@@ -459,10 +437,9 @@ public class Database {
 		Database db = new Database();
 		try {
 			db = new Database();
-			db.setPst("DELETE FROM items WHERE itemID = ?");
+			db.setPst("DELETE FROM menu WHERE menuID = (SELECT menuID FROM items WHERE itemID = ?)");
 			db.getPst().setString(1, item.getId());
 			db.getPst().executeUpdate();
-			
 			items.remove(item);
 			menu.remove(item);
 			
@@ -473,6 +450,7 @@ public class Database {
 	    }
 		
 	}
+	
 	
 	public static void updateItem(String id, String name, float price) throws SQLException, NameExistsInArrayException {
 		Database db = new Database();
@@ -596,27 +574,6 @@ public class Database {
 	    }
 	}
 	
-	public static void removePackage(Package p) throws SQLException {
-		
-		Database db = new Database();
-		try {
-			db = new Database();
-			db.setPst("DELETE FROM package WHERE package.packageID = ?");
-			db.getPst().setString(1, p.getId());
-			db.getPst().executeUpdate();
-			
-			removeMenu(p);
-			
-			pack.remove(p);
-			menu.remove(p);
-			
-	    } finally {
-	        if (db != null) {
-	            db.closeConn();
-	        }
-	    }
-		
-	}	
 	
 	
 

@@ -1629,7 +1629,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
 		}
 		try {
         	Package pack = Database.getPackageByID(inputPackageID.getText());
-			Database.removePackage(pack);
+			Database.removeMenu(pack);
 			inputNewPackage.setText("" + Database.getLastPackageID());
 		} catch (SQLException | MenuNotFoundException e) {
 			JOptionPane.showMessageDialog(this, e.getMessage());
@@ -1661,6 +1661,11 @@ public class AdminClassFrame extends javax.swing.JFrame {
         String itemID = model.getValueAt(rowIndex, 0).toString();
         inputPackageSingleID.setText(itemID);
         Item i;
+        
+        if(inputPackageID.getText().isEmpty()) {
+        	JOptionPane.showMessageDialog(this, "Please choose a package.");
+        	return;
+        }
 		try {
 	        Package p = Database.getPackageByID(inputPackageID.getText());
 			i = Database.getItemByID(inputPackageSingleID.getText());
@@ -1690,7 +1695,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
     	
 
 		int choice = JOptionPane.showConfirmDialog(null, "Add item to package?", "Add Confirmation", JOptionPane.YES_NO_OPTION);
-        if(choice == JOptionPane.NO_OPTION) {
+        if(choice != JOptionPane.YES_OPTION) {
         	return;
         }
 
@@ -1719,11 +1724,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
         rowIndex = tablePackageItem.getSelectedRow();
         
         inputPackageSingleID2.setText(model.getValueAt(rowIndex, 0).toString());
-
-    	
-    	tableViewPackageItem(inputPackageID.getText());
-    	clearPackages();
-
+//        tableViewPackageItem(inputPackageID.getText());
     }
 
     //```buttons ---- REMOVE ITEM FROM PACKAGE//
@@ -1732,6 +1733,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
 		if(choice != JOptionPane.YES_OPTION) {
 			return;
 		}
+		
     	try {
 			Package p = Database.getPackageByID(inputPackageID.getText());
 			Item i = Database.getItemByID(inputPackageSingleID2.getText());
@@ -1740,7 +1742,6 @@ public class AdminClassFrame extends javax.swing.JFrame {
 				if(inputPackagePrice.getText().substring(0, 1).equals("-")) {
 					inputPackagePrice.setText("0");
 				}
-
 				Database.removePackageItem(p, i);
 				tableViewPackageItem(inputPackageID.getText());
 				updatePackage();

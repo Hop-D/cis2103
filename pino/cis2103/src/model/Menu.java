@@ -100,6 +100,22 @@ public abstract class Menu {
 		this.dateUpdated = dateUpdated;
 	}
 	
+	public LocalDateTime getDateAddedLDT() {
+		return dateAdded;
+	}
+
+	public void setDateAddedLDT(LocalDateTime dateAdded) {
+		this.dateAdded = dateAdded;
+	}
+
+	public LocalDateTime getDateUpdatedLDT() {
+		return dateUpdated;
+	}
+
+	public void setDateUpdatedLDT(LocalDateTime dateUpdated) {
+		this.dateUpdated = dateUpdated;
+	}
+	
 	public abstract String concatDets();
 	
 	public abstract void updateMenu();
