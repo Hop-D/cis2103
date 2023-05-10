@@ -2032,6 +2032,8 @@ public class AdminClassFrame extends javax.swing.JFrame {
     
     // Only numeric inputs for price //AnotherClass
     private void inputSinglePriceKeyTyped(java.awt.event.KeyEvent evt) {
+    	
+    }
 
     // Only numeric inputs for package price
     private void inputPackagePriceKeyTyped(java.awt.event.KeyEvent evt) {
