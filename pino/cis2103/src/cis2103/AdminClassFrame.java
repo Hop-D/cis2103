@@ -32,6 +32,7 @@ import javax.swing.GroupLayout;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import java.awt.Dimension;
 
+
 public class AdminClassFrame extends javax.swing.JFrame {
     
     private DefaultTableModel model, model3;
@@ -130,7 +131,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
         jLabel8 = new javax.swing.JLabel();
         inputNewPackage = new javax.swing.JTextField();
         inputNewPackageName = new javax.swing.JTextField();
-        jButton9 = new javax.swing.JButton();
+        buttonPackageAdd = new javax.swing.JButton();
         jScrollPane5 = new javax.swing.JScrollPane();
         tablePackages = new javax.swing.JTable();
         buttonPackageUpdate = new javax.swing.JButton();
@@ -665,6 +666,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        tablePackageSingle.setRowHeight(40);
         tablePackageSingle.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tablePackageSingleMouseClicked(evt);
@@ -691,6 +693,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        tablePackageItem.setRowHeight(40);
         tablePackageItem.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tablePackageItemMouseClicked(evt);
@@ -786,7 +789,12 @@ public class AdminClassFrame extends javax.swing.JFrame {
         jLabel8.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel8.setText("ENTER PACKAGE NAME :");
 
-        jButton9.setText("CREATE");
+        buttonPackageAdd.setText("CREATE");
+        buttonPackageAdd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonPackageAddActionPerformed(evt);
+            }
+        });
 
         tablePackages.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -804,6 +812,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        tablePackages.setRowHeight(40);
         tablePackages.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tablePackagesMouseClicked(evt);
@@ -873,7 +882,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
                                     .addGroup(jPanel10Layout.createSequentialGroup()
                                         .addComponent(inputNewPackageName, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(jButton9, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                        .addComponent(buttonPackageAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))))
                             .addGroup(jPanel10Layout.createSequentialGroup()
                                 .addGap(26, 26, 26)
                                 .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 611, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -906,7 +915,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
                 .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
                     .addComponent(inputNewPackageName, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton9, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(buttonPackageAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -1216,6 +1225,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        tableFeedback.setRowHeight(40);
         tableFeedback.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tableFeedbackMouseClicked(evt);
@@ -1509,7 +1519,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
     	model.setRowCount(0);
     	Object[] row;
     	for(Item i: Database.getItems()) {
-               row = new Object[5];
+               row = new Object[3];
                row[0] = i.getId();
                row[1] = i.getName();
                row[2] = i.getPrice();
@@ -1943,7 +1953,6 @@ public class AdminClassFrame extends javax.swing.JFrame {
     	}
     }
     
-    
     private void tableFeedbackMouseClicked(java.awt.event.MouseEvent evt) {
     	model = (DefaultTableModel) tableFeedback.getModel();
     	rowIndex = tableFeedback.getSelectedRow();
@@ -1969,8 +1978,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
     	welcomeItem.setText(String.valueOf(Database.getItems().size()));
     	welcomePack.setText(String.valueOf(Database.getPack().size()));
     	welcomeUser.setText(String.valueOf(Database.getUsers().size()));
-    	welcomeMess.setText(String.valueOf(Database.getFeedback().size()));
-    	
+    	welcomeMess.setText(String.valueOf(Database.getFeedback().size()));    	
     }
     
     private void welcomeTableMouseClicked(java.awt.event.MouseEvent evt) {
@@ -2012,7 +2020,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
     private javax.swing.JTextField inputUserName;
     private javax.swing.JTextField inputUserPass;
     private javax.swing.JTextField inputUserSearch;
-    private javax.swing.JButton jButton9;
+    private javax.swing.JButton buttonPackageAdd;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
