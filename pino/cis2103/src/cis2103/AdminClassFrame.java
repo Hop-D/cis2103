@@ -1564,6 +1564,11 @@ public class AdminClassFrame extends javax.swing.JFrame {
     //```buttons ---- UPDATE ITEM// //AnotherClass
     private void buttonItemUpdateActionPerformed(java.awt.event.ActionEvent evt) throws SQLException {
 		try {
+			int choice = JOptionPane.showConfirmDialog(null, "Update item?", "Update Confirmation", JOptionPane.YES_NO_OPTION);
+	        
+	        if(choice != JOptionPane.YES_OPTION) {
+	        	return;
+	        }
 			Database.updateItem(inputItemID.getText(), inputSingleName.getText(), Float.parseFloat(inputSinglePrice.getText()));
 		} catch (Exception e) {
 			JOptionPane.showInputDialog(this, e.getMessage());
@@ -1577,7 +1582,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
     //```buttons ---- REMOVE ITEM// //AnotherClass
     private void buttonItemRemoveActionPerformed(java.awt.event.ActionEvent evt) {
         try {
-        	int choice = JOptionPane.showConfirmDialog(null, "Remove item?", "Add Confirmation", JOptionPane.YES_NO_OPTION);
+        	int choice = JOptionPane.showConfirmDialog(null, "Remove item?", "Remove Confirmation", JOptionPane.YES_NO_OPTION);
 	        if(choice == JOptionPane.NO_OPTION) {
 	        	return;
 	        }
@@ -1737,9 +1742,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
 	    		row = new Object[4];
 	    		row[0] = i.getId();
 	    		row[1] = i.getName();
-
 	    		row[2] = i.getPrice();
-	    		
 	    		row[2] = i.getQuantity();
 	    		row[3] = i.getPrice();
 
@@ -2120,7 +2123,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
     private void buttonUserUpdateActionPerformed(java.awt.event.ActionEvent evt) {
     	
         if(isEmptyUser() && noDupe() == 0) {
-        	int choice = JOptionPane.showConfirmDialog(null, "Update User?", "Add Confirmation", JOptionPane.YES_NO_OPTION);
+        	int choice = JOptionPane.showConfirmDialog(null, "Update User?", "Update Confirmation", JOptionPane.YES_NO_OPTION);
     		if(choice != JOptionPane.YES_OPTION) {
     			return;
     		} 
@@ -2144,7 +2147,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
     private void buttonUserRemoveActionPerformed(java.awt.event.ActionEvent evt) {
     	
     	
-    	int choice = JOptionPane.showConfirmDialog(null, "Remove User?", "Add Confirmation", JOptionPane.YES_NO_OPTION);
+    	int choice = JOptionPane.showConfirmDialog(null, "Remove User?", "Remove Confirmation", JOptionPane.YES_NO_OPTION);
 		if(choice != JOptionPane.YES_OPTION) {
 			return;
 		} 
