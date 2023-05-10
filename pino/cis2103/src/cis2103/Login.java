@@ -5,7 +5,6 @@ import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.sql.SQLException;
 
-import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import com.formdev.flatlaf.FlatIntelliJLaf;
 import javax.swing.UIManager;
@@ -18,12 +17,7 @@ import model.UserClass;
 public class Login extends javax.swing.JFrame {
 
     public Login() {
-//    	try {
-//    	ImageIcon icon = new ImageIcon(getClass().getClassLoader().getResource(".//resources//icon.png"));
-//    	setIconImage(icon.getImage());
-//    	}catch(Exception e) {
-//    		
-//    	}
+
 		boolean connected = false;
 		while (!connected) {
 	        try {
@@ -34,6 +28,7 @@ public class Login extends javax.swing.JFrame {
 	            Database.loadFeedbackFromDatabase();
 	            connected = true;
 	        } catch (SQLException e) {
+	        	e.printStackTrace();
 	            String[] options = {"Try Again", "Exit"};
 	            int choice = javax.swing.JOptionPane.showOptionDialog(null, "Database Error. Try again once connected.", "Database Error", javax.swing.JOptionPane.DEFAULT_OPTION, javax.swing.JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
 	            if (choice == 1) {

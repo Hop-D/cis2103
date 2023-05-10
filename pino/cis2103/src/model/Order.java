@@ -16,9 +16,6 @@ public class Order {
 	public static String DELIVER = "Deliver";
 	
 	
-	public Order(int id, String orderMethod, String deliveryMethod, float total, ArrayList<Menu> menuOrders) {
-		
-	}
 	
 	public Order() {
 		

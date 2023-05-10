@@ -107,25 +107,6 @@ public class Database {
 		Database.menu = menu;
 	}
 	
-	public static ArrayList<Feedbacks> getFeedback() {
-		return feedback;
-	}
-	public static void setFeedback(ArrayList<Feedbacks> feedback) {
-		Database.feedback = feedback;
-	}
-	public static ArrayList<Vouchers> getVouchers() {
-		return vouchers;
-	}
-	public static void setVouchers(ArrayList<Vouchers> vouchers) {
-		Database.vouchers = vouchers;
-	}
-	public static ArrayList<Invoice> getInvoice() {
-		return invoice;
-	}
-	public static void setInvoice(ArrayList<Invoice> invoice) {
-		Database.invoice = invoice;
-	}
-	
 	
 	
 	//Additional codes for database
@@ -305,17 +286,15 @@ public class Database {
 	    try {
 	        db = new Database();
 	        ResultSet rs = db.executeStatement("SELECT COALESCE(package.packageID, items.itemID) AS id, \r\n"
-	        		+ "menu.menuType AS type, \r\n"
-	        		+ "COALESCE(package.name, items.name) AS name, \r\n"
+	        		+ "menu.menuType AS type,\r\n"
+	        		+ "COALESCE(package.name, items.name) AS name,\r\n"
 	        		+ "COALESCE(package.price, items.price) AS price,\r\n"
 	        		+ "COALESCE(package.dateAdded, items.dateAdded) AS dateAdded,\r\n"
-	        		+ "COALESCE(package.dateUpdated, items.dateUpdated) AS dateUpdated  \r\n"
-	        		+ "menu.menuID  \r\n"
-	        		+ "COALESCE(package.dateUpdated, items.dateUpdated) AS dateUpdated,  \r\n"
-	        		+ "COALESCE(package.menuID, items.menuID) AS menuID  \r\n"
+	        		+ "COALESCE(package.dateUpdated, items.dateUpdated) AS dateUpdated, \r\n"
+	        		+ "menu.menuID \r\n"
 	        		+ "FROM menu\r\n"
 	        		+ "LEFT JOIN package ON menu.menuID = package.menuID\r\n"
-	        		+ "LEFT JOIN items ON menu.menuID = items.menuID");
+	        		+ "LEFT JOIN items ON menu.menuID = items.menuID;");
 	        while (rs.next()) {
 	            String id = rs.getString("id");
 	            String type = rs.getString("type");
@@ -639,22 +618,7 @@ public class Database {
 		
 	}	
 	
-	public static void  removeMenu(Package packag) throws SQLException {
-		Database db = new Database();
-		try {
-			db = new Database();
-			db.setPst("DELETE FROM menu WHERE menuID = (SELECT menuID FROM package WHERE packageID = ?)");
-			db.getPst().setString(1, packag.getId());
-			db.getPst().executeUpdate();
-			pack.remove(packag);
-			menu.remove(packag);
-			
-	    } finally {
-	        if (db != null) {
-	            db.closeConn();
-	        }
-	    }
-	}
+	
 
 
 	/////////////////////PACKAGE ITEM////////////////////////////////
@@ -678,33 +642,6 @@ public class Database {
 		}
 	}
 	
-	public static void updatePackage(String id, String name, float price, int count) throws SQLException, NameExistsInArrayException {
-		Database db = new Database();
-		try {
-			
-			for(Package p: pack) {
-				if(id.equals(p.getId())) {
-					db = new Database();
-					db.setPst("UPDATE package SET name = ?, price = ?, count = ?, dateUpdated = current_timestamp() WHERE packageID = ?");
-					db.getPst().setString(1, name);
-					db.getPst().setFloat(2, price);
-					db.getPst().setFloat(3, count);
-					db.getPst().setString(4, id);
-					db.getPst().executeUpdate();
-					
-					p.setName(name);
-					p.setPrice(price);
-					p.setDateUpdated(LocalDateTime.now());
-					return;
-				}
-			}
-			
-	    }finally {
-	        if (db != null) {
-	            db.closeConn();
-	        }
-	    }
-	}
 	
 	public static void removePackageItem(Package p, Item i) throws SQLException {
 		Database db = new Database();
@@ -810,35 +747,7 @@ public class Database {
 
 	}
 	
-	public static ArrayList<Menu> loadOrderItems(int id) throws SQLException{
-		Database db = null;
-		ArrayList<Menu> oi = new ArrayList<Menu>();
-	    try {
-	        db = new Database();
-	        Statement stmt = db.getConn().createStatement();
-	        ResultSet rs = stmt.executeQuery("SELECT menuID FROM orderitems WHERE orderID = ?");
-	        while (rs.next()) {
-	            oi.add(getMenuBymenuID(rs.getInt("menuID")));
-	        }
-	    } catch (MenuNotFoundException e) {
-			e.printStackTrace();
-		} finally {
-	   
-	        if (db != null) {
-	            db.closeConn();
-	        }
-	    }
-	    return oi;
-	}
 	
-	public static Menu getMenuBymenuID(int menuID) throws MenuNotFoundException{
-		for(Menu m: menu) {
-			if(m.getMenuID() == menuID) {
-				return m;
-			}
-		}
-		throw new MenuNotFoundException();
-	}
 	
 	public static void addOrder(Order order) throws SQLException {
 		Database db = new Database();
@@ -859,25 +768,6 @@ public class Database {
 	    }
 	}
 	
-	public static void addOrderItems(Order order, int menuID) throws SQLException {
-		Database db = new Database();
-		try {
-			
-			db = new Database();
-			db.setPst("INSERT INTO orderitems (orderItemsID, orderID, quantity, notes, menuID) VALUES (?, ?, ?, ?, ?)");
-			db.getPst().setInt(1, getNextOIID());
-			db.getPst().setString(2, order.getOrderMethod());
-			db.getPst().setString(3, order.getDeliveryMethod());
-			db.getPst().setFloat(4, order.getTotal());
-			db.getPst().setInt(5, menuID);
-			db.getPst().executeUpdate();
-			
-	    } finally {
-	        if (db != null) {
-	            db.closeConn();
-	        }
-	    }
-	}
 	
 	public static int getNextOIID() throws SQLException {
 		Database db = new Database();
@@ -916,7 +806,6 @@ public class Database {
 	public static void setInvoice(ArrayList<Invoice> invoice) {
 		Database.invoice = invoice;
 	}
-	}
 	
 	public static ArrayList<Menu> loadOrderItems(int id) throws SQLException{
 		Database db = null;
@@ -948,26 +837,6 @@ public class Database {
 		throw new MenuNotFoundException();
 	}
 	
-	public static void addOrder(Order order) throws SQLException {
-		Database db = new Database();
-		try {
-			orders.add(order);
-			db = new Database();
-			db.setPst("INSERT INTO orders (orderID, menuID, orderMethod, deliveryMethod, status, total) VALUES (?, ?, ?, ?, ?, ?);");
-			db.getPst().setInt(1, order.getId());
-			db.getPst().setInt(2, 0);
-			db.getPst().setString(3, order.getOrderMethod());
-			db.getPst().setString(4, order.getDeliveryMethod());
-			db.getPst().setString(5, "lawl");
-			db.getPst().setFloat(6, order.getTotal());
-			db.getPst().executeUpdate();
-			
-	    } finally {
-	        if (db != null) {
-	            db.closeConn();
-	        }
-	    }
-	}
 	
 	public static void addOrderItems(Order order, int menuID) throws SQLException {
 		Database db = new Database();
@@ -987,47 +856,6 @@ public class Database {
 	            db.closeConn();
 	        }
 	    }
-	}
-	
-	public static int getNextOIID() throws SQLException {
-		Database db = new Database();
-		try {
-			db = new Database();
-		   	Statement stmt = db.getConn().createStatement();
-		   	ResultSet rs = stmt.executeQuery("SELECT MAX(orderItemsID) AS nextID FROM orderitems");
-		    if (rs.next()) {
-		    	return rs.getInt("nextID")+1;
-		    }else {
-		    	return 1;
-		    }
-	    } finally {
-	        if (db != null) {
-	            db.closeConn();
-	        }
-	    }
-	}
-	
-	public static String nameExist(String name, String array) throws NameExistsInArrayException {
-		if(array.equals("USER")) {
-			for(UserClass n: users) {
-				if(name.equals(n.getUserName())) {
-					throw new NameExistsInArrayException();
-				}
-			}
-		}else if(array.equals("ITEMS")) {
-			for(Item n: items) {
-				if(name.equals(n.getName())) {
-					throw new NameExistsInArrayException();
-				}
-			}
-		}else if(array.equals("PACKAGE")) {
-			for(Package n: pack) {
-				if(name.equals(n.getName())) {
-					throw new NameExistsInArrayException();
-				}
-			}
-		}
-		return name;
 	}
 	
 	
