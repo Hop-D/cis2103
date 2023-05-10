@@ -998,19 +998,11 @@ public class RegularClassFrame extends javax.swing.JFrame {
     private void buttonRegPrintActionPerformed(java.awt.event.ActionEvent evt) {                                              
         // TODO add your handling code here:
     }                                             
-
-    private void inputRegAmountKeyPressed(java.awt.event.KeyEvent evt) {                                          
-        try {
-        	if(evt.getKeyCode() == KeyEvent.VK_ENTER) {
-                inputRegChange.setText(Float.toString(showChange()));
-        	}
-        } catch (Exception e) {
-            System.out.println("lawl");
-        }
-    } 
     
     private void inputRegAmountKeyTyped(java.awt.event.KeyEvent evt) {
-    	
+	if(!Character.isDigit(evt.getKeyChar())) {
+            evt.consume();
+        }
     }
     
     private void buttonRegCalActionPerformed(java.awt.event.ActionEvent evt) {
