@@ -75,7 +75,6 @@ public class AdminClassFrame extends javax.swing.JFrame {
 
     private void initComponents() {
     	
-
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -181,6 +180,25 @@ public class AdminClassFrame extends javax.swing.JFrame {
         jPanel19 = new javax.swing.JPanel();
         jScrollPane8 = new javax.swing.JScrollPane();
         tableFeedback = new javax.swing.JTable();
+        jPanel20 = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel22 = new javax.swing.JLabel();
+        jLabel23 = new javax.swing.JLabel();
+        jLabel24 = new javax.swing.JLabel();
+        jLabel26 = new javax.swing.JLabel();
+        inputVID = new javax.swing.JTextField();
+        inputVName = new javax.swing.JTextField();
+        inputVCode = new javax.swing.JTextField();
+        inputVRate = new javax.swing.JTextField();
+        jPanel21 = new javax.swing.JPanel();
+        jScrollPane9 = new javax.swing.JScrollPane();
+        tableVouchers = new javax.swing.JTable();
+        inputVMax = new javax.swing.JTextField();
+        jLabel27 = new javax.swing.JLabel();
+        buttonVAdd = new javax.swing.JButton();
+        buttonVUpdate = new javax.swing.JButton();
+        buttonVRemove = new javax.swing.JButton();
+        buttonVClear = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMaximumSize(new java.awt.Dimension(1720, 880));
@@ -690,7 +708,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                false, false, true, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -807,7 +825,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+                false, false, false, true, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -1288,6 +1306,183 @@ public class AdminClassFrame extends javax.swing.JFrame {
         );
 
         jTabbedPane2.addTab("SEE FEEDBACKS", jPanel12);
+
+        jPanel20.setBackground(new java.awt.Color(255, 255, 255));
+
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jLabel2.setText("Voucher ID :");
+
+        jLabel22.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jLabel22.setText("Voucher Name :");
+
+        jLabel23.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jLabel23.setText("Voucher Code :");
+
+        jLabel24.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jLabel24.setText("Discount Rate :");
+
+        jLabel26.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jLabel26.setText("Maximum Use :");
+
+        inputVRate.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                inputVRateKeyTyped(evt);
+            }
+        });
+
+        jPanel21.setBackground(new java.awt.Color(1, 18, 68));
+
+        tableVouchers.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "ID", "NAME", "CODE", "RATE", "MAX", "USE COUNT", "EXPIRY DATE"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, true, true, true
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tableVouchers.setRowHeight(40);
+        tableVouchers.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tableVouchersMouseClicked(evt);
+            }
+        });
+        jScrollPane9.setViewportView(tableVouchers);
+
+        javax.swing.GroupLayout jPanel21Layout = new javax.swing.GroupLayout(jPanel21);
+        jPanel21.setLayout(jPanel21Layout);
+        jPanel21Layout.setHorizontalGroup(
+            jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel21Layout.createSequentialGroup()
+                .addGap(17, 17, 17)
+                .addComponent(jScrollPane9, javax.swing.GroupLayout.PREFERRED_SIZE, 663, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(20, Short.MAX_VALUE))
+        );
+        jPanel21Layout.setVerticalGroup(
+            jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel21Layout.createSequentialGroup()
+                .addContainerGap(17, Short.MAX_VALUE)
+                .addComponent(jScrollPane9, javax.swing.GroupLayout.PREFERRED_SIZE, 485, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(19, 19, 19))
+        );
+
+        inputVMax.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                inputVMaxKeyTyped(evt);
+            }
+        });
+
+        jLabel27.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jLabel27.setText("Expiry Date :");
+
+        buttonVAdd.setText("ADD");
+        buttonVAdd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonVAddActionPerformed(evt);
+            }
+        });
+
+        buttonVUpdate.setText("UPDATE");
+        buttonVUpdate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonVUpdateActionPerformed(evt);
+            }
+        });
+
+        buttonVRemove.setText("REMOVE");
+        buttonVRemove.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonVRemoveActionPerformed(evt);
+            }
+        });
+
+        buttonVClear.setText("CLEAR");
+        buttonVClear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonVClearActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel20Layout = new javax.swing.GroupLayout(jPanel20);
+        jPanel20.setLayout(jPanel20Layout);
+        jPanel20Layout.setHorizontalGroup(
+            jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel20Layout.createSequentialGroup()
+                .addGap(250, 250, 250)
+                .addGroup(jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel20Layout.createSequentialGroup()
+                        .addGroup(jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel22)
+                            .addComponent(jLabel23)
+                            .addComponent(jLabel24)
+                            .addComponent(jLabel26))
+                        .addGap(30, 30, 30)
+                        .addGroup(jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(inputVID)
+                            .addComponent(inputVName)
+                            .addComponent(inputVCode)
+                            .addComponent(inputVRate)
+                            .addComponent(inputVMax, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)))
+                    .addComponent(jLabel27)
+                    .addGroup(jPanel20Layout.createSequentialGroup()
+                        .addComponent(buttonVAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(buttonVUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(buttonVClear, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(buttonVRemove, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE))))
+                .addGap(68, 68, 68)
+                .addComponent(jPanel21, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(296, Short.MAX_VALUE))
+        );
+        jPanel20Layout.setVerticalGroup(
+            jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel20Layout.createSequentialGroup()
+                .addGap(70, 70, 70)
+                .addGroup(jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jPanel21, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel20Layout.createSequentialGroup()
+                        .addGroup(jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2)
+                            .addComponent(inputVID, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel22)
+                            .addComponent(inputVName, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel23)
+                            .addComponent(inputVCode, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel24)
+                            .addComponent(inputVRate, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel26)
+                            .addComponent(inputVMax, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel27)
+                        .addGap(38, 38, 38)
+                        .addGroup(jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(buttonVRemove, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
+                            .addComponent(buttonVUpdate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(buttonVAdd, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(18, 18, 18)
+                        .addComponent(buttonVClear, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(163, Short.MAX_VALUE))
+        );
+
+        jTabbedPane2.addTab("MANAGE VOUCHERS", jPanel20);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -1799,9 +1994,9 @@ public class AdminClassFrame extends javax.swing.JFrame {
 					}
 					
 					if(radioUserRegular.isSelected()) {
-						Database.addUser(new RegularClass("R" + inputUserID.getText(), inputUserName.getText(), inputUserPass.getText(), inputUserContact.getText(), RegularClass.REGULAR_USER, LocalDateTime.now(), LocalDateTime.now(), temp.getId()));
+						Database.addUser(new RegularClass("R" + inputUserID.getText(), inputUserName.getText(), inputUserPass.getText(), inputUserContact.getText(), RegularClass.REGULAR_USER, temp.getId()));
 					} else if(radioUserAdmin.isSelected()) {
-						Database.addUser(new AdminClass("A" + inputUserID.getText(), inputUserName.getText(), inputUserPass.getText(), inputUserContact.getText(), AdminClass.ADMIN_USER, LocalDateTime.now(), LocalDateTime.now(), temp.getId()));
+						Database.addUser(new AdminClass("A" + inputUserID.getText(), inputUserName.getText(), inputUserPass.getText(), inputUserContact.getText(), AdminClass.ADMIN_USER, temp.getId()));
 					}
 				} catch (NumberFormatException | SQLException | NameExistsInArrayException ex) {
 					JOptionPane.showMessageDialog(this, ex.getMessage());
@@ -1989,6 +2184,38 @@ public class AdminClassFrame extends javax.swing.JFrame {
     	
     }
     
+	////////////VOUCHERS////////////////////
+    
+    private void buttonVAddActionPerformed(java.awt.event.ActionEvent evt) {
+
+    }
+    private void buttonVUpdateActionPerformed(java.awt.event.ActionEvent evt) {
+
+    }
+    private void buttonVRemoveActionPerformed(java.awt.event.ActionEvent evt) {
+
+    }
+    private void buttonVClearActionPerformed(java.awt.event.ActionEvent evt) {
+
+    }
+    
+    private void tableVouchersMouseClicked(java.awt.event.MouseEvent evt) {
+    	
+    }
+    
+    private void inputVMaxKeyTyped(java.awt.event.KeyEvent evt) {
+        if(!Character.isDigit(evt.getKeyChar())) {
+            evt.consume();
+        }
+    }
+    
+    private void inputVRateKeyTyped(java.awt.event.KeyEvent evt) {
+        if(!Character.isDigit(evt.getKeyChar())) {
+            evt.consume();
+        }
+    }
+    
+    
     private javax.swing.JButton buttonAddNewItem;
     private javax.swing.JButton buttonClearInputItem;
     private javax.swing.JButton buttonItemPrint;
@@ -1997,6 +2224,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
     private javax.swing.JButton buttonItemTableRefresh;
     private javax.swing.JButton buttonItemUpdate;
     private javax.swing.JButton buttonLogOut;
+    private javax.swing.JButton buttonPackageAdd;
     private javax.swing.JButton buttonPackageItemAdd;
     private javax.swing.JButton buttonPackageItemRemove;
     private javax.swing.JButton buttonPackageRemove;
@@ -2008,6 +2236,10 @@ public class AdminClassFrame extends javax.swing.JFrame {
     private javax.swing.JButton buttonUserRemove;
     private javax.swing.JButton buttonUserSearch;
     private javax.swing.JButton buttonUserUpdate;
+    private javax.swing.JButton buttonVAdd;
+    private javax.swing.JButton buttonVClear;
+    private javax.swing.JButton buttonVRemove;
+    private javax.swing.JButton buttonVUpdate;
     private javax.swing.JTextField inputItemID;
     private javax.swing.JTextField inputNewPackage;
     private javax.swing.JTextField inputNewPackageName;
@@ -2024,7 +2256,11 @@ public class AdminClassFrame extends javax.swing.JFrame {
     private javax.swing.JTextField inputUserName;
     private javax.swing.JTextField inputUserPass;
     private javax.swing.JTextField inputUserSearch;
-    private javax.swing.JButton buttonPackageAdd;
+    private javax.swing.JTextField inputVCode;
+    private javax.swing.JTextField inputVID;
+    private javax.swing.JTextField inputVMax;
+    private javax.swing.JTextField inputVName;
+    private javax.swing.JTextField inputVRate;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -2036,9 +2272,15 @@ public class AdminClassFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
+    private javax.swing.JLabel jLabel22;
+    private javax.swing.JLabel jLabel23;
+    private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel25;
+    private javax.swing.JLabel jLabel26;
+    private javax.swing.JLabel jLabel27;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -2058,6 +2300,8 @@ public class AdminClassFrame extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel18;
     private javax.swing.JPanel jPanel19;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel20;
+    private javax.swing.JPanel jPanel21;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
@@ -2073,6 +2317,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JScrollPane jScrollPane8;
+    private javax.swing.JScrollPane jScrollPane9;
     private javax.swing.JSpinner jSpinner1;
     private javax.swing.JTabbedPane jTabbedPane2;
     private javax.swing.JLabel labelFeedDate;
@@ -2086,6 +2331,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
     private javax.swing.JTable tablePackageSingle;
     private javax.swing.JTable tablePackages;
     private javax.swing.JTable tableUsers;
+    private javax.swing.JTable tableVouchers;
     private javax.swing.JTextArea textFeedArea;
     private javax.swing.JLabel welcomeItem;
     private javax.swing.JLabel welcomeMess;
@@ -2093,5 +2339,5 @@ public class AdminClassFrame extends javax.swing.JFrame {
     private javax.swing.JLabel welcomeOrder;
     private javax.swing.JLabel welcomePack;
     private javax.swing.JTable welcomeTable;
-    private javax.swing.JLabel welcomeUser;
+    private javax.swing.JLabel welcomeUser;   
 }
