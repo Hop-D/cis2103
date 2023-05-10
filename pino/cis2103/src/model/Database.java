@@ -187,16 +187,17 @@ public class Database {
 		try {
 			db = new Database();
 			db.setPst("INSERT INTO user (userID, name, password, contactNo, role, userCreated, userUpdated, editorID) \r\n"
-					+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+					+ "VALUES (?, ?, ?, ?, ?, current_timestamp(), current_timestamp(), ?)");
 			db.getPst().setString(1, u.getId());
 			db.getPst().setString(2, nameExist(u.getUserName(), "USER"));
 			db.getPst().setString(3, u.getPassword());
 			db.getPst().setString(4, u.getContact());
 			db.getPst().setString(5, u.getRole());
-			db.getPst().setTimestamp(6, Timestamp.valueOf(u.getUserCreated()));
-			db.getPst().setTimestamp(7, Timestamp.valueOf(u.getUserUpdated()));
-			db.getPst().setString(8, u.getEditedByID());
+			db.getPst().setString(6, u.getEditedByID());
 			db.getPst().executeUpdate();
+			
+			u.setUserCreated(LocalDateTime.now());
+			u.setUserUpdated(LocalDateTime.now());
 			
 			users.add(u);
 			
@@ -206,6 +207,7 @@ public class Database {
 	        }
 	    }
 	}
+	
 	
 	//get a user from array
 	public static UserClass getUserByID(String id) throws UserNotFoundException {
@@ -938,5 +940,4 @@ public class Database {
 	        }
 	    }
 	}
-
 }
