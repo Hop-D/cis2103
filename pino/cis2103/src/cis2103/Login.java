@@ -14,7 +14,7 @@ import model.UserClass;
 
 public class Login extends javax.swing.JFrame {
 
-    public Login() {
+public Login() {
 		boolean connected = false;
 		while (!connected) {
 	        try {
@@ -27,9 +27,10 @@ public class Login extends javax.swing.JFrame {
 	        } catch (SQLException e) {
 	            String[] options = {"Try Again", "Exit"};
 	            int choice = javax.swing.JOptionPane.showOptionDialog(null, "Database Error. Try again once connected.", "Database Error", javax.swing.JOptionPane.DEFAULT_OPTION, javax.swing.JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+	            e.printStackTrace();
 	            System.out.println(e.getMessage());
 	            if (choice == 1) {
-	                return;
+	                System.exit(1);
 	            }
 	        }
 	    }

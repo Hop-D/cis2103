@@ -10,6 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ButtonGroup;
 import javax.swing.JOptionPane;
+import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
@@ -30,6 +31,7 @@ import javax.swing.GroupLayout;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import java.awt.Dimension;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.event.ChangeEvent;
 
 
 public class AdminClassFrame extends javax.swing.JFrame {
@@ -48,7 +50,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
         
         initComponents();
 
-		inputItemID.setText(String.valueOf("" + Database.getLastItemID()));
+		inputItemID.setText(Database.getLastItemID() + "");
 		inputNewPackage.setText("" + Database.getLastPackageID());
         inputUserID.setText(String.valueOf("" + Database.getLastUserID()));
           
@@ -68,7 +70,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
         userRoles.add(radioUserAdmin);
         userRoles.add(radioUserRegular);
         radioUserRegular.setSelected(true);
-        jSpinner1.setValue(0);
+        jSpinner1.setValue(1);
         
         initWelcome();
         
@@ -131,7 +133,6 @@ public class AdminClassFrame extends javax.swing.JFrame {
         jLabel10 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
-        jSpinner1 = new javax.swing.JSpinner();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         inputNewPackage = new javax.swing.JTextField();
@@ -206,6 +207,8 @@ public class AdminClassFrame extends javax.swing.JFrame {
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("SYSTEM | ADMIN");
 
+        
+        
         buttonLogOut.setText("LOG OUT");
         buttonLogOut.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -657,7 +660,17 @@ public class AdminClassFrame extends javax.swing.JFrame {
         jPanel10.setBackground(new java.awt.Color(255, 255, 255));
 
         jPanel16.setBackground(new java.awt.Color(1, 18, 68));
-
+        
+        javax.swing.SpinnerModel model = new SpinnerNumberModel(1, 1, 1000, 1);
+        jSpinner1 = new javax.swing.JSpinner(model);
+        
+        jSpinner1.addChangeListener(new javax.swing.event.ChangeListener() {
+            @Override
+            public void stateChanged(javax.swing.event.ChangeEvent e) {
+            	addChangeListenerActionPerformed(e);
+            }
+        });
+        
         tablePackageSingle.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -684,10 +697,10 @@ public class AdminClassFrame extends javax.swing.JFrame {
 
         tablePackageItem.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+//                {null, null, null, null},
+//                {null, null, null, null},
+//                {null, null, null, null},
+//                {null, null, null, null}
             },
             new String [] {
                 "ID", "NAME", "QUANTITY", "PRICE"
@@ -801,6 +814,11 @@ public class AdminClassFrame extends javax.swing.JFrame {
         jLabel8.setText("ENTER PACKAGE NAME :");
 
         buttonPackageAdd.setText("CREATE");
+        buttonPackageAdd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            	buttonPackageAddActionPerformed(evt);
+            }
+        });
 
         tablePackages.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -1209,10 +1227,10 @@ public class AdminClassFrame extends javax.swing.JFrame {
 
         tableFeedback.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+//                {null, null, null, null},
+//                {null, null, null, null},
+//                {null, null, null, null},
+//                {null, null, null, null}
             },
             new String [] {
                 "ID", "MESSAGE", "DATE", "SENT BY"
@@ -1326,7 +1344,19 @@ public class AdminClassFrame extends javax.swing.JFrame {
     }
     
 
-    // LOG OUT //AnotherClass //AnotherClass
+    protected void addChangeListenerActionPerformed(ChangeEvent e) {
+		// TODO Auto-generated method stub
+    	
+		
+		try {
+			Package p = Database.getPackageByID(inputPackageID.getText());
+			Item i = Database.getItemByID(inputPackageSingleID.getText());
+			inputPackagePrice.setText("" + (p.getPrice() + i.getPrice()*(int)jSpinner1.getValue()));
+		} catch (MenuNotFoundException e1) {
+		}
+	}
+
+	// LOG OUT //AnotherClass //AnotherClass
     private void buttonLogOutActionPerformed(java.awt.event.ActionEvent evt) {
         
         int out = JOptionPane.showConfirmDialog(this, "Do you want to log out?", "SELECT", JOptionPane.YES_NO_OPTION);
@@ -1345,7 +1375,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
         if(isEmptyItems()) {
         	try {
 				@SuppressWarnings("unused")
-				Item item = Database.getItemByName(inputSingleName.getText());
+				Item item = Database.getItemByID(inputSingleName.getText());
 				JOptionPane.showMessageDialog(this, "Item already exists");
 			} catch (MenuNotFoundException e) {
 				try {
@@ -1542,9 +1572,8 @@ public class AdminClassFrame extends javax.swing.JFrame {
 	    		row = new Object[4];
 	    		row[0] = i.getId();
 	    		row[1] = i.getName();
-	    		row[2] = i.getPrice();
 	    		row[2] = i.getQuantity();
-	    		row[3] = i.getPrice();
+	    		row[3] = row[2] + " * " + i.getPrice();
 	    		model.addRow(row);
 	    	}
 		} catch (MenuNotFoundException e) {
@@ -1563,7 +1592,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
         inputPackagePrice.setText(model.getValueAt(rowIndex, 2).toString());
         
         tablePackageItem.setModel(new DefaultTableModel(null, new Object[] {
-            "ITEM ID", "NAME", "PRICE"
+        		"ID", "NAME", "QUANTITY", "PRICE"
         }));
 
     	model = (DefaultTableModel) tablePackages.getModel();
@@ -1598,21 +1627,8 @@ public class AdminClassFrame extends javax.swing.JFrame {
 	        }
 	        try {
 				Database.addPackage(new Package(id, inputNewPackageName.getText(), 0));
-				inputNewPackage.setText("" + Database.getLastPackageID());
-				inputNewPackage.setText(""+Database.getLastPackageID());;
 	        } catch (SQLException | NameExistsInArrayException e1) {
 	        }
-	        try {
-	        	Database.addPackage(new Package(id, inputNewPackageName.getText(), 0));
-				inputNewPackage.setText("" + Database.getLastPackageID());
-				inputNewPackage.setText("" + Database.getLastPackageID());;
-	        } catch (NumberFormatException | SQLException e1) {
-
-				JOptionPane.showMessageDialog(this, e1.getMessage());
-			} catch (NameExistsInArrayException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
     	} finally {
         	clearPackages();
 			tableViewPackages();
@@ -1693,7 +1709,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
 		try {
 	        Package p = Database.getPackageByID(inputPackageID.getText());
 			i = Database.getItemByID(inputPackageSingleID.getText());
-			inputPackagePrice.setText("" + (p.getPrice() + i.getPrice()));
+			inputPackagePrice.setText("" + (p.getPrice() + i.getPrice()*(int)jSpinner1.getValue()));
 		} catch (MenuNotFoundException e) {
 			JOptionPane.showMessageDialog(this, e.getMessage());
 		}
@@ -1703,65 +1719,105 @@ public class AdminClassFrame extends javax.swing.JFrame {
 
     //```buttons ---- ADD ITEM TO PACKAGE// //AnotherClass
     private void buttonPackageItemAddActionPerformed(java.awt.event.ActionEvent evt) {
-    	
-    	int id = Database.getLastPackageItemID();	
-
-    	
-  // WHEN A QUANTITY IS ADDED
-//    	model = (DefaultTableModel) tablePackageItem.getModel();
-//    	int column = 0;
-//    	int rowCount = model.getRowCount();
-//    	for (int row = 0; row < rowCount; row++) {
-//    	    Object data = model.getValueAt(row, column);
-//    	    // Do something with the data, such as printing it to the console
-//    	    System.out.println(data);
-//    	}
-    	
 
 		int choice = JOptionPane.showConfirmDialog(null, "Add item to package?", "Add Confirmation", JOptionPane.YES_NO_OPTION);
         if(choice != JOptionPane.YES_OPTION) {
         	return;
         }
 
-
     	try {
-			Package p = Database.getPackageByID(inputPackageID.getText());
-			Item i = Database.getItemByID(inputPackageSingleID.getText());
-			i.setQuantity(Integer.parseInt(jSpinner1.getValue().toString()));
-			try {
-				Database.addPackageItem(id, p, i);
-
-		    	tableViewPackageItem(inputPackageID.getText());
-
-				updatePackage();
-			} catch (SQLException e) {
-				System.out.println(e.getMessage());
+    		Package p = Database.getPackageByID(inputPackageID.getText());
+    		String itemID = inputPackageSingleID.getText();
+    		float oldPrice = p.getPrice();
+			for(Item ip: p.getPackageitems()) {
+				if(ip.getId().equals(itemID)) {
+					SpinnerNumberModel sModel = new SpinnerNumberModel(ip.getQuantity(), 1, 200, 1);
+					JSpinner updateQty = new JSpinner(sModel);
+					javax.swing.JPanel existingQty = new javax.swing.JPanel();
+					existingQty.setLayout(new javax.swing.BoxLayout(existingQty, javax.swing.BoxLayout.Y_AXIS));
+					existingQty.add(new javax.swing.JLabel("Item already exists in the package."));
+					existingQty.add(new javax.swing.JLabel("Enter new quantity: "));
+					existingQty.add(updateQty);
+					int confirm = JOptionPane.showConfirmDialog(null, existingQty, "Existing package item", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+					float priceDifference = (ip.getPrice()*ip.getQuantity()) - ((int)updateQty.getValue()*ip.getPrice());
+					inputPackagePrice.setText("" + (oldPrice - priceDifference));
+					if(confirm != JOptionPane.OK_OPTION) {
+						return;
+					}
+					Database.updatePackageItem(p.getId(), itemID, (int)updateQty.getValue());
+					updatePackage();
+					return;
+				}
 			}
+			
+			if((int)jSpinner1.getValue() == 0) {
+				JOptionPane.showMessageDialog(this, "Please specify a quantity.");
+				return;
+			}
+			updatePackage();
+			Database.addPackageItem(p, Database.getItemByID(itemID), (int)jSpinner1.getValue());
+			
 		} catch (MenuNotFoundException e) {
 			System.out.println(e.getMessage());
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			tableViewPackageItem(inputPackageID.getText());
 		}
 
     }
-    
+   
     // Fetch data of item inside package //AnotherClass
     private void tablePackageItemMouseClicked(java.awt.event.MouseEvent evt) {
         model = (DefaultTableModel) tablePackageItem.getModel();
         rowIndex = tablePackageItem.getSelectedRow();
-        
         inputPackageSingleID2.setText(model.getValueAt(rowIndex, 0).toString());
-//        tableViewPackageItem(inputPackageID.getText());
     }
 
     //```buttons ---- REMOVE ITEM FROM PACKAGE// //AnotherClass
     private void buttonPackageItemRemoveActionPerformed(java.awt.event.ActionEvent evt) {
-    	int choice = JOptionPane.showConfirmDialog(null, "Remove item from pacakage?", "Remove Confirmation", JOptionPane.YES_NO_OPTION);
-		if(choice != JOptionPane.YES_OPTION) {
+    	int choice = JOptionPane.showConfirmDialog(null, "Remove item from pacakage? Click 'No' to customize quantity.", "Remove Confirmation", JOptionPane.YES_NO_CANCEL_OPTION);
+		if(choice == JOptionPane.CANCEL_OPTION) {
 			return;
 		}
 		
+		
     	try {
-			Package p = Database.getPackageByID(inputPackageID.getText());
-			Item i = Database.getItemByID(inputPackageSingleID2.getText());
+    		Package p = Database.getPackageByID(inputPackageID.getText());
+    		String itemID = inputPackageSingleID2.getText();
+    		float oldPrice = p.getPrice();
+    		if(choice == JOptionPane.NO_OPTION) {    			
+        		for(Item ip: p.getPackageitems()) {
+    				if(ip.getId().equals(itemID)) {
+    					SpinnerNumberModel sModel = new SpinnerNumberModel(ip.getQuantity(), 1, ip.getQuantity(), 1);
+    					JSpinner updateQty = new JSpinner(sModel);
+    					javax.swing.JPanel existingQty = new javax.swing.JPanel();
+    					existingQty.setLayout(new javax.swing.BoxLayout(existingQty, javax.swing.BoxLayout.Y_AXIS));
+    					existingQty.add(new javax.swing.JLabel("Removing items"));
+    					existingQty.add(new javax.swing.JLabel("Enter new quantity: "));
+    					existingQty.add(updateQty);
+    					int confirm = JOptionPane.showConfirmDialog(null, existingQty, "Existing package item", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+    					
+    					if(confirm != JOptionPane.OK_OPTION) {
+    						return;
+    					}
+    					
+    					float priceDifference = (ip.getQuantity() - (int)updateQty.getValue())*ip.getPrice();
+    					inputPackagePrice.setText("" + (oldPrice - priceDifference));
+    					
+    					Database.updatePackageItem(p.getId(), itemID, (int)updateQty.getValue());
+
+    					tableViewPackageItem(p.getId());
+    					updatePackage();
+    					
+    					return;
+    				}
+    			}
+    		}
+			
+    		
+			Item i = Database.getItemByID(itemID);
 			try {
 				inputPackagePrice.setText("" + (p.getPrice() - i.getPrice()));
 				if(inputPackagePrice.getText().substring(0, 1).equals("-")) {
@@ -1770,18 +1826,17 @@ public class AdminClassFrame extends javax.swing.JFrame {
 				Database.removePackageItem(p, i);
 				tableViewPackageItem(inputPackageID.getText());
 				updatePackage();
-
 			} catch (SQLException e) {
 				System.out.println(e.getMessage());
 			}
-		} catch (MenuNotFoundException e) {
+		} catch (MenuNotFoundException | SQLException e) {
 			System.out.println(e.getMessage());
 		}
     	
     	
     	
     	tableViewPackageItem(inputPackageID.getText());
-    	clearPackages();
+//    	clearPackages();
     }
 
 

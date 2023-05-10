@@ -782,13 +782,13 @@ public class RegularClassFrame extends javax.swing.JFrame {
     	model = (DefaultTableModel) tableRegOne.getModel();
     	Object[] row = new Object[3];
     	    	
-    	for(Item i : Database.getItems()) {
-    		row[0] = i.getId();
-			row[1] = i.getName();
-			row[2] = i.getPrice();
-			model.addRow(row);
-		}
-    }
+//    	for(Item i : Database.getItems()) {
+//    		row[0] = i.getId();
+//			row[1] = i.getName();
+//			row[2] = i.getPrice();
+//			model.addRow(row);
+//		}
+//    }
     
     private void tableViewRegTwo() {
     	

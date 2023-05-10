@@ -75,39 +75,6 @@ public class Database {
 		this.rs = this.pst.executeQuery();
 	}
 
-	public static ArrayList<UserClass> getUsers() {
-		return users;
-	}
-
-	public static void setUsers(ArrayList<UserClass> users) {
-		Database.users = users;
-	}
-
-	public static ArrayList<Item> getItems() {
-		return items;
-	}
-
-	public static void setItems(ArrayList<Item> items) {
-		Database.items = items;
-	}
-	
-	public static ArrayList<Package> getPack() {
-		return pack;
-	}
-	public static void setPack(ArrayList<Package> pack) {
-		Database.pack = pack;
-	}
-	
-	public static ArrayList<Menu> getMenu() {
-		return menu;
-	}
-	public static void setMenu(ArrayList<Menu> menu) {
-		Database.menu = menu;
-	}
-	
-	
-	
-	//Additional codes for database
 	public void closeConn() {
 		try {
 			this.conn.close();
@@ -122,10 +89,76 @@ public class Database {
 	}
 	
 	
+///////////////////////////////////////////////////////////////////////////////////
+/////////static ArrayList getters and setters//////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////
+	public static ArrayList<UserClass> getUsers() {
+		return users;
+	}
+
+	public static void setUsers(ArrayList<UserClass> users) {
+		Database.users = users;
+	}
+
+	public static ArrayList<Menu> getMenu() {
+		return menu;
+	}
+
+	public static void setMenu(ArrayList<Menu> menu) {
+		Database.menu = menu;
+	}
+
+	public static ArrayList<Item> getItems() {
+		return items;
+	}
+
+	public static void setItems(ArrayList<Item> items) {
+		Database.items = items;
+	}
+
+	public static ArrayList<Package> getPack() {
+		return pack;
+	}
+
+	public static void setPack(ArrayList<Package> pack) {
+		Database.pack = pack;
+	}
+
+	public static ArrayList<Order> getOrders() {
+		return orders;
+	}
+
+	public static void setOrders(ArrayList<Order> orders) {
+		Database.orders = orders;
+	}
+
+	public static ArrayList<Feedbacks> getFeedback() {
+		return feedback;
+	}
+
+	public static void setFeedback(ArrayList<Feedbacks> feedback) {
+		Database.feedback = feedback;
+	}
+
+	public static ArrayList<Vouchers> getVouchers() {
+		return vouchers;
+	}
+
+	public static void setVouchers(ArrayList<Vouchers> vouchers) {
+		Database.vouchers = vouchers;
+	}
+
+	public static ArrayList<Invoice> getInvoice() {
+		return invoice;
+	}
+
+	public static void setInvoice(ArrayList<Invoice> invoice) {
+		Database.invoice = invoice;
+	}
 	
-	/////////////////////USER////////////////////////////////
-	
-	//store USERS from database to arraylist
+/////////////////////////////////////////////////////////////////////////////
+//////////////LOAD TABLES FROM DATABASE//////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
 	public static void loadUsersFromDatabase() throws SQLException {
 	    Database db = null;
 	    UserClass user = null;
@@ -146,7 +179,7 @@ public class Database {
 				    user = new AdminClass(id, userName, password, contact, role, userCreated.toLocalDateTime(), userUpdated.toLocalDateTime(), editedByID);    
 				}
 				if(role.equals(UserClass.REGULAR_USER)) {
-						user = new RegularClass(id, userName, password, contact, role, userCreated.toLocalDateTime(), userUpdated.toLocalDateTime(), editedByID);
+					user = new RegularClass(id, userName, password, contact, role, userCreated.toLocalDateTime(), userUpdated.toLocalDateTime(), editedByID);
 				}
 	            users.add(user);
 	        }
@@ -156,127 +189,6 @@ public class Database {
 	        }
 	    }
 	}
-	
-	//add a user
-	public static void addUser(UserClass u) throws SQLException, NameExistsInArrayException {
-		Database db = null;
-		try {
-			db = new Database();
-			db.setPst("INSERT INTO user (userID, name, password, contactNo, role, userCreated, userUpdated, editorID) \r\n"
-					+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-			db.getPst().setString(1, u.getId());
-			db.getPst().setString(2, nameExist(u.getUserName(), "USER"));
-			db.getPst().setString(3, u.getPassword());
-			db.getPst().setString(4, u.getContact());
-			db.getPst().setString(5, u.getRole());
-			db.getPst().setTimestamp(6, Timestamp.valueOf(u.getUserCreatedLDT()));
-			db.getPst().setTimestamp(7, Timestamp.valueOf(u.getUserUpdatedLDT()));
-			db.getPst().setString(8, u.getEditedByID());
-			db.getPst().executeUpdate();
-			
-			users.add(u);
-			
-	    } finally {
-	        if (db != null) {
-	            db.closeConn();
-	        }
-	    }
-	}
-	
-	public static String nameExist(String name, String array) throws NameExistsInArrayException {
-		if(array.equals("USER")) {
-			for(UserClass n: users) {
-				if(name.equals(n.getUserName())) {
-					throw new NameExistsInArrayException();
-				}
-			}
-		}else if(array.equals("ITEMS")) {
-			for(Item n: items) {
-				if(name.equals(n.getName())) {
-					throw new NameExistsInArrayException();
-				}
-			}
-		}else if(array.equals("PACKAGE")) {
-			for(Package n: pack) {
-				if(name.equals(n.getName())) {
-					throw new NameExistsInArrayException();
-				}
-			}
-		}
-			
-		
-		return name;
-	}
-	
-	//get a user from array
-	public static UserClass getUserByID(String id) throws UserNotFoundException {
-		for(UserClass user: users) {
-			if(id.equals(user.getId())) {
-				return user;
-			}
-		}
-		throw new UserNotFoundException();
-	}
-	
-	public static int getLastUserID(){
-		if(users.isEmpty()) {
-			return 1;
-		}
-		return Integer.parseInt(users.get(users.size()-1).getId().substring(1))+1;
-	}
-	
-	// update a user
-	public static void updateUser(String id, String username, String password, String contact, String role, String editedByID) throws SQLException {
-		Database db = new Database();
-		try {
-			db = new Database();
-			db.setPst("UPDATE user SET name = ?, password = ?, contactNo = ?, role = ?, userUpdated = current_timestamp(), editorID = ? WHERE userID = ?");
-			db.getPst().setString(1, username);
-			db.getPst().setString(2, password);
-			db.getPst().setString(3, contact);
-			db.getPst().setString(4, role);
-			db.getPst().setString(5, editedByID);
-			db.getPst().setString(6, id);
-			db.getPst().executeUpdate();
-			
-			for(UserClass user : users) {
-				if(id.equals(user.getId())) {
-					user.setUserName(username);
-					user.setPassword(password);
-					user.setContact(contact);
-					user.setRole(role);
-					user.setUserUpdated(LocalDateTime.now());
-					user.setEditedBy(editedByID);
-					return;
-				}
-			}
-	    }finally {
-	        if (db != null) {
-	            db.closeConn();
-	        }
-	    }
-	}
-	
-	// remove a user
-	public static void removeUser(UserClass user) throws SQLException {
-		Database db = new Database();
-		try {
-			db.setPst("DELETE FROM user WHERE userID = ?");
-			db.getPst().setString(1, user.getId());
-			db.getPst().executeUpdate();
-			
-			users.remove(user);
-			
-		} finally {
-			if(db != null) {
-				db.closeConn();
-			}
-		}
-	}
-	
-	
-	
-	////////////////////MENU////////////////////
 	
 	public static void loadMenuFromDatabase() throws SQLException {
 		Database db = null;
@@ -313,80 +225,7 @@ public class Database {
 	        }
 	    }
 	}
-	
-	public static Menu getMenuByID(String id) throws MenuNotFoundException{
-		for(Menu m: menu) {
-			if(id.equals(m.getId())) {
-				return m;
-			}
-		}
-		throw new MenuNotFoundException();
-	}
-	
-	public static void addMenu(String type) throws SQLException {
-		Database db = new Database();
-		try {
-			System.out.println(getLastMenuID());
-			db = new Database();
-			db.setPst("INSERT INTO menu(menuID, menuType) VALUES(?, ?)");
-			db.getPst().setInt(1, getLastMenuID()+1);
-			db.getPst().setString(2, type);
-			db.getPst().executeUpdate();
-			
-	    } finally {
-	        if (db != null) {
-	            db.closeConn();
-	        }
-	    }
-	}
 
-	
-	public static void  removeMenu(Package packag) throws SQLException {
-		Database db = new Database();
-		try {
-			db = new Database();
-			db.setPst("DELETE FROM menu WHERE menuID = (SELECT menuID FROM package WHERE packageID = ?)");
-			db.getPst().setString(1, packag.getId());
-			db.getPst().executeUpdate();
-			pack.remove(packag);
-			menu.remove(packag);
-			
-	    } finally {
-	        if (db != null) {
-	            db.closeConn();
-	        }
-	    }
-	}
-	
-
-	public static int getLastMenuID() throws SQLException {
-		Database db = new Database();
-		int ret = 1;
-		try {
-			db = new Database();
-			ResultSet rs = db.executeStatement("SELECT MAX(menuID) FROM menu");
-			
-			if(rs.next()) {
-				ret = rs.getInt("MAX(menuID)");
-			}
-	    } finally {
-	        if (db != null) {
-	            db.closeConn();
-	        }
-	    }
-		return ret;
-	}
-	
-	
-	/////////////////////ITEM////////////////////////////////
-	
-	public static int getLastItemID(){
-		if(items.isEmpty()) {
-			return 1;
-		}
-		return Integer.parseInt(items.get(items.size()-1).getId().substring(1))+1;
-	}
-	
 	public static void loadItemsFromDatabase() throws SQLException {
 	    Database db = null;
 	    items.clear();
@@ -408,96 +247,7 @@ public class Database {
 	        }
 	    }
 	}
-	
-	public static void addItem(Item item) throws SQLException, NameExistsInArrayException {
-		Database db = new Database();
-		try {
-			addMenu(item.getType());
-			db = new Database();
-			db.setPst("INSERT INTO items (itemID, name, price,  dateAdded, dateUpdated, menuID) \r\n"
-					+ "VALUES (?, ?, ?, current_timestamp(), current_timestamp(), ?)");
-			db.getPst().setString(1, item.getId());
-			db.getPst().setString(2, nameExist(item.getName(), "ITEMS"));
-			db.getPst().setFloat(3, item.getPrice());
-			db.getPst().setInt(4, getLastMenuID());
-			db.getPst().executeUpdate();
-			
-			items.add(item);
-			menu.add(item);
-			
-	    } finally {
-	        if (db != null) {
-	            db.closeConn();
-	        }
-	    }
-	}
-	
-	
-	public static void removeMenu(Item item) throws SQLException {
-		Database db = new Database();
-		try {
-			db = new Database();
-			db.setPst("DELETE FROM menu WHERE menuID = (SELECT menuID FROM items WHERE itemID = ?)");
-			db.getPst().setString(1, item.getId());
-			db.getPst().executeUpdate();
-			items.remove(item);
-			menu.remove(item);
-			
-	    } finally {
-	        if (db != null) {
-	            db.closeConn();
-	        }
-	    }
-		
-	}
-	
-	
-	public static void updateItem(String id, String name, float price) throws SQLException, NameExistsInArrayException {
-		Database db = new Database();
-		try {
-			db = new Database();
-			db.setPst("UPDATE items SET name = ?, price = ?, dateUpdated = current_timestamp() WHERE itemID = ?");
-			db.getPst().setString(1, name);
-			db.getPst().setFloat(2, price);
-			db.getPst().setString(3, id);
-			db.getPst().executeUpdate();
-			
-			for(Item item: items) {
-				if(id.equals(item.getId())) {
-					item.setName(name);
-					item.setPrice(price);
-					item.setDateUpdated(LocalDateTime.now());
-					return;
-				}
-			}
-	    }finally {
-	        if (db != null) {
-	            db.closeConn();
-	        }
-	    }
-	}
-	
-	public static Item getItemByID(String id) throws MenuNotFoundException {
-		for(Item i: items) {
-			if(id.equals(i.getId())) {
-				return i;
-			}
-		}
-		throw new MenuNotFoundException();
-	}
-	
-	public static Item getItemByName(String name) throws MenuNotFoundException {
-		for(Item i: items) {
-			if(name.equals(i.getName())) {
-				return i;
-			}
-		}
-		throw new MenuNotFoundException();
-	}
-	
-	
-	/////////////////////PACKAGE////////////////////////////////
-	
+
 	public static void loadPackageFromDatabase() throws SQLException {
 	    Database db = null;
 	    try {
@@ -523,6 +273,164 @@ public class Database {
 	    }
 	}
 		
+	public static ArrayList<Item> loadPackageItemFromDatabase(String idd) {
+		ArrayList<Item> packItem = new ArrayList<Item>();
+		Database db = null;
+		
+		try {
+			Package temp = Database.getPackageByID(idd);
+			db = new Database();
+			db.setPst("Select itemID, quantity FROM packageitem WHERE packageID = ?");
+			db.getPst().setString(1, idd);
+		    ResultSet rs = db.getPst().executeQuery();
+		    while (rs.next()) {
+	            String itemID = rs.getString("itemID");
+	            Item item = getItemByID(itemID);
+	            item.setQuantity(rs.getInt("quantity"));
+		    	packItem.add(item);
+	        }
+		    temp.setPackageitems(packItem);
+		} catch (SQLException | MenuNotFoundException e) {
+	       
+	    }finally {
+	        if (db != null) {
+	            db.closeConn();
+	        }
+	    }
+		return packItem;
+	}
+	
+	public static void loadOrdersFromDatabase() throws SQLException, MenuNotFoundException{
+		 Database db = null;
+		 try {
+		   	orders.clear();
+		   	db = new Database();
+		   	Statement stmt = db.getConn().createStatement();
+		   	ResultSet rs = stmt.executeQuery("SELECT * FROM orders");
+		    while (rs.next()) {
+		    	int id = rs.getInt("orderID");
+		        int menuID = rs.getInt("menuID");
+		        String orderMethod = rs.getString("orderMethod");
+		        String deliveryMethod = rs.getString("deliveryMethod");
+		        float total = rs.getFloat("total");
+		        orders.add(new Order(id, orderMethod, deliveryMethod, total, loadOrderItemsFromDatabase(id)));
+		    }
+		 } finally {
+		     if (db != null) {
+		    	 db.closeConn();
+		     }
+		 }
+
+	}
+	
+	public static ArrayList<Menu> loadOrderItemsFromDatabase(int orderID) throws SQLException, MenuNotFoundException{
+		Database db = null;
+		ArrayList<Menu> orderItems = new ArrayList<Menu>();
+		 try {
+		   	db = new Database();
+		   	Statement stmt = db.getConn().createStatement();
+		   	ResultSet rs = stmt.executeQuery("SELECT menuID FROM orderitems WHERE orderID = ?");
+		    while (rs.next()) {
+		    	orderItems.add(getMenuByMenuID(rs.getInt("menuID")));
+		    }
+		 } finally {
+		     if (db != null) {
+		    	 db.closeConn();
+		     }
+		 }
+		 return orderItems;
+
+	}
+	
+	public static void loadFeedbackFromDatabase() throws SQLException {
+	    Database db = null;
+	    feedback.clear();
+	    try {
+	        db = new Database();
+	        ResultSet rs = db.executeStatement("SELECT * FROM `employee feedback`");
+	        while (rs.next()) {
+	            int id = rs.getInt("feedbackID");
+	            String message = rs.getString("message");
+	            Timestamp dateAdded = rs.getTimestamp("dateAdded");
+	            String userID = rs.getString("userID");
+				feedback.add(new Feedbacks(id,userID, message, dateAdded.toLocalDateTime()));
+	        }
+	    } finally {
+	        if (db != null) {
+	            db.closeConn();
+	        }
+	    }
+	}
+	
+	
+////////////////////////////////////////////////////////////////////////////
+////////////////ADDING DATA/////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
+	public static void addUser(UserClass u) throws SQLException, NameExistsInArrayException {
+		Database db = null;
+		try {
+			db = new Database();
+			db.setPst("INSERT INTO user (userID, name, password, contactNo, role, userCreated, userUpdated, editorID) \r\n"
+					+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+			db.getPst().setString(1, u.getId());
+			db.getPst().setString(2, nameExist(u.getUserName(), "USER"));
+			db.getPst().setString(3, u.getPassword());
+			db.getPst().setString(4, u.getContact());
+			db.getPst().setString(5, u.getRole());
+			db.getPst().setTimestamp(6, Timestamp.valueOf(u.getUserCreatedLDT()));
+			db.getPst().setTimestamp(7, Timestamp.valueOf(u.getUserUpdatedLDT()));
+			db.getPst().setString(8, u.getEditedByID());
+			db.getPst().executeUpdate();
+			
+			users.add(u);
+			
+	    } finally {
+	        if (db != null) {
+	            db.closeConn();
+	        }
+	    }
+	}
+	
+	public static void addMenu(String type) throws SQLException {
+		Database db = new Database();
+		try {
+			System.out.println(getLastMenuID());
+			db = new Database();
+			db.setPst("INSERT INTO menu(menuID, menuType) VALUES(?, ?)");
+			db.getPst().setInt(1, getLastMenuID()+1);
+			db.getPst().setString(2, type);
+			db.getPst().executeUpdate();
+			
+	    } finally {
+	        if (db != null) {
+	            db.closeConn();
+	        }
+	    }
+	}
+
+	public static void addItem(Item item) throws SQLException, NameExistsInArrayException {
+		Database db = new Database();
+		try {
+			addMenu(item.getType());
+			db = new Database();
+			db.setPst("INSERT INTO items (itemID, name, price,  dateAdded, dateUpdated, menuID) \r\n"
+					+ "VALUES (?, ?, ?, current_timestamp(), current_timestamp(), ?)");
+			db.getPst().setString(1, item.getId());
+			db.getPst().setString(2, nameExist(item.getName(), "ITEMS"));
+			db.getPst().setFloat(3, item.getPrice());
+			db.getPst().setInt(4, getLastMenuID());
+			db.getPst().executeUpdate();
+			
+			items.add(item);
+			menu.add(item);
+			
+	    } finally {
+	        if (db != null) {
+	            db.closeConn();
+	        }
+	    }
+	}
+
 	public static void addPackage(Package packag) throws SQLException, NameExistsInArrayException {
 		Database db = new Database();
 		try {
@@ -540,6 +448,151 @@ public class Database {
 			menu.add(packag);
 			
 	    } finally {
+	        if (db != null) {
+	            db.closeConn();
+	        }
+	    }
+	}
+	
+	public static void addPackageItem(Package p, Item i, int qty) throws SQLException {
+		Database db = new Database();
+		try {
+			db = new Database();
+			db.setPst("INSERT INTO packageitem (packageItemID, quantity, itemID, packageID) VALUES (?, ?, ?, ?)");
+			db.getPst().setInt(1, getLastPackageItemID());
+			db.getPst().setInt(2, qty);
+			db.getPst().setString(3, i.getId());
+			db.getPst().setString(4, p.getId());
+			db.getPst().executeUpdate();
+			int packInt = getPackageIndex(p);
+			i.setQuantity(qty);
+			pack.get(packInt).getPackageitems().add(i);
+			p.getPackageitems().add(i);
+		} catch (MenuNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+	        if (db != null) {
+	            db.closeConn();
+	        }
+		}
+	}
+
+	public static void addOrder(Order order) throws SQLException {
+		Database db = new Database();
+		try {
+			orders.add(order);
+			db = new Database();
+			db.setPst("INSERT INTO orders (orderID, orderMethod, deliveryMethod, total) VALUES (?, ?, ?, ?, ?);");
+			db.getPst().setInt(1, order.getId());
+			db.getPst().setString(2, order.getOrderMethod());
+			db.getPst().setString(3, order.getDeliveryMethod());
+			db.getPst().setFloat(4, order.getTotal());
+			db.getPst().executeUpdate();
+			
+	    } finally {
+	        if (db != null) {
+	            db.closeConn();
+	        }
+	    }
+	}
+	
+	public static void addOrderItems(Order order, int menuID) throws SQLException {
+		Database db = new Database();
+		try {
+			
+			db = new Database();
+			db.setPst("INSERT INTO orderitems (orderItemsID, orderID, quantity, notes, menuID) VALUES (?, ?, ?, ?, ?)");
+			db.getPst().setInt(1, getLastOIID());
+			db.getPst().setString(2, order.getOrderMethod());
+			db.getPst().setString(3, order.getDeliveryMethod());
+			db.getPst().setFloat(4, order.getTotal());
+			db.getPst().setInt(5, menuID);
+			db.getPst().executeUpdate();
+			
+	    } finally {
+	        if (db != null) {
+	            db.closeConn();
+	        }
+	    }
+	}
+	
+	public static void addFeedback(Feedbacks f) throws SQLException  {
+		
+		Database db = new Database();
+		
+		try {
+			db = new Database();
+			db.setPst("INSERT INTO `employee feedback` (feedbackID, message, dateAdded, userID) \r\n"
+					+ "VALUES (?, ?, current_timestamp(), ?)");
+			
+			db.getPst().setInt(1, f.getId());
+			db.getPst().setString(2, f.getMessage());
+			db.getPst().setString(3, f.getUserID());
+			db.getPst().executeUpdate();
+			feedback.add(f);
+			
+	    } finally {
+	        if (db != null) {
+	            db.closeConn();
+	        }
+	    }
+	}
+
+////////////////////////////////////////////////////////////////////////////
+////////////////UPDATE DATA/////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
+	
+	public static void updateUser(String id, String username, String password, String contact, String role, String editedByID) throws SQLException {
+		Database db = new Database();
+		try {
+			db = new Database();
+			db.setPst("UPDATE user SET name = ?, password = ?, contactNo = ?, role = ?, userUpdated = current_timestamp(), editorID = ? WHERE userID = ?");
+			db.getPst().setString(1, username);
+			db.getPst().setString(2, password);
+			db.getPst().setString(3, contact);
+			db.getPst().setString(4, role);
+			db.getPst().setString(5, editedByID);
+			db.getPst().setString(6, id);
+			db.getPst().executeUpdate();
+			
+			for(UserClass user : users) {
+				if(id.equals(user.getId())) {
+					user.setUserName(username);
+					user.setPassword(password);
+					user.setContact(contact);
+					user.setRole(role);
+					user.setUserUpdated(LocalDateTime.now());
+					user.setEditedBy(editedByID);
+					return;
+				}
+			}
+	    }finally {
+	        if (db != null) {
+	            db.closeConn();
+	        }
+	    }
+	}
+	
+	public static void updateItem(String id, String name, float price) throws SQLException, NameExistsInArrayException {
+		Database db = new Database();
+		try {
+			db = new Database();
+			db.setPst("UPDATE items SET name = ?, price = ?, dateUpdated = current_timestamp() WHERE itemID = ?");
+			db.getPst().setString(1, name);
+			db.getPst().setFloat(2, price);
+			db.getPst().setString(3, id);
+			db.getPst().executeUpdate();
+			
+			for(Item item: items) {
+				if(id.equals(item.getId())) {
+					item.setName(name);
+					item.setPrice(price);
+					item.setDateUpdated(LocalDateTime.now());
+					return;
+				}
+			}
+	    }finally {
 	        if (db != null) {
 	            db.closeConn();
 	        }
@@ -573,33 +626,88 @@ public class Database {
 	        }
 	    }
 	}
-	
-	
-	
 
-
-	/////////////////////PACKAGE ITEM////////////////////////////////
-	public static void addPackageItem(int id, Package p, Item i) throws SQLException {
+	public static void updatePackageItem(String packID, String itemID, int qty) throws SQLException{
 		Database db = new Database();
 		
 		try {
 			db = new Database();
-			db.setPst("INSERT INTO packageitem (packageItemID, quantity, itemID, packageID) VALUES (?, ?, ?, ?)");
-			db.getPst().setInt(1, id);
-			db.getPst().setInt(2, 1);
-			db.getPst().setString(3, i.getId());
-			db.getPst().setString(4, p.getId());
+			db.setPst("UPDATE packageitem SET quantity = ? WHERE itemID = ? AND packageID = ?");
+			db.getPst().setInt(1, qty);
+			db.getPst().setString(2, itemID);
+			db.getPst().setString(3, packID);
 			db.getPst().executeUpdate();
-			p.getPackageitems().add(i);
-			
+			for(Package p: pack) {
+				if(p.getId().equals(packID)) {
+					for(Item i: p.getPackageitems()) {
+						i.setQuantity(qty);
+						break;
+					}
+					break;
+				}
+			}
 		} finally {
 	        if (db != null) {
 	            db.closeConn();
 	        }
+		}	
+	}
+	
+////////////////////////////////////////////////////////////////////////////
+////////////////REMOVE DATA/////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
+	
+	public static void removeUser(UserClass user) throws SQLException {
+		Database db = new Database();
+		try {
+			db.setPst("DELETE FROM user WHERE userID = ?");
+			db.getPst().setString(1, user.getId());
+			db.getPst().executeUpdate();
+			
+			users.remove(user);
+			
+		} finally {
+			if(db != null) {
+				db.closeConn();
+			}
 		}
 	}
 	
-	
+	public static void removeMenu(Package packag) throws SQLException {
+		Database db = new Database();
+		try {
+			db = new Database();
+			db.setPst("DELETE FROM menu WHERE menuID = (SELECT menuID FROM package WHERE packageID = ?)");
+			db.getPst().setString(1, packag.getId());
+			db.getPst().executeUpdate();
+			pack.remove(packag);
+			menu.remove(packag);
+			
+	    } finally {
+	        if (db != null) {
+	            db.closeConn();
+	        }
+	    }
+	}
+
+	public static void removeMenu(Item item) throws SQLException {
+		Database db = new Database();
+		try {
+			db = new Database();
+			db.setPst("DELETE FROM menu WHERE menuID = (SELECT menuID FROM items WHERE itemID = ?)");
+			db.getPst().setString(1, item.getId());
+			db.getPst().executeUpdate();
+			items.remove(item);
+			menu.remove(item);
+			
+	    } finally {
+	        if (db != null) {
+	            db.closeConn();
+	        }
+	    }
+		
+	}
+
 	public static void removePackageItem(Package p, Item i) throws SQLException {
 		Database db = new Database();
 		
@@ -609,12 +717,105 @@ public class Database {
 			db.getPst().setString(1, i.getId());
 			db.getPst().setString(2, p.getId());
 			db.getPst().executeUpdate();
-			p.getPackageitems().remove(i);
+			pack.get(getPackageIndex(p)).getPackageitems().remove(i);
+		} catch (MenuNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		} finally {
 	        if (db != null) {
 	            db.closeConn();
 	        }
+		}	
+	}
+	
+////////////////////////////////////////////////////////////////////////////
+////////////////GET INDEX OF OBJECT FROM ARRAY////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////	
+
+	public static int getUserIndex(UserClass user) throws UserNotFoundException{
+		int index = 0;
+		for(UserClass u: users) {
+			if(user.getId().equals(u.getId())){
+				return index;
+			}
+			index++;
 		}
+		throw new UserNotFoundException();
+	}
+	
+	public static int getMenuIndex(Menu men) throws MenuNotFoundException{
+		int index = 0;
+		for(Menu m: menu) {
+			if(men.getId().equals(m.getId())){
+				return index;
+			}
+			index++;
+		}
+		throw new MenuNotFoundException();
+	}
+	
+	public static int getItemIndex(Item item) throws MenuNotFoundException{
+		int index = 0;
+		for(Item i: items) {
+			if(item.getId().equals(i.getId())){
+				return index;
+			}
+			index++;
+		}
+		throw new MenuNotFoundException();
+	}
+	
+	private static int getPackageIndex(Package p) throws MenuNotFoundException {
+		int index = 0;
+		for(index = 0; index<pack.size(); index++) {
+			if(pack.get(index).getId().equals(p.getId())) {
+				return index;
+			}
+		}
+
+		throw new MenuNotFoundException();
+	}
+
+////////////////////////////////////////////////////////////////////////////
+////////////////GET OBJECT FROM ARRAY///////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
+	
+	//get a user from array
+	public static UserClass getUserByID(String id) throws UserNotFoundException {
+		for(UserClass user: users) {
+			if(id.equals(user.getId())) {
+				return user;
+			}
+		}
+		throw new UserNotFoundException();
+	}
+	
+
+	public static Menu getMenuByID(String id) throws MenuNotFoundException{
+		for(Menu m: menu) {
+			if(id.equals(m.getId())) {
+				return m;
+			}
+		}
+		throw new MenuNotFoundException();
+	}
+	
+	public static Menu getMenuByMenuID(int id) throws MenuNotFoundException{
+		for(Menu m: menu) {
+			if(m.getMenuID() == id) {
+				return m;
+			}
+		}
+		throw new MenuNotFoundException();
+	}
+	
+	public static Item getItemByID(String id) throws MenuNotFoundException {
+		for(Item i: items) {
+			if(id.equals(i.getId())) {
+				return i;
+			}
+		}
+		throw new MenuNotFoundException();
 	}
 	
 	public static Package getPackageByID(String id) throws MenuNotFoundException {
@@ -626,14 +827,56 @@ public class Database {
 		throw new MenuNotFoundException();
 	}
 	
+	
+	
+////////////////////////////////////////////////////////////////////////////
+////////////////GET LAST USER ID///////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
+	
+	public static int getLastUserID(){
+		if(users.isEmpty()) {
+			return 1;
+		}
+		return Integer.parseInt(users.get(users.size()-1).getId().substring(1))+1;
+	}
+
+	// remove a user
+	public static int getLastMenuID() throws SQLException {
+		Database db = new Database();
+		int ret = 1;
+		try {
+			db = new Database();
+			ResultSet rs = db.executeStatement("SELECT MAX(menuID) FROM menu");
+			
+			if(rs.next()) {
+				ret = rs.getInt("MAX(menuID)");
+			}
+	    } finally {
+	        if (db != null) {
+	            db.closeConn();
+	        }
+	    }
+		return ret;
+	}
+	
+	public static int getLastItemID(){
+		if(items.isEmpty()) {
+			return 1;
+		}
+		return Integer.parseInt(items.get(items.size()-1).getId().substring(1))+1;
+	}
+	
 	public static int getLastPackageID() {
 		if(pack.isEmpty()) {
 			return 1;
 		}
 		return Integer.parseInt(pack.get(pack.size()-1).getId().substring(1))+1;
 	}
+	/////////////////////PACKAGE ITEM////////////////////////////////
 	
-	public static int getLastPackageItemID() {
+
+	
+	public static int getLastPackageItemID() throws SQLException {
 		
 		Database db = null;
 		int id = 0;
@@ -644,8 +887,6 @@ public class Database {
 	        while (rs.next()) {
 	        	id = rs.getInt(1);
 	        }
-	    } catch (SQLException e) {
-	    	System.out.println(e.getMessage());
 	    } finally {
 	        if (db != null) {
 	            db.closeConn();
@@ -654,79 +895,7 @@ public class Database {
 		return id + 1;
 	}
 	
-	public static ArrayList<Item> loadPackageItemFromDatabase(String idd) {
-		ArrayList<Item> packItem = new ArrayList<Item>();
-		Database db = null;
-		
-		try {
-			Package temp = Database.getPackageByID(idd);
-			db = new Database();
-			db.setPst("Select itemID FROM packageitem WHERE packageID = ?");
-			db.getPst().setString(1, idd);
-		    ResultSet rs = db.getPst().executeQuery();
-		    while (rs.next()) {
-	            String itemID = rs.getString("itemID");
-		    	packItem.add(getItemByID(itemID));
-	        }
-		    temp.setPackageitems(packItem);
-		} catch (SQLException | MenuNotFoundException e) {
-	       
-	    }finally {
-	        if (db != null) {
-	            db.closeConn();
-	        }
-	    }
-		return packItem;
-	}
-	
-
-	/////////////////////ORDERS////////////////////////////////ch
-	public static void loadOrdersFromDatabase() throws SQLException{
-		 Database db = null;
-		 try {
-		   	orders.clear();
-		   	db = new Database();
-		   	Statement stmt = db.getConn().createStatement();
-		   	ResultSet rs = stmt.executeQuery("SELECT * FROM orders");
-		    while (rs.next()) {
-		    	int id = rs.getInt("orderID");
-		        int menuID = rs.getInt("menuID");
-		        String orderMethod = rs.getString("orderMethod");
-		        String deliveryMethod = rs.getString("deliveryMethod");
-		        float total = rs.getFloat("total");
-		        orders.add(new Order(id, orderMethod, deliveryMethod, total, loadOrderItems(menuID)));
-		    }
-		 } finally {
-		     if (db != null) {
-		    	 db.closeConn();
-		     }
-		 }
-
-	}
-	
-	
-	
-	public static void addOrder(Order order) throws SQLException {
-		Database db = new Database();
-		try {
-			orders.add(order);
-			db = new Database();
-			db.setPst("INSERT INTO orders (orderID, orderMethod, deliveryMethod, total) VALUES (?, ?, ?, ?, ?);");
-			db.getPst().setInt(1, order.getId());
-			db.getPst().setString(2, order.getOrderMethod());
-			db.getPst().setString(3, order.getDeliveryMethod());
-			db.getPst().setFloat(4, order.getTotal());
-			db.getPst().executeUpdate();
-			
-	    } finally {
-	        if (db != null) {
-	            db.closeConn();
-	        }
-	    }
-	}
-	
-	
-	public static int getNextOIID() throws SQLException {
+	public static int getLastOIID() throws SQLException {
 		Database db = new Database();
 		try {
 			db = new Database();
@@ -737,100 +906,6 @@ public class Database {
 		    }else {
 		    	return 1;
 		    }
-	    } finally {
-	        if (db != null) {
-	            db.closeConn();
-	        }
-	    }
-	}
-	
-	
-	public static ArrayList<Feedbacks> getFeedback() {
-		return feedback;
-	}
-	public static void setFeedback(ArrayList<Feedbacks> feedback) {
-		Database.feedback = feedback;
-	}
-	public static ArrayList<Vouchers> getVouchers() {
-		return vouchers;
-	}
-	public static void setVouchers(ArrayList<Vouchers> vouchers) {
-		Database.vouchers = vouchers;
-	}
-	public static ArrayList<Invoice> getInvoice() {
-		return invoice;
-	}
-	public static void setInvoice(ArrayList<Invoice> invoice) {
-		Database.invoice = invoice;
-	}
-	
-	public static ArrayList<Menu> loadOrderItems(int id) throws SQLException{
-		Database db = null;
-		ArrayList<Menu> oi = new ArrayList<Menu>();
-	    try {
-	        db = new Database();
-	        Statement stmt = db.getConn().createStatement();
-	        ResultSet rs = stmt.executeQuery("SELECT menuID FROM orderitems WHERE orderID = ?");
-	        while (rs.next()) {
-	            oi.add(getMenuBymenuID(rs.getInt("menuID")));
-	        }
-	    } catch (MenuNotFoundException e) {
-			e.printStackTrace();
-		} finally {
-	   
-	        if (db != null) {
-	            db.closeConn();
-	        }
-	    }
-	    return oi;
-	}
-	
-	public static Menu getMenuBymenuID(int menuID) throws MenuNotFoundException{
-		for(Menu m: menu) {
-			if(m.getMenuID() == menuID) {
-				return m;
-			}
-		}
-		throw new MenuNotFoundException();
-	}
-	
-	
-	public static void addOrderItems(Order order, int menuID) throws SQLException {
-		Database db = new Database();
-		try {
-			
-			db = new Database();
-			db.setPst("INSERT INTO orderitems (orderItemsID, orderID, quantity, notes, menuID) VALUES (?, ?, ?, ?, ?)");
-			db.getPst().setInt(1, getNextOIID());
-			db.getPst().setString(2, order.getOrderMethod());
-			db.getPst().setString(3, order.getDeliveryMethod());
-			db.getPst().setFloat(4, order.getTotal());
-			db.getPst().setInt(5, menuID);
-			db.getPst().executeUpdate();
-			
-	    } finally {
-	        if (db != null) {
-	            db.closeConn();
-	        }
-	    }
-	}
-	
-	
-	/////////////////////FEEDBACK////////////////////////////////
-	
-	public static void loadFeedbackFromDatabase() throws SQLException {
-	    Database db = null;
-	    feedback.clear();
-	    try {
-	        db = new Database();
-	        ResultSet rs = db.executeStatement("SELECT * FROM `employee feedback`");
-	        while (rs.next()) {
-	            int id = rs.getInt("feedbackID");
-	            String message = rs.getString("message");
-	            Timestamp dateAdded = rs.getTimestamp("dateAdded");
-	            String userID = rs.getString("userID");
-				feedback.add(new Feedbacks(id,userID, message, dateAdded.toLocalDateTime()));
-	        }
 	    } finally {
 	        if (db != null) {
 	            db.closeConn();
@@ -856,27 +931,34 @@ public class Database {
 		return ret + 1;
 	}
 	
-	public static void addFeedback(Feedbacks f) throws SQLException  {
-		
-		Database db = new Database();
-		
-		try {
-			db = new Database();
-			db.setPst("INSERT INTO `employee feedback` (feedbackID, message, dateAdded, userID) \r\n"
-					+ "VALUES (?, ?, current_timestamp(), ?)");
+	
+	
+	
+	//////////////////CHECK DUPLICATE////////////////////////////////////
+	//Check for duplicates in the array
+	public static String nameExist(String name, String array) throws NameExistsInArrayException {
+		if(array.equals("USER")) {
+			for(UserClass n: users) {
+				if(name.equals(n.getUserName())) {
+					throw new NameExistsInArrayException();
+				}
+			}
+		}else if(array.equals("ITEMS")) {
+			for(Item n: items) {
+				if(name.equals(n.getName())) {
+					throw new NameExistsInArrayException();
+				}
+			}
+		}else if(array.equals("PACKAGE")) {
+			for(Package n: pack) {
+				if(name.equals(n.getName())) {
+					throw new NameExistsInArrayException();
+				}
+			}
+		}
 			
-			db.getPst().setInt(1, f.getId());
-			db.getPst().setString(2, f.getMessage());
-			db.getPst().setString(3, f.getUserID());
-			db.getPst().executeUpdate();
-			feedback.add(f);
-			
-	    } finally {
-	        if (db != null) {
-	            db.closeConn();
-	        }
-	    }
+		
+		return name;
 	}
-
 
 }
