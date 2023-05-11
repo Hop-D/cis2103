@@ -26,10 +26,6 @@ import model.Package;
 import model.UserClass;
 
 
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.GroupLayout;
-import javax.swing.LayoutStyle.ComponentPlacement;
-import java.awt.Dimension;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 
