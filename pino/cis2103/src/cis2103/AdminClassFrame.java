@@ -1394,8 +1394,20 @@ public class AdminClassFrame extends javax.swing.JFrame {
     
     //```buttons ---- UPDATE ITEM// //AnotherClass
     private void buttonItemUpdateActionPerformed(java.awt.event.ActionEvent evt) throws SQLException {
+    	if(inputSinglePrice.getText().isEmpty() || inputSingleName.getText().isEmpty()) {
+    		JOptionPane.showMessageDialog(this, "Required fields are missing");
+    		return;
+    	}
+  
+    	
 		try {
+
+        	int choice = JOptionPane.showConfirmDialog(null, "Update item?", "Update Confirmation", JOptionPane.YES_NO_OPTION);
+	        if(choice == JOptionPane.NO_OPTION) {
+	        	return;
+	        }
 			Database.updateItem(inputItemID.getText(), inputSingleName.getText(), Float.parseFloat(inputSinglePrice.getText()));
+	        
 		} catch (Exception e) {
 			JOptionPane.showInputDialog(this, e.getMessage());
 		} finally {
@@ -1408,7 +1420,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
     //```buttons ---- REMOVE ITEM// //AnotherClass
     private void buttonItemRemoveActionPerformed(java.awt.event.ActionEvent evt) {
         try {
-        	int choice = JOptionPane.showConfirmDialog(null, "Remove item?", "Add Confirmation", JOptionPane.YES_NO_OPTION);
+        	int choice = JOptionPane.showConfirmDialog(null, "Remove item?", "Remove Confirmation", JOptionPane.YES_NO_OPTION);
 	        if(choice == JOptionPane.NO_OPTION) {
 	        	return;
 	        }
@@ -1612,7 +1624,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
              return;
          }
     	 
-    	try {
+    	try{
     		Package pack = Database.getPackageByID(id);
 			JOptionPane.showMessageDialog(this, "Package already exists");
     	} catch (MenuNotFoundException e) {
@@ -1624,6 +1636,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
 	        try {
 				Database.addPackage(new Package(id, inputNewPackageName.getText(), 0));
 	        } catch (SQLException | NameExistsInArrayException e1) {
+	        	JOptionPane.showMessageDialog(this, "Package already exists");
 	        }
     	} finally {
         	clearPackages();
@@ -1631,19 +1644,19 @@ public class AdminClassFrame extends javax.swing.JFrame {
     	}
     }
 
+	
 
     //```buttons ---- UPDATE PACKAGE// //AnotherClass
     private void buttonPackageUpdateActionPerformed(java.awt.event.ActionEvent evt) {
-    	
-    	if(isEmptyPackage()) {
+
+	   	 
+	   	 if(isEmptyPackage()) {
         	int choice = JOptionPane.showConfirmDialog(null, "Update Package?", "Update Confirmation", JOptionPane.YES_NO_OPTION);
     		if(choice != JOptionPane.YES_OPTION) {
     			return;
     		}
     		updatePackage();
-    	} else {
-    		JOptionPane.showMessageDialog(this, "Package Name already exists");
-    	}
+    	} 
 
     }
     //AnotherClass
@@ -1678,14 +1691,10 @@ public class AdminClassFrame extends javax.swing.JFrame {
     
     // check if package input boxes are empty //AnotherClass
     public boolean isEmptyPackage() {
-        if(inputPackageName.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Package Name is missing");
+        if(inputPackageName.getText().isEmpty() || inputPackagePrice.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Required fields are missing");
             return false;
-        }
-        if(inputPackagePrice.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Package Price is missing");
-            return false;
-        }      
+        }   
         return true;
     } 
     
@@ -1958,7 +1967,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
     private void buttonUserUpdateActionPerformed(java.awt.event.ActionEvent evt) {
     	
         if(isEmptyUser() && noDupe() == 0) {
-        	int choice = JOptionPane.showConfirmDialog(null, "Update User?", "Add Confirmation", JOptionPane.YES_NO_OPTION);
+        	int choice = JOptionPane.showConfirmDialog(null, "Update User?", "UpdatevConfirmation", JOptionPane.YES_NO_OPTION);
     		if(choice != JOptionPane.YES_OPTION) {
     			return;
     		} 
@@ -2036,7 +2045,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
     // check if input boxes are empty //AnotherClass
     public boolean isEmptyUser() {
         if(inputUserName.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "User Name is missing");
+            JOptionPane.showMessageDialog(this, "Required fields are missing");
             return false;
         }
         if(inputUserPass.getText().isEmpty()) {

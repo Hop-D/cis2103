@@ -411,7 +411,6 @@ public class Database {
 	public static void addItem(Item item) throws SQLException, NameExistsInArrayException {
 		Database db = new Database();
 		try {
-			addMenu(item.getType());
 			db = new Database();
 			db.setPst("INSERT INTO items (itemID, name, price,  dateAdded, dateUpdated, menuID) \r\n"
 					+ "VALUES (?, ?, ?, current_timestamp(), current_timestamp(), ?)");
