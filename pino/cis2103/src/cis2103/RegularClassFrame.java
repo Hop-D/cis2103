@@ -1,12 +1,18 @@
 
 package cis2103;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.KeyEvent;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import javax.swing.ButtonGroup;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import exceptions.MenuNotFoundException;
@@ -21,6 +27,8 @@ import model.RegularClass;
 import model.UserClass;
 
 import javax.swing.GroupLayout.Alignment;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.GroupLayout;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SpinnerNumberModel;
@@ -51,7 +59,7 @@ public class RegularClassFrame extends javax.swing.JFrame {
 //        custModeBG.add(radioRegDeliver);
         
         try {
-			inputRegTrans.setText(String.valueOf(Database.getNextOIID()));
+			inputRegTrans.setText(String.valueOf(Database.getLastOrderID()));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -774,6 +782,7 @@ public class RegularClassFrame extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
     	int out = JOptionPane.showConfirmDialog(this, "Do you want to log out?", "SELECT", JOptionPane.YES_NO_OPTION);
         if(out == 0) {
+        	clearReg();
             Login log = new Login();
         	log.setVisible(true);
         	log.setLocationRelativeTo(null);
@@ -796,8 +805,8 @@ public class RegularClassFrame extends javax.swing.JFrame {
     private void tableViewRegTwo() {
     	
         model = (DefaultTableModel) tableRegTwo.getModel(); 
-        model.setRowCount(0);
     	Object[] row = new Object[3];
+        model.setRowCount(0);
     	
     	for(Package p : Database.getPack()) {
     		row[0] = p.getId();
@@ -841,7 +850,44 @@ public class RegularClassFrame extends javax.swing.JFrame {
         spinnerOne.setValue(1);          
         tableRegOne.clearSelection();
         tableRegItems.clearSelection();
-    }                                            
+        
+        displayPack(jLabel10.getText(), inputRegOne.getText(), Float.parseFloat(model.getValueAt(rowIndex2, 2).toString()));
+    }   
+    
+    private void displayPack(String id, String packName, float price) {
+        JFrame newFrame = new JFrame("Item in Package");
+        newFrame.setSize(600, 400);
+        newFrame.setLayout(new BorderLayout());
+
+        JLabel lblTitle = new JLabel("Package " + packName);
+        lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        lblTitle.setHorizontalAlignment(JLabel.CENTER);
+        newFrame.add(lblTitle, BorderLayout.NORTH);
+
+        String[] columnNames = {"Name", "Quantity", "Price"};
+
+		ArrayList<Item> mi = Database.loadPackageItemFromDatabase(id);
+		Object[][] rowData = new Object[mi.size()][3];
+		int i = 0;
+		for(Item it : mi) {
+			rowData[i][0] = it.getName();
+			rowData[i][1] = it.getQuantity();
+			rowData[i][2] = it.getPrice();
+			i++;
+		}
+		JTable table = new JTable(rowData, columnNames);
+		table.setPreferredScrollableViewportSize(new Dimension(500, 200));
+		table.setRowHeight(40);
+		table.setFillsViewportHeight(true);
+		JScrollPane scrollPane = new JScrollPane(table);
+		newFrame.add(scrollPane, BorderLayout.CENTER);
+
+        newFrame.setVisible(true);
+        newFrame.pack();
+        newFrame.setLocationRelativeTo(null);
+    }
+    
+    
 
     private void tableRegItemsMouseClicked(java.awt.event.MouseEvent evt) {                                           
         
@@ -959,7 +1005,7 @@ public class RegularClassFrame extends javax.swing.JFrame {
     
     private void buttonRegProceedActionPerformed(java.awt.event.ActionEvent evt) {
     	Billing bill = new Billing(Integer.parseInt(inputRegTrans.getText().toString()), oi, Float.parseFloat(inputRegTotal.getText()), Float.parseFloat(inputRegAmount.getText()), temp.getId());
-    	bill.setVisible(true);
+    	new Billing(o).setVisible(true);
     	bill.setLocationRelativeTo(null);	
     }
     
