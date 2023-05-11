@@ -1,12 +1,17 @@
 
 package cis2103;
 
-import java.awt.event.KeyEvent;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import javax.swing.ButtonGroup;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import exceptions.MenuNotFoundException;
@@ -19,23 +24,25 @@ import model.Package;
 import model.RegularClass;
 import model.UserClass;
 
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.GroupLayout;
-import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 
 
 public class RegularClassFrame extends javax.swing.JFrame {
 
-    ArrayList<Menu> oi = new ArrayList<>();
+    Order order;
     private DefaultTableModel model;
     int rowIndex1, rowIndex2, rowIndex3;
-    Order o = new Order();
     private static RegularClass temp;
 
     
     public RegularClassFrame(UserClass user) {
         initComponents();
-        
+        try {
+			order = new Order();
+		} catch (SQLException e1) {
+			JOptionPane.showMessageDialog(this, "Something went wrong in the database. Please contact developers.");
+		}
         tableViewRegOne();
         tableViewRegTwo();
         tableViewRegItem();
@@ -49,7 +56,7 @@ public class RegularClassFrame extends javax.swing.JFrame {
 //        custModeBG.add(radioRegDeliver);
         
         try {
-			inputRegTrans.setText(String.valueOf(Database.getLastOIID()));
+			inputRegTrans.setText(String.valueOf(Database.getLastOrderID()));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -62,8 +69,6 @@ public class RegularClassFrame extends javax.swing.JFrame {
     }
 
 
-    @SuppressWarnings("unchecked")
-                         
     private void initComponents() {
     	
         jPanel1 = new javax.swing.JPanel();
@@ -811,7 +816,7 @@ public class RegularClassFrame extends javax.swing.JFrame {
         model.setRowCount(0);
         Object[] row = new Object[3];
 
-        for(Menu m : oi) {
+        for(Menu m : order.getMenuOrders()) {
         	row[0] = m.getName();
         	row[1] = m.getQuantity();
         	row[2] = m.getPrice() * m.getQuantity();
@@ -827,7 +832,6 @@ public class RegularClassFrame extends javax.swing.JFrame {
         inputRegOne.setText(model.getValueAt(rowIndex1, 1).toString());
         spinnerOne.setValue(1);        
         tableRegTwo.clearSelection();
-        tableRegOne.clearSelection();
     }                                           
 
     private void tableRegTwoMouseClicked(java.awt.event.MouseEvent evt) {                                             
@@ -839,7 +843,55 @@ public class RegularClassFrame extends javax.swing.JFrame {
         spinnerOne.setValue(1);          
         tableRegOne.clearSelection();
         tableRegItems.clearSelection();
-    }                                            
+        
+        
+        displayPack(jLabel10.getText(), inputRegOne.getText(), Float.parseFloat(model.getValueAt(rowIndex2, 2).toString()));
+    }        
+    
+ // display item list of a package
+    private void displayPack(String id, String packName, float price) {
+        JFrame newFrame = new JFrame("Items inside " + packName);
+        newFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        newFrame.setSize(600, 400);
+        newFrame.setLayout(new BorderLayout());
+        newFrame.setFocusable(true);
+        newFrame.addFocusListener(new FocusListener() {
+        	public void focusLost(FocusEvent e) {
+        		newFrame.toFront();
+                newFrame.dispose();
+            }
+
+			public void focusGained(FocusEvent e) {
+				
+			}
+        });
+        JLabel lblTitle = new JLabel("Package " + packName);
+        lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        lblTitle.setHorizontalAlignment(JLabel.CENTER);
+        newFrame.add(lblTitle, BorderLayout.NORTH);
+        
+        String[] columnNames = {"Name", "Quantity", "Price"};
+
+		ArrayList<Item> mi = Database.loadPackageItemFromDatabase(id);
+		Object[][] rowData = new Object[mi.size()][3];
+		int i = 0;
+		for(Item it : mi) {
+			rowData[i][0] = it.getName();
+			rowData[i][1] = it.getQuantity();
+			rowData[i][2] = it.getPrice();
+			i++;
+		}
+		JTable table = new JTable(rowData, columnNames);
+		table.setPreferredScrollableViewportSize(new Dimension(500, 200));
+		table.setRowHeight(40);
+		table.setFillsViewportHeight(true);
+		JScrollPane scrollPane = new JScrollPane(table);
+		newFrame.add(scrollPane, BorderLayout.CENTER);
+		
+		newFrame.pack();
+		newFrame.setVisible(true);
+		newFrame.setLocationRelativeTo(null);
+    }
 
     private void tableRegItemsMouseClicked(java.awt.event.MouseEvent evt) {                                           
         
@@ -866,29 +918,23 @@ public class RegularClassFrame extends javax.swing.JFrame {
     }
 
     private void buttonRegAddOneActionPerformed(java.awt.event.ActionEvent evt) {                                              
-
-    	int i, exist = 0;
     	int tempQty = Integer.parseInt(spinnerOne.getValue().toString());
     	try {
-       		o.setId(Integer.parseInt(inputRegTrans.getText()));
-    		o.setMenuOrders(oi);			
-    		Menu temp = Database.getMenuByID(jLabel10.getText());
     		
-            for(i = 0; i < oi.size(); i++) {
-                if(temp.getName().equals(oi.get(i).getName())) {
-                    exist = 1;
-                    break;
-                } else {
-                    exist = 0;
-                }
-            }
-            
-            if(exist == 1) {
-            	oi.get(i).setQuantity(oi.get(i).getQuantity() + tempQty);
-            } else {
-            	temp.setQuantity(tempQty);
-            	oi.add(temp);
-            }
+    		Menu temp = Database.getMenuByID(jLabel10.getText());
+    		boolean exist = false;
+    		for(Menu m: order.getMenuOrders()) {
+    			if(temp.getId().equals(m.getId())) {
+    				m.setQuantity(m.getQuantity() + tempQty);
+    				exist = false;
+    				break;
+    			}
+    		}
+    		if(!exist) {
+    			temp.setQuantity(tempQty);
+    			order.getMenuOrders().add(temp);
+    		}
+    		
            
 		} catch (NumberFormatException | MenuNotFoundException e) {
 			e.printStackTrace();
@@ -908,11 +954,13 @@ public class RegularClassFrame extends javax.swing.JFrame {
         String tempName = model.getValueAt(rowIndex3, 0).toString();
         int tempQty = Integer.parseInt(jSpinner1.getValue().toString());
 
-        for(Menu m : oi) {
+        for(Menu m : order.getMenuOrders()) {
         	if(m.getName().equals(tempName)) {
-        		m.setQuantity(tempQty);        		
+        		m.setQuantity(tempQty);        	
+        		break;
         	}
         } 
+        
         tableViewRegItem();
         inputRegTotal.setText(Float.toString(currentTotal()));
         clearReg();
@@ -927,9 +975,9 @@ public class RegularClassFrame extends javax.swing.JFrame {
 		
         model = (DefaultTableModel) tableRegItems.getModel();
         String tempName = model.getValueAt(rowIndex3, 0).toString();
-        for(Menu m : oi) {
+        for(Menu m : order.getMenuOrders()) {
         	if(m.getName().equals(tempName)) {
-        		oi.remove(m);
+        		order.getMenuOrders().remove(m);
         		break;
         	}
         } 
@@ -939,11 +987,7 @@ public class RegularClassFrame extends javax.swing.JFrame {
         inputRegTotal.setText(Float.toString(currentTotal()));
     
     }                                                                                          
-
-    private void buttonRegPrintActionPerformed(java.awt.event.ActionEvent evt) {                                              
-        // TODO add your handling code here:
-    }                                             
-    
+                                
     private void inputRegAmountKeyTyped(java.awt.event.KeyEvent evt) {
         if(!Character.isDigit(evt.getKeyChar())) {
             evt.consume();
@@ -951,22 +995,25 @@ public class RegularClassFrame extends javax.swing.JFrame {
     }
     
     private void buttonRegCalActionPerformed(java.awt.event.ActionEvent evt) {
+    	if(inputRegAmount.getText().isEmpty()) {
+    		inputRegAmount.setText("0");
+    	}
     	float change = Float.parseFloat(inputRegAmount.getText()) - Float.parseFloat(inputRegTotal.getText());
     	inputRegChange.setText(String.valueOf(change)); 	
     }
     
     private void buttonRegProceedActionPerformed(java.awt.event.ActionEvent evt) {
-    	Billing bill = new Billing();
-    	bill.setVisible(true);
-    	bill.setLocationRelativeTo(null);	
+    	order.setTotal(Float.parseFloat(inputRegTotal.getText()));
+    	new Billing(order).setVisible(true);
     }
     
     public float currentTotal() {
-        int i;
         float total = 0;
-        for(i = 0; i < oi.size(); i++) {
-            total += (oi.get(i).getPrice() * oi.get(i).getQuantity()) ;
+        
+        for(Menu m: order.getMenuOrders()) {
+        	total += (m.getQuantity() * m.getPrice());
         }
+        
         return total;
     } 
     
@@ -1014,7 +1061,6 @@ public class RegularClassFrame extends javax.swing.JFrame {
                    
     private javax.swing.JButton buttonFeedSend;
     private javax.swing.JButton buttonRegAddOne;
-    private javax.swing.JButton buttonRegAddTwo;
     private javax.swing.JButton buttonRegCal;
     private javax.swing.JButton buttonRegProceed;
     private javax.swing.JButton buttonRegRemove;
@@ -1025,7 +1071,6 @@ public class RegularClassFrame extends javax.swing.JFrame {
     private javax.swing.JTextField inputRegTemp;
     private javax.swing.JTextField inputRegTotal;
     private javax.swing.JTextField inputRegTrans;
-    private javax.swing.JTextField inputRegTwo;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -1059,7 +1104,6 @@ public class RegularClassFrame extends javax.swing.JFrame {
     private javax.swing.JSpinner jSpinner1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JSpinner spinnerOne;
-    private javax.swing.JSpinner spinnerTwo;
     private javax.swing.JTable tableFeedbacks;
     private javax.swing.JTable tableRegItems;
     private javax.swing.JTable tableRegOne;

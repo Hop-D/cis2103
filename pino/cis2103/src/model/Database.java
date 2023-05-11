@@ -517,6 +517,7 @@ public class Database {
 	    }
 	}
 	
+	
 	public static void addFeedback(Feedbacks f) throws SQLException  {
 		
 		Database db = new Database();
@@ -652,6 +653,39 @@ public class Database {
 	        }
 		}	
 	}
+	
+	public static void updateOrderItem(ArrayList<Menu> orderItems, Order order) throws SQLException{
+		Database db = new Database();
+		
+		try {
+			db = new Database();
+			db.setPst("DELETE FROM orderitems WHERE orderID = ?");
+			db.getPst().setInt(1, order.getId());
+			db.getPst().executeUpdate();
+			for(Menu oi: orderItems) {
+				db.setPst("UPDATE orderitems SET quantity = ? WHERE menuID = ? AND orderID = ?");
+				db.getPst().setInt(1, oi.getQuantity());
+				db.getPst().setInt(2, oi.getMenuID());
+				db.getPst().setInt(3, order.getId());
+				db.getPst().executeUpdate();
+			}
+			
+			for(Order o: orders) {
+				if(o.getId() == order.getId()) {
+					for(Menu oi: orderItems) {
+						o.getMenuOrders().add(oi);
+					}
+					break;
+				}
+			}
+		} finally {
+	        if (db != null) {
+	            db.closeConn();
+	        }
+		}	
+	}
+	
+	
 	
 ////////////////////////////////////////////////////////////////////////////
 ////////////////REMOVE DATA/////////////////////////////////////////////////
@@ -893,6 +927,24 @@ public class Database {
 	        }
 	    }
 		return id + 1;
+	}
+	
+	public static int getLastOrderID() throws SQLException {
+		Database db = new Database();
+		try {
+			db = new Database();
+		   	Statement stmt = db.getConn().createStatement();
+		   	ResultSet rs = stmt.executeQuery("SELECT MAX(orderID) AS nextID FROM orders");
+		    if (rs.next()) {
+		    	return rs.getInt("nextID")+1;
+		    }else {
+		    	return 1;
+		    }
+	    } finally {
+	        if (db != null) {
+	            db.closeConn();
+	        }
+	    }
 	}
 	
 	public static int getLastOIID() throws SQLException {

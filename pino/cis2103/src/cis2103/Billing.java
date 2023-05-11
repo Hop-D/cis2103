@@ -1,9 +1,12 @@
 package cis2103;
 
+import model.Order;
+
 public class Billing extends javax.swing.JFrame {
 
-
-    public Billing() {
+	private static Order order;
+    public Billing(Order ord) {
+    	order = ord;
         initComponents();
     }
 
@@ -184,7 +187,7 @@ public class Billing extends javax.swing.JFrame {
 
         jLabel11.setText("AMOUNT: <AMOUNT>");
 
-        jLabel12.setText("TOTAL BILL : <TOTAL BILL>");
+        jLabel12.setText("TOTAL BILL : " + order.getTotal());
 
         jLabel13.setText("CHANGE : <CHANGE>");
 

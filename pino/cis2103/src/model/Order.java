@@ -1,5 +1,6 @@
 package model;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class Order {
@@ -16,10 +17,20 @@ public class Order {
 	public static String DELIVER = "Deliver";
 	
 	
-	
-	public Order() {
-		
+	public Order() throws SQLException {
+		this.id = Database.getLastOrderID();
+		this.orderMethod = PHYSICAL;
+		this.deliveryMethod = PICKUP;
+		menuOrders = new ArrayList<Menu>();
 	}
+//	
+//	public Order(float total, ArrayList<Menu> menuOrders) throws SQLException {
+//		this.id = Database.getLastOrderID();
+//		this.orderMethod = PHYSICAL;
+//		this.deliveryMethod = PICKUP;
+//		this.total = total;
+//		this.menuOrders = menuOrders;
+//	}
 	
 	public Order(int id, String orderMethod, String deliveryMethod, float total, ArrayList<Menu> menuOrders) {
 		this.id = id;
