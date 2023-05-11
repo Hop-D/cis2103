@@ -411,12 +411,12 @@ public class Database {
 	public static void addItem(Item item) throws SQLException, NameExistsInArrayException {
 		Database db = new Database();
 		try {
-			addMenu(item.getType());
 			db = new Database();
 			db.setPst("INSERT INTO items (itemID, name, price,  dateAdded, dateUpdated, menuID) \r\n"
 					+ "VALUES (?, ?, ?, current_timestamp(), current_timestamp(), ?)");
 			db.getPst().setString(1, item.getId());
 			db.getPst().setString(2, nameExist(item.getName(), "ITEMS"));
+			addMenu(item.getType());
 			db.getPst().setFloat(3, item.getPrice());
 			db.getPst().setInt(4, getLastMenuID());
 			db.getPst().executeUpdate();
@@ -434,12 +434,12 @@ public class Database {
 	public static void addPackage(Package packag) throws SQLException, NameExistsInArrayException {
 		Database db = new Database();
 		try {
-			addMenu(packag.getType());
 			db = new Database();
 			db.setPst("INSERT INTO Package (packageID, name, price, count, dateAdded, dateUpdated, menuID) \r\n"
 					+ "VALUES (?, ?, ?, ?, current_timestamp(), current_timestamp(), ?)");
 			db.getPst().setString(1, packag.getId());
 			db.getPst().setString(2, nameExist(packag.getName(), "PACKAGE"));
+			addMenu(packag.getType());
 			db.getPst().setFloat(3, packag.getPrice());
 			db.getPst().setInt(4, Integer.parseInt("0"));
 			db.getPst().setInt(5, getLastMenuID());
