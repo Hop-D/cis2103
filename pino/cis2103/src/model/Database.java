@@ -483,12 +483,15 @@ public class Database {
 		try {
 			orders.add(order);
 			db = new Database();
-			db.setPst("INSERT INTO orders (orderID, orderMethod, deliveryMethod, total) VALUES (?, ?, ?, ?, ?);");
+			db.setPst("INSERT INTO orders (orderID, orderMethod, deliveryMethod, total) VALUES (?, ?, ?, ?);");
 			db.getPst().setInt(1, order.getId());
 			db.getPst().setString(2, order.getOrderMethod());
 			db.getPst().setString(3, order.getDeliveryMethod());
 			db.getPst().setFloat(4, order.getTotal());
 			db.getPst().executeUpdate();
+			for(Menu i: order.getMenuOrders()) {
+				addOrderItems(order, i.getMenuID(), i.getQuantity());
+			}
 			
 	    } finally {
 	        if (db != null) {
@@ -497,16 +500,16 @@ public class Database {
 	    }
 	}
 	
-	public static void addOrderItems(Order order, int menuID) throws SQLException {
+	public static void addOrderItems(Order order, int menuID, int qty) throws SQLException {
 		Database db = new Database();
 		try {
 			
 			db = new Database();
 			db.setPst("INSERT INTO orderitems (orderItemsID, orderID, quantity, notes, menuID) VALUES (?, ?, ?, ?, ?)");
 			db.getPst().setInt(1, getLastOIID());
-			db.getPst().setString(2, order.getOrderMethod());
-			db.getPst().setString(3, order.getDeliveryMethod());
-			db.getPst().setFloat(4, order.getTotal());
+			db.getPst().setInt(2, order.getId());
+			db.getPst().setInt(3, qty);
+			db.getPst().setString(4, "");
 			db.getPst().setInt(5, menuID);
 			db.getPst().executeUpdate();
 			
@@ -517,6 +520,69 @@ public class Database {
 	    }
 	}
 	
+	public static void addBilling(BillingAddress bill) throws SQLException {
+		Database db = new Database();
+		try {
+			
+			db = new Database();
+			db.setPst("INSERT INTO billingaddress (billingID, name, emailAdd, contactNo) VALUES (?, ?, ?, ?)");
+			db.getPst().setInt(1, bill.getId());
+			db.getPst().setString(2, bill.getName());
+			db.getPst().setString(3, bill.getEmailAdd());
+			db.getPst().setString(4, bill.getContactNo());
+			db.getPst().executeUpdate();
+			
+	    } finally {
+	        if (db != null) {
+	            db.closeConn();
+	        }
+	    }
+	}
+	public static void addInvoice(Invoice inv) throws SQLException {
+		Database db = new Database();
+		try {
+			
+			db = new Database();
+			db.setPst("INSERT INTO invoice (invoiceID, paymentMethod, shippingAdd, status, billingID, voucherID, orderID, userID) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+			db.getPst().setInt(1, inv.getId());
+			db.getPst().setString(2, inv.getPaymentMethod());
+			db.getPst().setString(3, inv.getShippingAdd());
+			db.getPst().setString(4, "");
+			db.getPst().setInt(5, inv.getBillingID());
+			db.getPst().setInt(6, inv.getVoucherID());
+			db.getPst().setInt(7, inv.getOrderID());
+			db.getPst().setString(8, inv.getUserID());
+			db.getPst().executeUpdate();
+			
+	    } finally {
+	        if (db != null) {
+	            db.closeConn();
+	        }
+	    }
+	}
+	
+	public static void addVoucher(Vouchers vouch) throws SQLException {
+		Database db = new Database();
+		try {
+			
+			db = new Database();
+			db.setPst("INSERT INTO `vouchers` (`voucherID`, `name`, `code`, `discountOpt`, `discountRate`, `useCount`, `maxUse`, `expireDate`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+			db.getPst().setInt(1, vouch.getId());
+			db.getPst().setString(2,vouch.getName());
+			db.getPst().setString(3, vouch.getCode());
+			db.getPst().setString(4, "");
+			db.getPst().setFloat(5, vouch.getDiscountRate());
+			db.getPst().setInt(6, 0);
+			db.getPst().setInt(7, 0);
+			db.getPst().setTimestamp(8, null);
+			db.getPst().executeUpdate();
+			
+	    } finally {
+	        if (db != null) {
+	            db.closeConn();
+	        }
+	    }
+	}
 	
 	public static void addFeedback(Feedbacks f) throws SQLException  {
 		
@@ -947,6 +1013,42 @@ public class Database {
 	    }
 	}
 	
+	public static int getLastBillingID() throws SQLException {
+		Database db = new Database();
+		try {
+			db = new Database();
+		   	Statement stmt = db.getConn().createStatement();
+		   	ResultSet rs = stmt.executeQuery("SELECT MAX(billingID) AS nextID FROM billingaddress");
+		    if (rs.next()) {
+		    	return rs.getInt("nextID")+1;
+		    }else {
+		    	return 1;
+		    }
+	    } finally {
+	        if (db != null) {
+	            db.closeConn();
+	        }
+	    }
+	}
+	
+	public static int getLastInvoiceID() throws SQLException {
+		Database db = new Database();
+		try {
+			db = new Database();
+		   	Statement stmt = db.getConn().createStatement();
+		   	ResultSet rs = stmt.executeQuery("SELECT MAX(invoiceID) AS nextID FROM invoice");
+		    if (rs.next()) {
+		    	return rs.getInt("nextID")+1;
+		    }else {
+		    	return 1;
+		    }
+	    } finally {
+	        if (db != null) {
+	            db.closeConn();
+	        }
+	    }
+	}
+	
 	public static int getLastOIID() throws SQLException {
 		Database db = new Database();
 		try {
@@ -983,6 +1085,23 @@ public class Database {
 		return ret + 1;
 	}
 	
+	public static int getLastVoucherID() throws SQLException {
+		Database db = new Database();
+		int ret = 1;
+		try {
+			db = new Database();
+			ResultSet rs = db.executeStatement("SELECT MAX(voucherID) FROM vouchers");
+			
+			if(rs.next()) {
+				ret = rs.getInt("MAX(voucherID)");
+			}
+	    } finally {
+	        if (db != null) {
+	            db.closeConn();
+	        }
+	    }
+		return ret + 1;
+	}
 	
 	
 	

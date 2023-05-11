@@ -937,7 +937,7 @@ public class RegularClassFrame extends javax.swing.JFrame {
     		
            
 		} catch (NumberFormatException | MenuNotFoundException e) {
-			e.printStackTrace();
+			
 		}
 
     	tableViewRegItem();
@@ -1004,7 +1004,8 @@ public class RegularClassFrame extends javax.swing.JFrame {
     
     private void buttonRegProceedActionPerformed(java.awt.event.ActionEvent evt) {
     	order.setTotal(Float.parseFloat(inputRegTotal.getText()));
-    	new Billing(order).setVisible(true);
+    	setVisible(false);
+    	new Billing(this, temp, order, Float.parseFloat(inputRegAmount.getText())).setVisible(true);
     }
     
     public float currentTotal() {
