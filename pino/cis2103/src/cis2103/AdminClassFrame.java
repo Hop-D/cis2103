@@ -5,12 +5,12 @@ import java.awt.print.PrinterException;
 import java.sql.SQLException;
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ButtonGroup;
 import javax.swing.JOptionPane;
+import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
@@ -25,18 +25,21 @@ import model.Item;
 import model.Package;
 import model.UserClass;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
+
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.GroupLayout;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import java.awt.Dimension;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.event.ChangeEvent;
 
 
 public class AdminClassFrame extends javax.swing.JFrame {
     
-    private DefaultTableModel model, model3;
+
+    private DefaultTableModel model;
+
+
     private int rowIndex;
     private static AdminClass temp;
     
@@ -47,7 +50,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
         
         initComponents();
 
-		inputItemID.setText(String.valueOf("" + Database.getLastItemID()));
+		inputItemID.setText(Database.getLastItemID() + "");
 		inputNewPackage.setText("" + Database.getLastPackageID());
         inputUserID.setText(String.valueOf("" + Database.getLastUserID()));
           
@@ -67,7 +70,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
         userRoles.add(radioUserAdmin);
         userRoles.add(radioUserRegular);
         radioUserRegular.setSelected(true);
-        jSpinner1.setValue(0);
+        jSpinner1.setValue(1);
         
         initWelcome();
         
@@ -75,6 +78,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
 
     private void initComponents() {
     	
+
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -129,7 +133,6 @@ public class AdminClassFrame extends javax.swing.JFrame {
         jLabel10 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
-        jSpinner1 = new javax.swing.JSpinner();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         inputNewPackage = new javax.swing.JTextField();
@@ -180,27 +183,11 @@ public class AdminClassFrame extends javax.swing.JFrame {
         jPanel19 = new javax.swing.JPanel();
         jScrollPane8 = new javax.swing.JScrollPane();
         tableFeedback = new javax.swing.JTable();
-        jPanel20 = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel22 = new javax.swing.JLabel();
-        jLabel23 = new javax.swing.JLabel();
-        jLabel24 = new javax.swing.JLabel();
-        jLabel26 = new javax.swing.JLabel();
-        inputVID = new javax.swing.JTextField();
-        inputVName = new javax.swing.JTextField();
-        inputVCode = new javax.swing.JTextField();
-        inputVRate = new javax.swing.JTextField();
-        jPanel21 = new javax.swing.JPanel();
-        jScrollPane9 = new javax.swing.JScrollPane();
-        tableVouchers = new javax.swing.JTable();
-        inputVMax = new javax.swing.JTextField();
-        jLabel27 = new javax.swing.JLabel();
-        buttonVAdd = new javax.swing.JButton();
-        buttonVUpdate = new javax.swing.JButton();
-        buttonVRemove = new javax.swing.JButton();
-        buttonVClear = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        radioUserAdmin.setOpaque(false);
+        radioUserRegular.setOpaque(false);
+        
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setMaximumSize(new java.awt.Dimension(1720, 880));
         setMinimumSize(new java.awt.Dimension(1720, 880));
         setPreferredSize(new java.awt.Dimension(1720, 880));
@@ -220,13 +207,15 @@ public class AdminClassFrame extends javax.swing.JFrame {
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("SYSTEM | ADMIN");
 
+        
+        
         buttonLogOut.setText("LOG OUT");
         buttonLogOut.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonLogOutActionPerformed(evt);
             }
         });
-
+        
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -671,7 +660,17 @@ public class AdminClassFrame extends javax.swing.JFrame {
         jPanel10.setBackground(new java.awt.Color(255, 255, 255));
 
         jPanel16.setBackground(new java.awt.Color(1, 18, 68));
-
+        
+        javax.swing.SpinnerModel model = new SpinnerNumberModel(1, 1, 1000, 1);
+        jSpinner1 = new javax.swing.JSpinner(model);
+        
+        jSpinner1.addChangeListener(new javax.swing.event.ChangeListener() {
+            @Override
+            public void stateChanged(javax.swing.event.ChangeEvent e) {
+            	addChangeListenerActionPerformed(e);
+            }
+        });
+        
         tablePackageSingle.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -698,17 +697,17 @@ public class AdminClassFrame extends javax.swing.JFrame {
 
         tablePackageItem.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+//                {null, null, null, null},
+//                {null, null, null, null},
+//                {null, null, null, null},
+//                {null, null, null, null}
             },
             new String [] {
                 "ID", "NAME", "QUANTITY", "PRICE"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, true, false
+                false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -815,6 +814,11 @@ public class AdminClassFrame extends javax.swing.JFrame {
         jLabel8.setText("ENTER PACKAGE NAME :");
 
         buttonPackageAdd.setText("CREATE");
+        buttonPackageAdd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            	buttonPackageAddActionPerformed(evt);
+            }
+        });
 
         tablePackages.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -825,7 +829,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, true, true
+                false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -843,12 +847,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
         buttonPackageUpdate.setText("UPDATE");
         buttonPackageUpdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                try {
-					buttonPackageUpdateActionPerformed(evt);
-				} catch (MenuNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+                buttonPackageUpdateActionPerformed(evt);
             }
         });
 
@@ -1228,10 +1227,10 @@ public class AdminClassFrame extends javax.swing.JFrame {
 
         tableFeedback.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+//                {null, null, null, null},
+//                {null, null, null, null},
+//                {null, null, null, null},
+//                {null, null, null, null}
             },
             new String [] {
                 "ID", "MESSAGE", "DATE", "SENT BY"
@@ -1307,183 +1306,6 @@ public class AdminClassFrame extends javax.swing.JFrame {
 
         jTabbedPane2.addTab("SEE FEEDBACKS", jPanel12);
 
-        jPanel20.setBackground(new java.awt.Color(255, 255, 255));
-
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jLabel2.setText("Voucher ID :");
-
-        jLabel22.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jLabel22.setText("Voucher Name :");
-
-        jLabel23.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jLabel23.setText("Voucher Code :");
-
-        jLabel24.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jLabel24.setText("Discount Rate :");
-
-        jLabel26.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jLabel26.setText("Maximum Use :");
-
-        inputVRate.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                inputVRateKeyTyped(evt);
-            }
-        });
-
-        jPanel21.setBackground(new java.awt.Color(1, 18, 68));
-
-        tableVouchers.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "ID", "NAME", "CODE", "RATE", "MAX", "USE COUNT", "EXPIRY DATE"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, true, true, true
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        tableVouchers.setRowHeight(40);
-        tableVouchers.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tableVouchersMouseClicked(evt);
-            }
-        });
-        jScrollPane9.setViewportView(tableVouchers);
-
-        javax.swing.GroupLayout jPanel21Layout = new javax.swing.GroupLayout(jPanel21);
-        jPanel21.setLayout(jPanel21Layout);
-        jPanel21Layout.setHorizontalGroup(
-            jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel21Layout.createSequentialGroup()
-                .addGap(17, 17, 17)
-                .addComponent(jScrollPane9, javax.swing.GroupLayout.PREFERRED_SIZE, 663, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(20, Short.MAX_VALUE))
-        );
-        jPanel21Layout.setVerticalGroup(
-            jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel21Layout.createSequentialGroup()
-                .addContainerGap(17, Short.MAX_VALUE)
-                .addComponent(jScrollPane9, javax.swing.GroupLayout.PREFERRED_SIZE, 485, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(19, 19, 19))
-        );
-
-        inputVMax.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                inputVMaxKeyTyped(evt);
-            }
-        });
-
-        jLabel27.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jLabel27.setText("Expiry Date :");
-
-        buttonVAdd.setText("ADD");
-        buttonVAdd.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonVAddActionPerformed(evt);
-            }
-        });
-
-        buttonVUpdate.setText("UPDATE");
-        buttonVUpdate.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonVUpdateActionPerformed(evt);
-            }
-        });
-
-        buttonVRemove.setText("REMOVE");
-        buttonVRemove.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonVRemoveActionPerformed(evt);
-            }
-        });
-
-        buttonVClear.setText("CLEAR");
-        buttonVClear.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonVClearActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanel20Layout = new javax.swing.GroupLayout(jPanel20);
-        jPanel20.setLayout(jPanel20Layout);
-        jPanel20Layout.setHorizontalGroup(
-            jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel20Layout.createSequentialGroup()
-                .addGap(250, 250, 250)
-                .addGroup(jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel20Layout.createSequentialGroup()
-                        .addGroup(jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel22)
-                            .addComponent(jLabel23)
-                            .addComponent(jLabel24)
-                            .addComponent(jLabel26))
-                        .addGap(30, 30, 30)
-                        .addGroup(jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(inputVID)
-                            .addComponent(inputVName)
-                            .addComponent(inputVCode)
-                            .addComponent(inputVRate)
-                            .addComponent(inputVMax, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)))
-                    .addComponent(jLabel27)
-                    .addGroup(jPanel20Layout.createSequentialGroup()
-                        .addComponent(buttonVAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(buttonVUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(buttonVClear, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(buttonVRemove, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE))))
-                .addGap(68, 68, 68)
-                .addComponent(jPanel21, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(296, Short.MAX_VALUE))
-        );
-        jPanel20Layout.setVerticalGroup(
-            jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel20Layout.createSequentialGroup()
-                .addGap(70, 70, 70)
-                .addGroup(jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jPanel21, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel20Layout.createSequentialGroup()
-                        .addGroup(jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel2)
-                            .addComponent(inputVID, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel22)
-                            .addComponent(inputVName, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel23)
-                            .addComponent(inputVCode, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel24)
-                            .addComponent(inputVRate, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel26)
-                            .addComponent(inputVMax, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel27)
-                        .addGap(38, 38, 38)
-                        .addGroup(jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(buttonVRemove, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
-                            .addComponent(buttonVUpdate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(buttonVAdd, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(18, 18, 18)
-                        .addComponent(buttonVClear, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(163, Short.MAX_VALUE))
-        );
-
-        jTabbedPane2.addTab("MANAGE VOUCHERS", jPanel20);
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -1522,7 +1344,19 @@ public class AdminClassFrame extends javax.swing.JFrame {
     }
     
 
-    // LOG OUT
+    protected void addChangeListenerActionPerformed(ChangeEvent e) {
+		// TODO Auto-generated method stub
+    	
+		
+		try {
+			Package p = Database.getPackageByID(inputPackageID.getText());
+			Item i = Database.getItemByID(inputPackageSingleID.getText());
+			inputPackagePrice.setText("" + (p.getPrice() + i.getPrice()*(int)jSpinner1.getValue()));
+		} catch (MenuNotFoundException e1) {
+		}
+	}
+
+	// LOG OUT //AnotherClass //AnotherClass
     private void buttonLogOutActionPerformed(java.awt.event.ActionEvent evt) {
         
         int out = JOptionPane.showConfirmDialog(this, "Do you want to log out?", "SELECT", JOptionPane.YES_NO_OPTION);
@@ -1536,18 +1370,18 @@ public class AdminClassFrame extends javax.swing.JFrame {
     
     ////////////MANAGE SINGLE ITEMS////////////////////
     
-    //```buttons ---- ADD NEW//
+    //```buttons ---- ADD NEW// //AnotherClass
     private void buttonAddNewItemActionPerformed(java.awt.event.ActionEvent evt) {
         if(isEmptyItems()) {
         	try {
 				@SuppressWarnings("unused")
-				Item item = Database.getItemByName(inputSingleName.getText());
+				Item item = Database.getItemByID(inputSingleName.getText());
 				JOptionPane.showMessageDialog(this, "Item already exists");
 			} catch (MenuNotFoundException e) {
 				try {
 					int choice = JOptionPane.showConfirmDialog(null, "Add item?", "Add Confirmation", JOptionPane.YES_NO_OPTION);
 			        
-			        if(choice == JOptionPane.NO_OPTION) {
+			        if(choice != JOptionPane.YES_OPTION) {
 			        	return;
 			        }
 					Database.addItem(new Item("I" + inputItemID.getText(), inputSingleName.getText(), Float.parseFloat(inputSinglePrice.getText())));
@@ -1562,7 +1396,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
         }
     }
     
-    //```buttons ---- UPDATE ITEM//
+    //```buttons ---- UPDATE ITEM// //AnotherClass
     private void buttonItemUpdateActionPerformed(java.awt.event.ActionEvent evt) throws SQLException {
 		try {
 			Database.updateItem(inputItemID.getText(), inputSingleName.getText(), Float.parseFloat(inputSinglePrice.getText()));
@@ -1575,7 +1409,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
 		}
     }
     
-    //```buttons ---- REMOVE ITEM//
+    //```buttons ---- REMOVE ITEM// //AnotherClass
     private void buttonItemRemoveActionPerformed(java.awt.event.ActionEvent evt) {
         try {
         	int choice = JOptionPane.showConfirmDialog(null, "Remove item?", "Add Confirmation", JOptionPane.YES_NO_OPTION);
@@ -1583,7 +1417,8 @@ public class AdminClassFrame extends javax.swing.JFrame {
 	        	return;
 	        }
         	Item item = Database.getItemByID(inputItemID.getText());
-			Database.removeItem(item);
+			Database.removeMenu(item);
+			tableViewItems("");
 		} catch (SQLException | MenuNotFoundException e) {
 			JOptionPane.showMessageDialog(this, e.getMessage());
 		}finally {
@@ -1593,7 +1428,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
 		}
     }
     
-    //```buttons ---- PRINT ITEM//
+    //```buttons ---- PRINT ITEM// //AnotherClass
     private void buttonItemPrintActionPerformed(java.awt.event.ActionEvent evt) {
         try {
             MessageFormat header = new MessageFormat("ALL ITEMS");
@@ -1604,7 +1439,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
         }
     }
 
-    //```buttons ---- SEARCH ITEM//
+    //```buttons ---- SEARCH ITEM// //AnotherClass
     private void buttonItemSearchActionPerformed(java.awt.event.ActionEvent evt) {   
         if(inputSingleSearch.getText().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Input is empty");
@@ -1616,26 +1451,26 @@ public class AdminClassFrame extends javax.swing.JFrame {
         }
     }
 
-    //```buttons ---- CLEAR//    
+    //```buttons ---- CLEAR//     //AnotherClass
     private void buttonClearInputItemActionPerformed(java.awt.event.ActionEvent evt) {   
         tableItems.clearSelection();
     	clearSingle();
     }
 
-    //```buttons ---- REFRESH ITEM//
+    //```buttons ---- REFRESH ITEM// //AnotherClass
     private void buttonItemTableRefreshActionPerformed(java.awt.event.ActionEvent evt) {
     	clearSingle();
 		tableViewItems("");
     }
     
-    // clear input boxes
+    // clear input boxes //AnotherClass
     private void clearSingle() {
 		inputItemID.setText("" + Database.getLastItemID());
 	    inputSingleName.setText(null);
 	    inputSinglePrice.setText(null);
     }
 
-    // display data of clicked row in MANAGE SINGLE ITEMS
+    // display data of clicked row in MANAGE SINGLE ITEMS //AnotherClass
     private void tableItemsMouseClicked(java.awt.event.MouseEvent evt) {      
         model = (DefaultTableModel) tableItems.getModel();
         rowIndex = tableItems.getSelectedRow();  
@@ -1644,13 +1479,13 @@ public class AdminClassFrame extends javax.swing.JFrame {
         inputSinglePrice.setText(model.getValueAt(rowIndex, 2).toString());
     }
     
-    // put data of items in a table
+    // put data of items in a table //AnotherClass
     private void tableViewItems(String searchVal) {
     	DefaultTableModel model = (DefaultTableModel) tableItems.getModel();
     	model.setRowCount(0);
     	Object[] row;
     	for(Item i: Database.getItems()) {
-    		if(i.concatDets().contains(searchVal)) {
+    		if(i.concatDets().toLowerCase().contains(searchVal.toLowerCase())) {
                 row = new Object[5];
                 row[0] = i.getId();
                 row[1] = i.getName();
@@ -1663,7 +1498,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
     }
     
 
-    //Check if all fields are filled
+    //Check if all fields are filled //AnotherClass
     public boolean isEmptyItems() {
         
         if(inputItemID.getText().isEmpty()) {
@@ -1680,6 +1515,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
         }
         return true;
     }
+
     
     // Only numeric inputs for price
     private void inputSinglePriceKeyTyped(java.awt.event.KeyEvent evt) {
@@ -1693,7 +1529,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
     
     // -- CRUD -- //
     
-    // display data to table
+    // display data to table //AnotherClass
 	private void tableViewPackages() {
 		model = (DefaultTableModel) tablePackages.getModel();
     	model.setRowCount(0);
@@ -1710,7 +1546,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
     }
   
 	
-	// display data to table
+	// display data to table //AnotherClass
     private void tableViewPackageSingle() {
     	DefaultTableModel model = (DefaultTableModel) tablePackageSingle.getModel();
     	model.setRowCount(0);
@@ -1724,7 +1560,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
     	}
     }
     
-    // display data to table
+    // display data to table //AnotherClass
     private void tableViewPackageItem(String id) {
     	DefaultTableModel model = (DefaultTableModel) tablePackageItem.getModel();
     	model.setRowCount(0);
@@ -1737,7 +1573,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
 	    		row[0] = i.getId();
 	    		row[1] = i.getName();
 	    		row[2] = i.getQuantity();
-	    		row[3] = i.getPrice();
+	    		row[3] = row[2] + " * " + i.getPrice();
 	    		model.addRow(row);
 	    	}
 		} catch (MenuNotFoundException e) {
@@ -1745,8 +1581,20 @@ public class AdminClassFrame extends javax.swing.JFrame {
 		}
     }
     
-    // Fetch data of selected package
+    
+    // Fetch data of selected package //AnotherClass
     private void tablePackagesMouseClicked(java.awt.event.MouseEvent evt) {
+        
+        model = (DefaultTableModel) tablePackages.getModel();
+        rowIndex = tablePackages.getSelectedRow();
+        
+        inputPackageID.setText(model.getValueAt(rowIndex, 0).toString());
+        inputPackagePrice.setText(model.getValueAt(rowIndex, 2).toString());
+        
+        tablePackageItem.setModel(new DefaultTableModel(null, new Object[] {
+        		"ID", "NAME", "QUANTITY", "PRICE"
+        }));
+
     	model = (DefaultTableModel) tablePackages.getModel();
     	rowIndex = tablePackages.getSelectedRow();
     	
@@ -1754,67 +1602,56 @@ public class AdminClassFrame extends javax.swing.JFrame {
     	inputPackageName.setText(model.getValueAt(rowIndex, 1).toString());
     	inputPackagePrice.setText(model.getValueAt(rowIndex, 2).toString());
     	tableViewPackageItem(inputPackageID.getText());
+
     }
     
-    // Fetch data of selected item
-    private void tablePackageSingleMouseClicked(java.awt.event.MouseEvent evt) {
-        model = (DefaultTableModel) tablePackageSingle.getModel();
-        rowIndex = tablePackageSingle.getSelectedRow();
-        
-        inputPackageSingleID.setText(model.getValueAt(rowIndex, 0).toString());
-    	jSpinner1.setValue(1);
-    }
+
     
-    // Fetch data of selected package item
-    private void tablePackageItemMouseClicked(java.awt.event.MouseEvent evt) {
-        model = (DefaultTableModel) tablePackageItem.getModel();
-        rowIndex = tablePackageItem.getSelectedRow();
-        
-        inputPackageSingleID2.setText(model.getValueAt(rowIndex, 0).toString());
-    }
-    
-    //```buttons ---- ADD PACKAGE//
+    //```buttons ---- ADD PACKAGE// //AnotherClass
     private void buttonPackageAddActionPerformed(java.awt.event.ActionEvent evt) {
     	
     	String id = "P" + inputNewPackage.getText();
+    	 if(inputNewPackageName.getText().isEmpty()) {
+             JOptionPane.showMessageDialog(this, "Package Name is missing");
+             return;
+         }
+    	 
     	try {
     		Package pack = Database.getPackageByID(id);
 			JOptionPane.showMessageDialog(this, "Package already exists");
     	} catch (MenuNotFoundException e) {
     		int choice = JOptionPane.showConfirmDialog(null, "Add package?", "Add Confirmation", JOptionPane.YES_NO_OPTION);
-	        if(choice == JOptionPane.NO_OPTION) {
+	        
+	        if(choice != JOptionPane.YES_OPTION) {
 	        	return;
 	        }
 	        try {
-	        	Database.addPackage(new Package(id, inputNewPackageName.getText(), 0));
-				inputNewPackage.setText("" + Database.getLastPackageID());
-				inputNewPackage.setText("" + Database.getLastPackageID());;
-	        } catch (NumberFormatException | SQLException e1) {
-				JOptionPane.showMessageDialog(this, e1.getMessage());
-			}
+				Database.addPackage(new Package(id, inputNewPackageName.getText(), 0));
+	        } catch (SQLException | NameExistsInArrayException e1) {
+	        	JOptionPane.showMessageDialog(this, e1.getMessage());
+	        }
     	} finally {
         	clearPackages();
 			tableViewPackages();
     	}
     }
 
-    //```buttons ---- UPDATE PACKAGE//
-    private void buttonPackageUpdateActionPerformed(java.awt.event.ActionEvent evt) throws MenuNotFoundException {
+
+    //```buttons ---- UPDATE PACKAGE// //AnotherClass
+    private void buttonPackageUpdateActionPerformed(java.awt.event.ActionEvent evt) {
     	
     	if(isEmptyPackage()) {
-        	int choice = JOptionPane.showConfirmDialog(null, "Update Package?", "Add Confirmation", JOptionPane.YES_NO_OPTION);
-    		if(choice == JOptionPane.NO_OPTION) {
+        	int choice = JOptionPane.showConfirmDialog(null, "Update Package?", "Update Confirmation", JOptionPane.YES_NO_OPTION);
+    		if(choice != JOptionPane.YES_OPTION) {
     			return;
     		}
     		updatePackage();
     	} else {
     		JOptionPane.showMessageDialog(this, "Package Name already exists");
     	}
-    	
-    	clearPackages();
-    	tableViewPackages();
+
     }
-    
+    //AnotherClass
     private void updatePackage() {
     	try {
 			Package temp = Database.getPackageByID(inputPackageID.getText());
@@ -1825,16 +1662,15 @@ public class AdminClassFrame extends javax.swing.JFrame {
     	tableViewPackages();
     }
     
-    //```buttons ---- REMOVE PACKAGE//
+    //```buttons ---- REMOVE PACKAGE// //AnotherClass
     private void buttonPackageRemoveActionPerformed(java.awt.event.ActionEvent evt) {
-    	int choice = JOptionPane.showConfirmDialog(null, "Remove Package?", "Add Confirmation", JOptionPane.YES_NO_OPTION);
-		if(choice == JOptionPane.NO_OPTION) {
+    	int choice = JOptionPane.showConfirmDialog(null, "Remove Package?", "Remove Confirmation", JOptionPane.YES_NO_OPTION);
+		if(choice != JOptionPane.YES_OPTION) {
 			return;
 		}
-		
-    	try {
+		try {
         	Package pack = Database.getPackageByID(inputPackageID.getText());
-			Database.removePackage(pack);
+			Database.removeMenu(pack);
 			inputNewPackage.setText("" + Database.getLastPackageID());
 		} catch (SQLException | MenuNotFoundException e) {
 			JOptionPane.showMessageDialog(this, e.getMessage());
@@ -1843,64 +1679,169 @@ public class AdminClassFrame extends javax.swing.JFrame {
 			tableViewPackages();
 		}
     }
+
     
-    //```buttons ---- ADD ITEM TO PACKAGE//
+    // check if package input boxes are empty //AnotherClass
+    public boolean isEmptyPackage() {
+        if(inputPackageName.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Package Name is missing");
+            return false;
+        }
+        if(inputPackagePrice.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Package Price is missing");
+            return false;
+        }      
+        return true;
+    } 
+    
+    // Fetch data of selected item //AnotherClass
+    private void tablePackageSingleMouseClicked(java.awt.event.MouseEvent evt) {
+        model = (DefaultTableModel) tablePackageSingle.getModel();
+        rowIndex = tablePackageSingle.getSelectedRow();
+        
+        String itemID = model.getValueAt(rowIndex, 0).toString();
+        inputPackageSingleID.setText(itemID);
+        Item i;
+        
+        if(inputPackageID.getText().isEmpty()) {
+        	JOptionPane.showMessageDialog(this, "Please choose a package.");
+        	return;
+        }
+		try {
+	        Package p = Database.getPackageByID(inputPackageID.getText());
+			i = Database.getItemByID(inputPackageSingleID.getText());
+			inputPackagePrice.setText("" + (p.getPrice() + i.getPrice()*(int)jSpinner1.getValue()));
+		} catch (MenuNotFoundException e) {
+			JOptionPane.showMessageDialog(this, e.getMessage());
+		}
+        
+    }
+    
+
+    //```buttons ---- ADD ITEM TO PACKAGE// //AnotherClass
     private void buttonPackageItemAddActionPerformed(java.awt.event.ActionEvent evt) {
-    	
-    	int id = Database.getLastPackageItemID();	
+
 		int choice = JOptionPane.showConfirmDialog(null, "Add item to package?", "Add Confirmation", JOptionPane.YES_NO_OPTION);
-        if(choice == JOptionPane.NO_OPTION) {
+        if(choice != JOptionPane.YES_OPTION) {
         	return;
         }
 
     	try {
-    		Database.loadPackageItemFromDatabase(inputPackageID.getText());
-			Package p = Database.getPackageByID(inputPackageID.getText());
-			Item i = Database.getItemByID(inputPackageSingleID.getText());
-			i.setQuantity(Integer.parseInt(jSpinner1.getValue().toString()));
-			try {
-				Database.addPackageItem(id, p, i);
-				updatePackage();
-			} catch (SQLException e) {
-				System.out.println(e.getMessage());
+    		Package p = Database.getPackageByID(inputPackageID.getText());
+    		String itemID = inputPackageSingleID.getText();
+    		float oldPrice = p.getPrice();
+			for(Item ip: p.getPackageitems()) {
+				if(ip.getId().equals(itemID)) {
+					SpinnerNumberModel sModel = new SpinnerNumberModel(ip.getQuantity(), 1, 200, 1);
+					JSpinner updateQty = new JSpinner(sModel);
+					javax.swing.JPanel existingQty = new javax.swing.JPanel();
+					existingQty.setLayout(new javax.swing.BoxLayout(existingQty, javax.swing.BoxLayout.Y_AXIS));
+					existingQty.add(new javax.swing.JLabel("Item already exists in the package."));
+					existingQty.add(new javax.swing.JLabel("Enter new quantity: "));
+					existingQty.add(updateQty);
+					int confirm = JOptionPane.showConfirmDialog(null, existingQty, "Existing package item", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+					float priceDifference = (ip.getPrice()*ip.getQuantity()) - ((int)updateQty.getValue()*ip.getPrice());
+					inputPackagePrice.setText("" + (oldPrice - priceDifference));
+					if(confirm != JOptionPane.OK_OPTION) {
+						return;
+					}
+					Database.updatePackageItem(p.getId(), itemID, (int)updateQty.getValue());
+					updatePackage();
+					return;
+				}
 			}
+			
+			if((int)jSpinner1.getValue() == 0) {
+				JOptionPane.showMessageDialog(this, "Please specify a quantity.");
+				return;
+			}
+			updatePackage();
+			Database.addPackageItem(p, Database.getItemByID(itemID), (int)jSpinner1.getValue());
+			
 		} catch (MenuNotFoundException e) {
 			System.out.println(e.getMessage());
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			tableViewPackageItem(inputPackageID.getText());
 		}
-    	
-    	tableViewPackageItem(inputPackageID.getText());
-    	clearPackages();
+
+    }
+   
+    // Fetch data of item inside package //AnotherClass
+    private void tablePackageItemMouseClicked(java.awt.event.MouseEvent evt) {
+        model = (DefaultTableModel) tablePackageItem.getModel();
+        rowIndex = tablePackageItem.getSelectedRow();
+        inputPackageSingleID2.setText(model.getValueAt(rowIndex, 0).toString());
     }
 
-    //```buttons ---- REMOVE ITEM FROM PACKAGE//
+    //```buttons ---- REMOVE ITEM FROM PACKAGE// //AnotherClass
     private void buttonPackageItemRemoveActionPerformed(java.awt.event.ActionEvent evt) {
-    		
-		int choice = JOptionPane.showConfirmDialog(null, "Remove item from package?", "Add Confirmation", JOptionPane.YES_NO_OPTION);
-        if(choice == JOptionPane.NO_OPTION) {
-        	return;
-        }
+    	int choice = JOptionPane.showConfirmDialog(null, "Remove item from pacakage? Click 'No' to customize quantity.", "Remove Confirmation", JOptionPane.YES_NO_CANCEL_OPTION);
+		if(choice == JOptionPane.CANCEL_OPTION) {
+			return;
+		}
     	try {
-			Package p = Database.getPackageByID(inputPackageID.getText());
-			Item i = Database.getItemByID(inputPackageSingleID2.getText());
+    		Package p = Database.getPackageByID(inputPackageID.getText());
+    		String itemID = inputPackageSingleID2.getText();
+    		float oldPrice = p.getPrice();
+    		if(choice == JOptionPane.NO_OPTION) {    			
+        		for(Item ip: p.getPackageitems()) {
+    				if(ip.getId().equals(itemID)) {
+    					SpinnerNumberModel sModel = new SpinnerNumberModel(ip.getQuantity(), 1, ip.getQuantity(), 1);
+    					JSpinner updateQty = new JSpinner(sModel);
+    					javax.swing.JPanel existingQty = new javax.swing.JPanel();
+    					existingQty.setLayout(new javax.swing.BoxLayout(existingQty, javax.swing.BoxLayout.Y_AXIS));
+    					existingQty.add(new javax.swing.JLabel("Removing items"));
+    					existingQty.add(new javax.swing.JLabel("Enter new quantity: "));
+    					existingQty.add(updateQty);
+    					int confirm = JOptionPane.showConfirmDialog(null, existingQty, "Existing package item", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+    					
+    					if(confirm != JOptionPane.OK_OPTION) {
+    						return;
+    					}
+    					
+    					float priceDifference = (ip.getQuantity() - (int)updateQty.getValue())*ip.getPrice();
+    					inputPackagePrice.setText("" + (oldPrice - priceDifference));
+    					
+    					Database.updatePackageItem(p.getId(), itemID, (int)updateQty.getValue());
+
+    					tableViewPackageItem(p.getId());
+    					updatePackage();
+    					
+    					return;
+    				}
+    			}
+    		}
+			
+    		
+			Item i = Database.getItemByID(itemID);
 			try {
+				inputPackagePrice.setText("" + (p.getPrice() - i.getPrice()));
+				if(inputPackagePrice.getText().substring(0, 1).equals("-")) {
+					inputPackagePrice.setText("0");
+				}
 				Database.removePackageItem(p, i);
+				tableViewPackageItem(inputPackageID.getText());
 				updatePackage();
-				
 			} catch (SQLException e) {
 				System.out.println(e.getMessage());
 			}
-		} catch (MenuNotFoundException e) {
+		} catch (MenuNotFoundException | SQLException e) {
 			System.out.println(e.getMessage());
 		}
     	
+    	
+    	
     	tableViewPackageItem(inputPackageID.getText());
-    	clearPackages();
+//    	clearPackages();
     }
 
 
     // PACKAGE OTHER FUNCTIONS //
         
-    // clear input boxes and table selections 
+    // clear input boxes and table selections  //AnotherClass
     private void clearPackages() {
     	inputNewPackage.setText("" + Database.getLastPackageID());
     	inputNewPackageName.setText("");
@@ -1916,21 +1857,28 @@ public class AdminClassFrame extends javax.swing.JFrame {
     	model.setRowCount(0);
     }
     
-    // check if package input boxes are empty
-    public boolean isEmptyPackage() {
-        if(inputPackageName.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "User Name is missing");
-            return false;
-        }
-        if(inputPackagePrice.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "User Password is missing");
-            return false;
-        }      
-        return true;
-    } 
+    // clearing input boxes
+    // for Manage Single Items
+
+    
+    
+	////////////MANAGE USERS////////////////////
+    
+    // clear input boxes and table selections //AnotherClass
+    private void clearUser() {
+        inputUserID.setText("" + Database.getLastUserID());
+        inputUserName.setText(null);
+        inputUserPass.setText(null);
+        inputUserContact.setText(null);
+        radioUserRegular.setSelected(true); 
+        tableUsers.getSelectionModel().clearSelection();
+    }
+    
+    
     
     // Only numeric inputs for package price
     private void inputPackagePriceKeyTyped(java.awt.event.KeyEvent evt) {
+
         if(!Character.isDigit(evt.getKeyChar())) {
             evt.consume();
         }
@@ -1940,13 +1888,13 @@ public class AdminClassFrame extends javax.swing.JFrame {
 	////////////MANAGE USERS////////////////////
     // -- CRUD -- //
         
-    // display data to table
+    // display data to table //AnotherClass
     private void tableViewUsers(String searchVal) {
         model = (DefaultTableModel) tableUsers.getModel();
         model.setRowCount(0);
         Object[] row = new Object[8];
         for(UserClass u : Database.getUsers()) {
-        	if(u.concatDets().contains(searchVal)) {
+        	if(u.concatDets().toLowerCase().contains(searchVal.toLowerCase())) {
         		row[0] = u.getId();
             	row[1] = u.getUserName();
             	row[2] = u.getPassword();
@@ -1960,7 +1908,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
         }
     }
     
-    // fetch data of selected table row
+    // fetch data of selected table row //AnotherClass
     private void tableUsersMouseClicked(java.awt.event.MouseEvent evt) {
         model = (DefaultTableModel) tableUsers.getModel();
         rowIndex = tableUsers.getSelectedRow();
@@ -1978,7 +1926,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
         }
     }
 
-    //```buttons ---- ADD USER//
+    //```buttons ---- ADD USER// //AnotherClass
     private void buttonUserAddActionPerformed(java.awt.event.ActionEvent evt) {
     	
     	if(isEmptyUser()) {
@@ -1989,14 +1937,14 @@ public class AdminClassFrame extends javax.swing.JFrame {
 			} catch (UserNotFoundException e) {
 				try {
 					int choice = JOptionPane.showConfirmDialog(null, "Add User?", "Add Confirmation", JOptionPane.YES_NO_OPTION);
-					if(choice == JOptionPane.NO_OPTION) {
+					if(choice != JOptionPane.YES_OPTION) {
 						return;
 					}
 					
 					if(radioUserRegular.isSelected()) {
-						Database.addUser(new RegularClass("R" + inputUserID.getText(), inputUserName.getText(), inputUserPass.getText(), inputUserContact.getText(), RegularClass.REGULAR_USER, temp.getId()));
+						Database.addUser(new RegularClass("R" + inputUserID.getText(), inputUserName.getText(), inputUserPass.getText(), inputUserContact.getText(), RegularClass.REGULAR_USER, LocalDateTime.now(), LocalDateTime.now(), temp.getId()));
 					} else if(radioUserAdmin.isSelected()) {
-						Database.addUser(new AdminClass("A" + inputUserID.getText(), inputUserName.getText(), inputUserPass.getText(), inputUserContact.getText(), AdminClass.ADMIN_USER, temp.getId()));
+						Database.addUser(new AdminClass("A" + inputUserID.getText(), inputUserName.getText(), inputUserPass.getText(), inputUserContact.getText(), AdminClass.ADMIN_USER, LocalDateTime.now(), LocalDateTime.now(), temp.getId()));
 					}
 				} catch (NumberFormatException | SQLException | NameExistsInArrayException ex) {
 					JOptionPane.showMessageDialog(this, ex.getMessage());
@@ -2009,12 +1957,12 @@ public class AdminClassFrame extends javax.swing.JFrame {
     	}
     }
 
-    //```buttons ---- UPDATE USER//
+    //```buttons ---- UPDATE USER// //AnotherClass
     private void buttonUserUpdateActionPerformed(java.awt.event.ActionEvent evt) {
     	
         if(isEmptyUser() && noDupe() == 0) {
         	int choice = JOptionPane.showConfirmDialog(null, "Update User?", "Add Confirmation", JOptionPane.YES_NO_OPTION);
-    		if(choice == JOptionPane.NO_OPTION) {
+    		if(choice != JOptionPane.YES_OPTION) {
     			return;
     		} 
         	try {
@@ -2033,12 +1981,12 @@ public class AdminClassFrame extends javax.swing.JFrame {
         tableViewUsers("");
     }
 
-    //```buttons ---- REMOVE USER//
+    //```buttons ---- REMOVE USER// //AnotherClass
     private void buttonUserRemoveActionPerformed(java.awt.event.ActionEvent evt) {
     	
     	
     	int choice = JOptionPane.showConfirmDialog(null, "Remove User?", "Add Confirmation", JOptionPane.YES_NO_OPTION);
-		if(choice == JOptionPane.NO_OPTION) {
+		if(choice != JOptionPane.YES_OPTION) {
 			return;
 		} 
 		try {
@@ -2052,12 +2000,12 @@ public class AdminClassFrame extends javax.swing.JFrame {
 		}
     }
     
-    //```buttons ---- CLEAR USER//
+    //```buttons ---- CLEAR USER// //AnotherClass
     private void buttonUserClearActionPerformed(java.awt.event.ActionEvent evt) {
     	clearUser();
     }
 
-    //```buttons ---- PRINT USER//
+    //```buttons ---- PRINT USER// //AnotherClass
     private void buttonUserPrintActionPerformed(java.awt.event.ActionEvent evt) {
         try {
             MessageFormat header = new MessageFormat("ALL USERS");
@@ -2068,7 +2016,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
         }
     }
 
-    //```buttons ---- SEARCH USER//
+    //```buttons ---- SEARCH USER// //AnotherClass
     private void buttonUserSearchActionPerformed(java.awt.event.ActionEvent evt) {
     	    	
         if(inputUserSearch.getText().isEmpty()) {
@@ -2079,7 +2027,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
         clearUser();
     }
 
-    //```buttons ---- REFRESH USER//
+    //```buttons ---- REFRESH USER// //AnotherClass
     private void buttonUserRefreshActionPerformed(java.awt.event.ActionEvent evt) {
         tableViewUsers("");
         inputUserSearch.setText(null);
@@ -2088,18 +2036,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
     
     
     // USER OTHER FUNCTIONS //
-    
-    // clear input boxes and table selections
-    private void clearUser() {
-        inputUserID.setText("" + Database.getLastUserID());
-        inputUserName.setText(null);
-        inputUserPass.setText(null);
-        inputUserContact.setText(null);
-        radioUserRegular.setSelected(true); 
-        tableUsers.getSelectionModel().clearSelection();
-    }
-    
-    // check if input boxes are empty
+    // check if input boxes are empty //AnotherClass
     public boolean isEmptyUser() {
         if(inputUserName.getText().isEmpty()) {
             JOptionPane.showMessageDialog(this, "User Name is missing");
@@ -2116,14 +2053,14 @@ public class AdminClassFrame extends javax.swing.JFrame {
         return true;
     } 
     
-    // Only numeric inputs for contact
+    // Only numeric inputs for contact //AnotherClass
     private void inputUserContactKeyTyped(java.awt.event.KeyEvent evt) {
         if(!Character.isDigit(evt.getKeyChar())) {
             evt.consume();
         }
     }
     
-    // check it exists
+    // check it exists //AnotherClass
     private int noDupe() { 	
         String id = null;
         
@@ -2139,7 +2076,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
     
     
 	////////////MANAGE FEEDBACK////////////////////
-    
+    //AnotherClass
     private void tableViewFeedbacks() {
     	model = (DefaultTableModel) tableFeedback.getModel();
     	model.setRowCount(0);
@@ -2153,6 +2090,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
     	}
     }
     
+    //AnotherClass
     private void tableFeedbackMouseClicked(java.awt.event.MouseEvent evt) {
     	model = (DefaultTableModel) tableFeedback.getModel();
     	rowIndex = tableFeedback.getSelectedRow();
@@ -2172,6 +2110,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
     
     
 	////////////WELCOME PAGE////////////////////
+    //AnotherClass
     private void initWelcome() {
     	welcomeName.setText("Welcome, Admin " + "'" + temp.getUserName() + "'");
     	welcomeItem.setText(String.valueOf(Database.getItems().size()));
@@ -2184,38 +2123,6 @@ public class AdminClassFrame extends javax.swing.JFrame {
     	
     }
     
-	////////////VOUCHERS////////////////////
-    
-    private void buttonVAddActionPerformed(java.awt.event.ActionEvent evt) {
-
-    }
-    private void buttonVUpdateActionPerformed(java.awt.event.ActionEvent evt) {
-
-    }
-    private void buttonVRemoveActionPerformed(java.awt.event.ActionEvent evt) {
-
-    }
-    private void buttonVClearActionPerformed(java.awt.event.ActionEvent evt) {
-
-    }
-    
-    private void tableVouchersMouseClicked(java.awt.event.MouseEvent evt) {
-    	
-    }
-    
-    private void inputVMaxKeyTyped(java.awt.event.KeyEvent evt) {
-        if(!Character.isDigit(evt.getKeyChar())) {
-            evt.consume();
-        }
-    }
-    
-    private void inputVRateKeyTyped(java.awt.event.KeyEvent evt) {
-        if(!Character.isDigit(evt.getKeyChar())) {
-            evt.consume();
-        }
-    }
-    
-    
     private javax.swing.JButton buttonAddNewItem;
     private javax.swing.JButton buttonClearInputItem;
     private javax.swing.JButton buttonItemPrint;
@@ -2224,7 +2131,6 @@ public class AdminClassFrame extends javax.swing.JFrame {
     private javax.swing.JButton buttonItemTableRefresh;
     private javax.swing.JButton buttonItemUpdate;
     private javax.swing.JButton buttonLogOut;
-    private javax.swing.JButton buttonPackageAdd;
     private javax.swing.JButton buttonPackageItemAdd;
     private javax.swing.JButton buttonPackageItemRemove;
     private javax.swing.JButton buttonPackageRemove;
@@ -2236,10 +2142,6 @@ public class AdminClassFrame extends javax.swing.JFrame {
     private javax.swing.JButton buttonUserRemove;
     private javax.swing.JButton buttonUserSearch;
     private javax.swing.JButton buttonUserUpdate;
-    private javax.swing.JButton buttonVAdd;
-    private javax.swing.JButton buttonVClear;
-    private javax.swing.JButton buttonVRemove;
-    private javax.swing.JButton buttonVUpdate;
     private javax.swing.JTextField inputItemID;
     private javax.swing.JTextField inputNewPackage;
     private javax.swing.JTextField inputNewPackageName;
@@ -2256,11 +2158,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
     private javax.swing.JTextField inputUserName;
     private javax.swing.JTextField inputUserPass;
     private javax.swing.JTextField inputUserSearch;
-    private javax.swing.JTextField inputVCode;
-    private javax.swing.JTextField inputVID;
-    private javax.swing.JTextField inputVMax;
-    private javax.swing.JTextField inputVName;
-    private javax.swing.JTextField inputVRate;
+    private javax.swing.JButton buttonPackageAdd;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -2272,15 +2170,9 @@ public class AdminClassFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
-    private javax.swing.JLabel jLabel22;
-    private javax.swing.JLabel jLabel23;
-    private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel25;
-    private javax.swing.JLabel jLabel26;
-    private javax.swing.JLabel jLabel27;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -2300,8 +2192,6 @@ public class AdminClassFrame extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel18;
     private javax.swing.JPanel jPanel19;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel20;
-    private javax.swing.JPanel jPanel21;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
@@ -2317,7 +2207,6 @@ public class AdminClassFrame extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JScrollPane jScrollPane8;
-    private javax.swing.JScrollPane jScrollPane9;
     private javax.swing.JSpinner jSpinner1;
     private javax.swing.JTabbedPane jTabbedPane2;
     private javax.swing.JLabel labelFeedDate;
@@ -2331,7 +2220,6 @@ public class AdminClassFrame extends javax.swing.JFrame {
     private javax.swing.JTable tablePackageSingle;
     private javax.swing.JTable tablePackages;
     private javax.swing.JTable tableUsers;
-    private javax.swing.JTable tableVouchers;
     private javax.swing.JTextArea textFeedArea;
     private javax.swing.JLabel welcomeItem;
     private javax.swing.JLabel welcomeMess;
@@ -2339,5 +2227,5 @@ public class AdminClassFrame extends javax.swing.JFrame {
     private javax.swing.JLabel welcomeOrder;
     private javax.swing.JLabel welcomePack;
     private javax.swing.JTable welcomeTable;
-    private javax.swing.JLabel welcomeUser;   
+    private javax.swing.JLabel welcomeUser;
 }
