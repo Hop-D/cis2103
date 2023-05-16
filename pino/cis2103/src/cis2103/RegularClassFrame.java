@@ -1052,7 +1052,7 @@ public class RegularClassFrame extends javax.swing.JFrame {
     
 	////////////WELCOME PAGE////////////////////
     private void initWelcome() {
-    	welcomeName.setText("Welcome, Admin " + "'" + temp.getUserName() + "'");
+    	welcomeName.setText("Welcome, " + temp.getUserName() + "!");
     	welcomeItem.setText(String.valueOf(Database.getItems().size()));
     	welcomePack.setText(String.valueOf(Database.getPack().size()));
     	welcomeUser.setText(String.valueOf(Database.getUsers().size()));

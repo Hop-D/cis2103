@@ -85,6 +85,8 @@ public Login() {
         jLabel4.setText("Password :");
 
         buttonLogin.setText("LOGIN");
+        buttonLogin.setBackground(new Color(15, 4, 76));
+        buttonLogin.setForeground(Color.WHITE);
         buttonLogin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonLoginActionPerformed(evt);
@@ -92,10 +94,12 @@ public Login() {
         });
 
         labelUN.setText("Username is empty");
+        labelUN.setForeground(Color.RED);
 
         labelUP.setText("Password is empty");
+        labelUP.setForeground(Color.RED);
 
-        inputLoginUN.setForeground(java.awt.Color.lightGray);
+        inputLoginUN.setForeground(Color.LIGHT_GRAY);
         inputLoginUN.setText("username");
         inputLoginUN.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         inputLoginUN.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -107,7 +111,7 @@ public Login() {
             }
         });
 
-        inputLoginUP.setForeground(java.awt.Color.lightGray);
+        inputLoginUP.setForeground(Color.LIGHT_GRAY);
         inputLoginUP.setText("password");
         inputLoginUP.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         inputLoginUP.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -251,17 +255,21 @@ public Login() {
         String username = inputLoginUN.getText();
         String password = String.valueOf(inputLoginUP.getPassword());
         
-        if(username.equals("")) {
+        if(username.equals("") || username.equals("username")) {
             labelUN.setVisible(true);
+            return;
+            
         }
 
-        if(password.equals("")) {
+        if(password.equals("") || password.equals("password")) {
             labelUP.setVisible(true);
+            return;
         }
 
         else {
         	try {
 				UserClass temp = loginUser(username, password);
+
 				if(temp.getRole().equals(UserClass.ADMIN_USER)) {
 					AdminClassFrame a = new AdminClassFrame(temp);
 					a.setVisible(true);
@@ -273,8 +281,9 @@ public Login() {
 					r.setLocationRelativeTo(null);
 					this.dispose();
 				}
-			} catch (UserNotFoundException e) {
+			} catch (UserNotFoundException e) {	
 				JOptionPane.showMessageDialog(this, "Credentials incorrect. Please contact administrator.");
+				
 			}
         }
     }

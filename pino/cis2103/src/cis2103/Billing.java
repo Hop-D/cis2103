@@ -2,8 +2,6 @@ package cis2103;
 
 import java.awt.Font;
 import java.awt.print.PrinterException;
-import java.lang.System.Logger;
-import java.lang.System.Logger.Level;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -17,11 +15,9 @@ import model.BillingAddress;
 import model.Database;
 import model.Invoice;
 import model.Item;
-import model.Package;
 import model.Menu;
 import model.Order;
 import model.UserClass;
-import model.Vouchers;
 
 public class Billing extends javax.swing.JFrame {
 
@@ -218,7 +214,7 @@ public class Billing extends javax.swing.JFrame {
         jButton2.setText("CHECK VOUCHER");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+              //  jButton2ActionPerformed(evt);
             }
         });
 
@@ -394,22 +390,7 @@ public class Billing extends javax.swing.JFrame {
         }
     } 
     
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {                                         
-    	String voucher = jTextField4.getText().toString();
-    	for(Vouchers v : Database.getVouchers()) {
-    		if(voucher.equals(v.getCode())) {
-    			jLabel9.setText("VOUCHER NAME : " + v.getName());
-    			jLabel10.setText("DISCOUNT RATE : " + String.valueOf(v.getDiscountRate()));
-    			vid = v.getId();
-    			tdiscount = v.getDiscountRate();
-    		} else {
-    			JOptionPane.showMessageDialog(this, "Voucher is not available");
-    			vid = 1;
-    			tdiscount = 0;
-    		}
-    	}
-    	initBilling();
-    } 
+ 
     private void initBilling() {
     	tchange = amount - (order.getTotal() - tdiscount);
         try {

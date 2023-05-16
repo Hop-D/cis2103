@@ -1,6 +1,9 @@
 
 package cis2103;
 
+import java.awt.Color;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.awt.print.PrinterException;
 import java.sql.SQLException;
 import java.text.MessageFormat;
@@ -552,13 +555,18 @@ public class AdminClassFrame extends javax.swing.JFrame {
         });
 
         buttonAddNewItem.setText("ADD NEW");
+        buttonAddNewItem.setBackground(new Color(91, 140, 90));
+        buttonAddNewItem.setForeground(Color.white);
         buttonAddNewItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonAddNewItemActionPerformed(evt);
             }
         });
-
+        
+        
         buttonItemUpdate.setText("UPDATE");
+        buttonItemUpdate.setBackground(new Color(233, 235, 135));
+        buttonItemUpdate.setForeground(Color.black);
         buttonItemUpdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 try {
@@ -571,6 +579,8 @@ public class AdminClassFrame extends javax.swing.JFrame {
         });
 
         buttonItemRemove.setText("REMOVE");
+        buttonItemRemove.setBackground(new Color(123, 8, 40));
+        buttonItemRemove.setForeground(Color.white);
         buttonItemRemove.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonItemRemoveActionPerformed(evt);
@@ -585,6 +595,8 @@ public class AdminClassFrame extends javax.swing.JFrame {
         });
 
         buttonItemPrint.setText("PRINT");
+        buttonItemPrint.setBackground(new Color(47, 88, 112));
+        buttonItemPrint.setForeground(Color.white);
         buttonItemPrint.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonItemPrintActionPerformed(evt);
@@ -651,7 +663,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
                 .addGap(0, 21, Short.MAX_VALUE))
         );
 
-        jTabbedPane2.addTab("MANAGE ITEMS", jPanel9);
+        jTabbedPane2.addTab("ITEMS", jPanel9);
 
         jPanel10.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -953,7 +965,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jTabbedPane2.addTab("MANAGE PACKAGES", jPanel10);
+        jTabbedPane2.addTab("PACKAGES", jPanel10);
 
         jPanel11.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -1199,7 +1211,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
                 .addGap(219, 219, 219))
         );
 
-        jTabbedPane2.addTab("MANAGE USERS", jPanel11);
+        jTabbedPane2.addTab("USERS", jPanel11);
 
         jPanel12.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -1444,6 +1456,8 @@ public class AdminClassFrame extends javax.swing.JFrame {
             tableItems.print(JTable.PrintMode.FIT_WIDTH, header, footer);
         } catch (PrinterException ex) {
             Logger.getLogger(AdminClassFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }finally {
+        	tableViewItems("");
         }
     }
 
@@ -1476,6 +1490,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
 		inputItemID.setText("" + Database.getLastItemID());
 	    inputSingleName.setText(null);
 	    inputSinglePrice.setText(null);
+		buttonAddNewItem.setEnabled(true);
     }
 
     // display data of clicked row in MANAGE SINGLE ITEMS //AnotherClass
@@ -1485,6 +1500,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
         inputItemID.setText(model.getValueAt(rowIndex, 0).toString());
         inputSingleName.setText(model.getValueAt(rowIndex, 1).toString());
         inputSinglePrice.setText(model.getValueAt(rowIndex, 2).toString());
+        buttonAddNewItem.setEnabled(false );
     }
     
     // put data of items in a table //AnotherClass
@@ -1503,6 +1519,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
                 model.addRow(row);
     		}
     	}
+		buttonAddNewItem.setEnabled(true);
     }
     
 
@@ -1585,7 +1602,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
 	    		model.addRow(row);
 	    	}
 		} catch (MenuNotFoundException e) {
-			System.out.println(e.getMessage());
+			JOptionPane.showMessageDialog(this, "Package not found");
 		}
     }
     
@@ -1733,32 +1750,41 @@ public class AdminClassFrame extends javax.swing.JFrame {
     	try {
     		Package p = Database.getPackageByID(inputPackageID.getText());
     		String itemID = inputPackageSingleID.getText();
-    		float oldPrice = p.getPrice();
-			for(Item ip: p.getPackageitems()) {
-				if(ip.getId().equals(itemID)) {
-					SpinnerNumberModel sModel = new SpinnerNumberModel(ip.getQuantity(), 1, 200, 1);
-					JSpinner updateQty = new JSpinner(sModel);
-					javax.swing.JPanel existingQty = new javax.swing.JPanel();
-					existingQty.setLayout(new javax.swing.BoxLayout(existingQty, javax.swing.BoxLayout.Y_AXIS));
-					existingQty.add(new javax.swing.JLabel("Item already exists in the package."));
-					existingQty.add(new javax.swing.JLabel("Enter new quantity: "));
-					existingQty.add(updateQty);
-					int confirm = JOptionPane.showConfirmDialog(null, existingQty, "Existing package item", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-					float priceDifference = (ip.getPrice()*ip.getQuantity()) - ((int)updateQty.getValue()*ip.getPrice());
-					inputPackagePrice.setText("" + (oldPrice - priceDifference));
-					if(confirm != JOptionPane.OK_OPTION) {
-						return;
-					}
-					Database.updatePackageItem(p.getId(), itemID, (int)updateQty.getValue());
-					updatePackage();
-					return;
-				}
-			}
-			
-			if((int)jSpinner1.getValue() == 0) {
-				JOptionPane.showMessageDialog(this, "Please specify a quantity.");
-				return;
-			}
+    		double oldPrice = p.getPrice();
+//			for(Item ip: p.getPackageitems()) {
+//				if(ip.getId().equals(itemID)) {
+//					SpinnerNumberModel sModel = new SpinnerNumberModel(ip.getQuantity(), 1, 200, 1);
+//					JSpinner updateQty = new JSpinner(sModel);
+//					javax.swing.JPanel existingQty = new javax.swing.JPanel();
+//					existingQty.setLayout(new javax.swing.BoxLayout(existingQty, javax.swing.BoxLayout.Y_AXIS));
+//					existingQty.add(new javax.swing.JLabel("Item already exists in the package."));
+//					existingQty.add(new javax.swing.JLabel("Enter new quantity: "));
+//					existingQty.add(updateQty);
+//					int confirm = JOptionPane.showConfirmDialog(null, existingQty, "Existing package item", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+//					double priceDifference = (ip.getPrice()*ip.getQuantity()) - ((int)updateQty.getValue()*ip.getPrice());
+//					inputPackagePrice.setText("" + (oldPrice - priceDifference));
+//					if(confirm != JOptionPane.OK_OPTION) {
+//						return;
+//					}
+//					Database.updatePackageItem(p.getId(), itemID, (int)updateQty.getValue());
+//					updatePackage();
+//					return;
+//				}
+//			}
+    		
+//			
+//			if((int)jSpinner1.getValue() == 0) {
+//				JOptionPane.showMessageDialog(this, "Please specify a quantity.");
+//				return;
+//			}
+    		
+    		for(Item ip: p.getPackageitems()) {
+    			if(ip.getId().equals(itemID)) {
+    				JOptionPane.showMessageDialog(this, "This item already exists in the package.");
+    				return;
+    			}
+    		}
+    		
 			updatePackage();
 			Database.addPackageItem(p, Database.getItemByID(itemID), (int)jSpinner1.getValue());
 			
@@ -1769,6 +1795,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
 			e.printStackTrace();
 		}finally {
 			tableViewPackageItem(inputPackageID.getText());
+			tableViewPackages();
 		}
 
     }
@@ -1782,8 +1809,8 @@ public class AdminClassFrame extends javax.swing.JFrame {
 
     //```buttons ---- REMOVE ITEM FROM PACKAGE// //AnotherClass
     private void buttonPackageItemRemoveActionPerformed(java.awt.event.ActionEvent evt) {
-    	int choice = JOptionPane.showConfirmDialog(null, "Remove item from pacakage? Click 'No' to customize quantity.", "Remove Confirmation", JOptionPane.YES_NO_CANCEL_OPTION);
-		if(choice == JOptionPane.CANCEL_OPTION) {
+    	int choice = JOptionPane.showConfirmDialog(null, "Remove item from pacakage?", "Remove Confirmation", JOptionPane.YES_NO_OPTION);
+		if(choice != JOptionPane.YES_OPTION) {
 			return;
 		}
 		
@@ -1791,39 +1818,39 @@ public class AdminClassFrame extends javax.swing.JFrame {
     	try {
     		Package p = Database.getPackageByID(inputPackageID.getText());
     		String itemID = inputPackageSingleID2.getText();
-    		float oldPrice = p.getPrice();
-    		if(choice == JOptionPane.NO_OPTION) {    			
-        		for(Item ip: p.getPackageitems()) {
-    				if(ip.getId().equals(itemID)) {
-    					SpinnerNumberModel sModel = new SpinnerNumberModel(ip.getQuantity(), 1, ip.getQuantity(), 1);
-    					JSpinner updateQty = new JSpinner(sModel);
-    					javax.swing.JPanel existingQty = new javax.swing.JPanel();
-    					existingQty.setLayout(new javax.swing.BoxLayout(existingQty, javax.swing.BoxLayout.Y_AXIS));
-    					existingQty.add(new javax.swing.JLabel("Removing items"));
-    					existingQty.add(new javax.swing.JLabel("Enter new quantity: "));
-    					existingQty.add(updateQty);
-    					int confirm = JOptionPane.showConfirmDialog(null, existingQty, "Existing package item", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-    					
-    					if(confirm != JOptionPane.OK_OPTION) {
-    						return;
-    					}
-    					
-    					float priceDifference = (ip.getQuantity() - (int)updateQty.getValue())*ip.getPrice();
-    					inputPackagePrice.setText("" + (oldPrice - priceDifference));
-    					
-    					Database.updatePackageItem(p.getId(), itemID, (int)updateQty.getValue());
-
-    					tableViewPackageItem(p.getId());
-    					updatePackage();
-    					
-    					return;
-    				}
-    			}
-    		}
+    		double oldPrice = p.getPrice();
+//    		if(choice == JOptionPane.NO_OPTION) {    			
+//        		for(Item ip: p.getPackageitems()) {
+//    				if(ip.getId().equals(itemID)) {
+//    					SpinnerNumberModel sModel = new SpinnerNumberModel(ip.getQuantity(), 1, ip.getQuantity(), 1);
+//    					JSpinner updateQty = new JSpinner(sModel);
+//    					javax.swing.JPanel existingQty = new javax.swing.JPanel();
+//    					existingQty.setLayout(new javax.swing.BoxLayout(existingQty, javax.swing.BoxLayout.Y_AXIS));
+//    					existingQty.add(new javax.swing.JLabel("Removing items"));
+//    					existingQty.add(new javax.swing.JLabel("Enter new quantity: "));
+//    					existingQty.add(updateQty);
+//    					int confirm = JOptionPane.showConfirmDialog(null, existingQty, "Existing package item", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+//    					
+//    					if(confirm != JOptionPane.OK_OPTION) {
+//    						return;
+//    					}
+//    					
+//    					double priceDifference = (ip.getQuantity() - (int)updateQty.getValue())*ip.getPrice();
+//    					inputPackagePrice.setText("" + (oldPrice - priceDifference));
+//    					
+//    					Database.updatePackageItem(p.getId(), itemID, (int)updateQty.getValue());
+//
+//    					tableViewPackageItem(p.getId());
+//    					updatePackage();
+//    					
+//    					return;
+//    				}
+//    			}
+//    		}
 			
     		
 			Item i = Database.getItemByID(itemID);
-			try {
+		
 				inputPackagePrice.setText("" + (p.getPrice() - i.getPrice()));
 				if(inputPackagePrice.getText().substring(0, 1).equals("-")) {
 					inputPackagePrice.setText("0");
@@ -1831,17 +1858,16 @@ public class AdminClassFrame extends javax.swing.JFrame {
 				Database.removePackageItem(p, i);
 				tableViewPackageItem(inputPackageID.getText());
 				updatePackage();
-			} catch (SQLException e) {
-				System.out.println(e.getMessage());
-			}
-		} catch (MenuNotFoundException | SQLException e) {
-			System.out.println(e.getMessage());
+			
+		} catch (MenuNotFoundException | SQLException e ) {
+			JOptionPane.showMessageDialog(this, e.getMessage());
 		}
     	
     	
     	
     	tableViewPackageItem(inputPackageID.getText());
-//    	clearPackages();
+    	inputPackageID.setText("");
+    	tableViewPackages();
     }
 
 
@@ -1946,6 +1972,9 @@ public class AdminClassFrame extends javax.swing.JFrame {
 					if(choice != JOptionPane.YES_OPTION) {
 						return;
 					}
+					if(inputUserName.getText().equals("username") || inputUserPass.getText().equals("password")) {
+						JOptionPane.showMessageDialog(this, "Illegal username and password.");
+					}
 					
 					if(radioUserRegular.isSelected()) {
 						Database.addUser(new RegularClass("R" + inputUserID.getText(), inputUserName.getText(), inputUserPass.getText(), inputUserContact.getText(), RegularClass.REGULAR_USER, LocalDateTime.now(), LocalDateTime.now(), temp.getId()));
@@ -1985,6 +2014,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
         }
         clearUser();
         tableViewUsers("");
+        
     }
 
     //```buttons ---- REMOVE USER// //AnotherClass
@@ -2118,7 +2148,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
 	////////////WELCOME PAGE////////////////////
     //AnotherClass
     private void initWelcome() {
-    	welcomeName.setText("Welcome, Admin " + "'" + temp.getUserName() + "'");
+    	welcomeName.setText("Welcome, " + temp.getUserName() + "!");
     	welcomeItem.setText(String.valueOf(Database.getItems().size()));
     	welcomePack.setText(String.valueOf(Database.getPack().size()));
     	welcomeUser.setText(String.valueOf(Database.getUsers().size()));

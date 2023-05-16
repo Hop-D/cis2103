@@ -1,5 +1,6 @@
 package model;
 
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -8,11 +9,13 @@ public abstract class Menu {
 	private String id;
 	private String type;
 	private String name;
-	private float price;
+	private double price;
 	private int quantity;
 	private LocalDateTime dateAdded;
 	private LocalDateTime dateUpdated;
 	private int menuID;
+	
+	private static final DecimalFormat df = new DecimalFormat("0.00");
 	
 	public static final String PACKAGE_TYPE = "Package";
 	public static final String ITEM_TYPE = "Item";
@@ -68,7 +71,11 @@ public abstract class Menu {
 		this.name = name;
 	}
 
-	public float getPrice() {
+	public String getFormattedPrice() {
+		return df.format(price);
+	}
+	
+	public double getPrice() {
 		return price;
 	}
 

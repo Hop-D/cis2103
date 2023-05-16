@@ -27,7 +27,6 @@ public class Database {
 	private static ArrayList<Package> pack = new ArrayList<Package>();
 	private static ArrayList<Order> orders = new ArrayList<Order>();
 	private static ArrayList<Feedbacks> feedback = new ArrayList<Feedbacks>();
-	private static ArrayList<Vouchers> vouchers = new ArrayList<Vouchers>();
 	private static ArrayList<Invoice> invoice = new ArrayList<Invoice>();
 
 	public Database () throws SQLException {
@@ -138,14 +137,6 @@ public class Database {
 
 	public static void setFeedback(ArrayList<Feedbacks> feedback) {
 		Database.feedback = feedback;
-	}
-
-	public static ArrayList<Vouchers> getVouchers() {
-		return vouchers;
-	}
-
-	public static void setVouchers(ArrayList<Vouchers> vouchers) {
-		Database.vouchers = vouchers;
 	}
 
 	public static ArrayList<Invoice> getInvoice() {
@@ -417,7 +408,7 @@ public class Database {
 			db.getPst().setString(1, item.getId());
 			db.getPst().setString(2, nameExist(item.getName(), "ITEMS"));
 			addMenu(item.getType());
-			db.getPst().setFloat(3, item.getPrice());
+			db.getPst().setDouble(3, item.getPrice());
 			db.getPst().setInt(4, getLastMenuID());
 			db.getPst().executeUpdate();
 			
@@ -440,7 +431,7 @@ public class Database {
 			db.getPst().setString(1, packag.getId());
 			db.getPst().setString(2, nameExist(packag.getName(), "PACKAGE"));
 			addMenu(packag.getType());
-			db.getPst().setFloat(3, packag.getPrice());
+			db.getPst().setDouble(3, packag.getPrice());
 			db.getPst().setInt(4, Integer.parseInt("0"));
 			db.getPst().setInt(5, getLastMenuID());
 			db.getPst().executeUpdate();
@@ -561,28 +552,7 @@ public class Database {
 	    }
 	}
 	
-	public static void addVoucher(Vouchers vouch) throws SQLException {
-		Database db = new Database();
-		try {
-			
-			db = new Database();
-			db.setPst("INSERT INTO `vouchers` (`voucherID`, `name`, `code`, `discountOpt`, `discountRate`, `useCount`, `maxUse`, `expireDate`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-			db.getPst().setInt(1, vouch.getId());
-			db.getPst().setString(2,vouch.getName());
-			db.getPst().setString(3, vouch.getCode());
-			db.getPst().setString(4, "");
-			db.getPst().setFloat(5, vouch.getDiscountRate());
-			db.getPst().setInt(6, 0);
-			db.getPst().setInt(7, 0);
-			db.getPst().setTimestamp(8, null);
-			db.getPst().executeUpdate();
-			
-	    } finally {
-	        if (db != null) {
-	            db.closeConn();
-	        }
-	    }
-	}
+	
 	
 	public static void addFeedback(Feedbacks f) throws SQLException  {
 		
