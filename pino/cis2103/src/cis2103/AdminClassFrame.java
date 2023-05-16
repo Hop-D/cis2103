@@ -12,9 +12,12 @@ import java.time.LocalDateTime;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ButtonGroup;
+import javax.swing.InputVerifier;
+import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import javax.swing.JSpinner;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 import exceptions.MenuNotFoundException;
@@ -822,6 +825,8 @@ public class AdminClassFrame extends javax.swing.JFrame {
         jLabel8.setText("ENTER PACKAGE NAME :");
 
         buttonPackageAdd.setText("CREATE");
+        buttonPackageAdd.setBackground(new Color(91, 140, 90));
+        buttonPackageAdd.setForeground(Color.white);
         buttonPackageAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
             	buttonPackageAddActionPerformed(evt);
@@ -853,6 +858,8 @@ public class AdminClassFrame extends javax.swing.JFrame {
         jScrollPane5.setViewportView(tablePackages);
 
         buttonPackageUpdate.setText("UPDATE");
+        buttonPackageUpdate.setBackground(new Color(233, 235, 135));
+        buttonPackageUpdate.setForeground(Color.black);
         buttonPackageUpdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonPackageUpdateActionPerformed(evt);
@@ -860,6 +867,8 @@ public class AdminClassFrame extends javax.swing.JFrame {
         });
 
         buttonPackageRemove.setText("REMOVE");
+        buttonPackageRemove.setBackground(new Color(123, 8, 40));
+        buttonPackageRemove.setForeground(Color.white);
         buttonPackageRemove.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonPackageRemoveActionPerformed(evt);
@@ -1064,7 +1073,9 @@ public class AdminClassFrame extends javax.swing.JFrame {
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
-        buttonUserPrint.setText("PRINT");
+        buttonUserPrint.setText("PRINT");        
+        buttonUserPrint.setBackground(new Color(47, 88, 112));
+        buttonUserPrint.setForeground(Color.white);
         buttonUserPrint.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonUserPrintActionPerformed(evt);
@@ -1072,6 +1083,8 @@ public class AdminClassFrame extends javax.swing.JFrame {
         });
 
         buttonUserRemove.setText("REMOVE");
+        buttonUserRemove.setBackground(new Color(123, 8, 40));
+        buttonUserRemove.setForeground(Color.white);
         buttonUserRemove.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonUserRemoveActionPerformed(evt);
@@ -1079,6 +1092,8 @@ public class AdminClassFrame extends javax.swing.JFrame {
         });
 
         buttonUserUpdate.setText("UPDATE");
+        buttonUserUpdate.setBackground(new Color(233, 235, 135));
+        buttonUserUpdate.setForeground(Color.black);
         buttonUserUpdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonUserUpdateActionPerformed(evt);
@@ -1086,6 +1101,8 @@ public class AdminClassFrame extends javax.swing.JFrame {
         });
 
         buttonUserAdd.setText("ADD NEW");
+        buttonUserAdd.setBackground(new Color(91, 140, 90));
+        buttonUserAdd.setForeground(Color.white);
         buttonUserAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonUserAddActionPerformed(evt);
@@ -1106,7 +1123,23 @@ public class AdminClassFrame extends javax.swing.JFrame {
 
         jLabel20.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel20.setText("User Role :");
+        inputUserContact.setInputVerifier(new InputVerifier() {
+            @Override
+            public boolean verify(JComponent input) {
+                JTextField textField = (JTextField) input;
+                String text = textField.getText();
 
+                if (!text.matches("[0-9]+")) {
+                	if(text.equals("")) {
+                		return true;
+                	}
+                    JOptionPane.showMessageDialog(textField, "Invalid input!");
+                    return false;
+                }
+
+                return true;
+            }
+        });
         inputUserContact.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 inputUserContactKeyTyped(evt);

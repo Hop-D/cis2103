@@ -2,6 +2,7 @@
 package cis2103;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.FocusEvent;
@@ -549,6 +550,9 @@ public class RegularClassFrame extends javax.swing.JFrame {
         );
 
         buttonRegProceed.setText("PROCEED");
+        buttonRegProceed.setBackground(new Color(15, 4, 76));
+        buttonRegProceed.setForeground(Color.WHITE);
+
         buttonRegProceed.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonRegProceedActionPerformed(evt);
