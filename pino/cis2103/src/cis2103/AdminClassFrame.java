@@ -1417,7 +1417,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
         	try {
 				@SuppressWarnings("unused")
 				Item item = Database.getItemByID(inputSingleName.getText());
-				JOptionPane.showMessageDialog(this, "Item already exists");
+				JOptionPane.showMessageDialog(this, "Item already exists","Warning", JOptionPane.WARNING_MESSAGE);
 			} catch (MenuNotFoundException e) {
 				try {
 					int choice = JOptionPane.showConfirmDialog(null, "Add item?", "Add Confirmation", JOptionPane.YES_NO_OPTION);
@@ -1440,7 +1440,13 @@ public class AdminClassFrame extends javax.swing.JFrame {
     //```buttons ---- UPDATE ITEM// //AnotherClass
     private void buttonItemUpdateActionPerformed(java.awt.event.ActionEvent evt) throws SQLException {
     	if(inputSinglePrice.getText().isEmpty() || inputSingleName.getText().isEmpty()) {
-    		JOptionPane.showMessageDialog(this, "Required fields are missing");
+    		JOptionPane.showMessageDialog(
+    			    this,
+    			    "Required fields are missing",
+    			    "Warning",
+    			    JOptionPane.WARNING_MESSAGE
+    			);
+
     		return;
     	}
   
@@ -1465,8 +1471,17 @@ public class AdminClassFrame extends javax.swing.JFrame {
     //```buttons ---- REMOVE ITEM// //AnotherClass
     private void buttonItemRemoveActionPerformed(java.awt.event.ActionEvent evt) {
         try {
-        	int choice = JOptionPane.showConfirmDialog(null, "Remove item?", "Remove Confirmation", JOptionPane.YES_NO_OPTION);
-	        if(choice == JOptionPane.NO_OPTION) {
+        	int choice = JOptionPane.showOptionDialog(
+        		    null,
+        		    "Remove item?",
+        		    "Remove Confirmation",
+        		    JOptionPane.YES_NO_OPTION,
+        		    JOptionPane.WARNING_MESSAGE,
+        		    null,
+        		    null,
+        		    null
+        		);
+	        if(choice != JOptionPane.YES_OPTION) {
 	        	return;
 	        }
         	Item item = Database.getItemByID(inputItemID.getText());
@@ -1722,7 +1737,17 @@ public class AdminClassFrame extends javax.swing.JFrame {
     
     //```buttons ---- REMOVE PACKAGE// //AnotherClass
     private void buttonPackageRemoveActionPerformed(java.awt.event.ActionEvent evt) {
-    	int choice = JOptionPane.showConfirmDialog(null, "Remove Package?", "Remove Confirmation", JOptionPane.YES_NO_OPTION);
+    	int choice = JOptionPane.showOptionDialog(
+    		    null,
+    		    "Remove Package?",
+    		    "Remove Confirmation",
+    		    JOptionPane.YES_NO_OPTION,
+    		    JOptionPane.WARNING_MESSAGE,
+    		    null,
+    		    null,
+    		    null
+    		);
+    	
 		if(choice != JOptionPane.YES_OPTION) {
 			return;
 		}
@@ -1842,7 +1867,18 @@ public class AdminClassFrame extends javax.swing.JFrame {
 
     //```buttons ---- REMOVE ITEM FROM PACKAGE// //AnotherClass
     private void buttonPackageItemRemoveActionPerformed(java.awt.event.ActionEvent evt) {
-    	int choice = JOptionPane.showConfirmDialog(null, "Remove item from pacakage?", "Remove Confirmation", JOptionPane.YES_NO_OPTION);
+    	int choice = JOptionPane.showOptionDialog(
+    		    null,
+    		    "Remove item from pacakage?",
+    		    "Remove Confirmation",
+    		    JOptionPane.YES_NO_OPTION,
+    		    JOptionPane.WARNING_MESSAGE,
+    		    null,
+    		    null,
+    		    null
+    		);
+
+
 		if(choice != JOptionPane.YES_OPTION) {
 			return;
 		}
@@ -2053,8 +2089,18 @@ public class AdminClassFrame extends javax.swing.JFrame {
     //```buttons ---- REMOVE USER// //AnotherClass
     private void buttonUserRemoveActionPerformed(java.awt.event.ActionEvent evt) {
     	
+    	int choice = JOptionPane.showOptionDialog(
+    		    null,
+    		    "Remove User?",
+    		    "Remove Confirmation",
+    		    JOptionPane.YES_NO_OPTION,
+    		    JOptionPane.WARNING_MESSAGE,
+    		    null,
+    		    null,
+    		    null
+    		);
+
     	
-    	int choice = JOptionPane.showConfirmDialog(null, "Remove User?", "Add Confirmation", JOptionPane.YES_NO_OPTION);
 		if(choice != JOptionPane.YES_OPTION) {
 			return;
 		} 

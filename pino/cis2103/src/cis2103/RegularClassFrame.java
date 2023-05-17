@@ -951,7 +951,7 @@ public class RegularClassFrame extends javax.swing.JFrame {
 
     private void buttonRegUpdateActionPerformed(java.awt.event.ActionEvent evt) {                                                
         
-    	int choice = JOptionPane.showConfirmDialog(null, "Update Order Item?", "Add Confirmation", JOptionPane.YES_NO_OPTION);
+    	int choice = JOptionPane.showConfirmDialog(null, "Update Order Item?", "Update Confirmation", JOptionPane.YES_NO_OPTION);
 		if(choice == JOptionPane.NO_OPTION) {
 			return;
 		} 
@@ -972,8 +972,12 @@ public class RegularClassFrame extends javax.swing.JFrame {
     }                                               
 
     private void buttonRegRemoveActionPerformed(java.awt.event.ActionEvent evt) {                                                
-    	int choice = JOptionPane.showConfirmDialog(null, "Remove Order Item?", "Add Confirmation", JOptionPane.YES_NO_OPTION);
-		if(choice == JOptionPane.NO_OPTION) {
+    	int choice = JOptionPane.showOptionDialog(null, "Remove Order Item?", "Remove Confirmation", JOptionPane.YES_NO_OPTION,
+    		    JOptionPane.WARNING_MESSAGE,
+    		    null,
+    		    null,
+    		    null);
+		if(choice != JOptionPane.YES_OPTION) {
 			return;
 		} 
 		
@@ -1041,7 +1045,7 @@ public class RegularClassFrame extends javax.swing.JFrame {
     	Feedbacks feed;
 		try {
 	    	int choice = JOptionPane.showConfirmDialog(null, "Send Message?", "Add Confirmation", JOptionPane.YES_NO_OPTION);
-			if(choice == JOptionPane.NO_OPTION) {
+			if(choice != JOptionPane.YES_OPTION) {
 				return;
 			} 
 			feed = new Feedbacks(Database.getLastFeedbackID(), temp.getId(), textFeedArea.getText(), LocalDateTime.now());
