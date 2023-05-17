@@ -15,7 +15,7 @@ public abstract class Menu {
 	private LocalDateTime dateUpdated;
 	private int menuID;
 	
-	private static final DecimalFormat df = new DecimalFormat("0.00");
+//	private static final DecimalFormat df = new DecimalFormat("0.00");
 	
 	public static final String PACKAGE_TYPE = "Package";
 	public static final String ITEM_TYPE = "Item";
@@ -71,13 +71,10 @@ public abstract class Menu {
 		this.name = name;
 	}
 
-	public String getFormattedPrice() {
-		return df.format(price);
-	}
-	
 	public double getPrice() {
 		return price;
 	}
+	
 
 	public void setPrice(float price) {
 		this.price = price;

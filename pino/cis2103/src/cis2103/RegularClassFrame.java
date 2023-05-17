@@ -8,6 +8,7 @@ import java.awt.Font;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
@@ -36,6 +37,7 @@ public class RegularClassFrame extends javax.swing.JFrame {
     int rowIndex1, rowIndex2, rowIndex3;
     private static RegularClass temp;
 
+    private static final DecimalFormat df = new DecimalFormat("0.00");
     
     public RegularClassFrame(UserClass user) {
         initComponents();
@@ -795,7 +797,7 @@ public class RegularClassFrame extends javax.swing.JFrame {
     	for(Item i : Database.getItems()) {
     		row[0] = i.getId();
 			row[1] = i.getName();
-			row[2] = i.getPrice();
+			row[2] = df.format(i.getPrice());
 			model.addRow(row);
 		}
     }
@@ -809,7 +811,7 @@ public class RegularClassFrame extends javax.swing.JFrame {
     	for(Package p : Database.getPack()) {
     		row[0] = p.getId();
     		row[1] = p.getName();
-    		row[2] = p.getPrice();
+    		row[2] = df.format(p.getPrice());
     		model.addRow(row);
     	}
     }
@@ -823,7 +825,7 @@ public class RegularClassFrame extends javax.swing.JFrame {
         for(Menu m : order.getMenuOrders()) {
         	row[0] = m.getName();
         	row[1] = m.getQuantity();
-        	row[2] = m.getPrice() * m.getQuantity();
+        	row[2] = df.format(m.getPrice() * m.getQuantity());
         	model.addRow(row);
         }
     }
@@ -882,7 +884,7 @@ public class RegularClassFrame extends javax.swing.JFrame {
 		for(Item it : mi) {
 			rowData[i][0] = it.getName();
 			rowData[i][1] = it.getQuantity();
-			rowData[i][2] = it.getPrice();
+			rowData[i][2] = df.format(it.getPrice());
 			i++;
 		}
 		JTable table = new JTable(rowData, columnNames);
@@ -992,7 +994,7 @@ public class RegularClassFrame extends javax.swing.JFrame {
         
         tableViewRegItem();
         clearReg();
-        inputRegTotal.setText(Float.toString(currentTotal()));
+        inputRegTotal.setText(df.format(currentTotal()));
     
     }                                                                                          
                                 

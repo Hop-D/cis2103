@@ -3,6 +3,7 @@ package cis2103;
 import java.awt.Font;
 import java.awt.print.PrinterException;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -26,6 +27,7 @@ public class Billing extends javax.swing.JFrame {
 	private static float amount, tdiscount, tchange;
 	private static Invoice i = new Invoice();
 	private static BillingAddress bill = new BillingAddress();
+    private static final DecimalFormat df = new DecimalFormat("0.00");
 	int vid = 1;
 	UserClass user;
 	
@@ -510,7 +512,7 @@ private void receipt() {
     	for(Menu m : order.getMenuOrders()) {
 			String str = String.format("%-22s", m.getName());
     		String str2 = String.format("%-17s", m.getQuantity());
-    		String str3 = String.format("%s", m.getPrice()*m.getQuantity());
+    		String str3 = String.format("%s", df.format(m.getPrice()*m.getQuantity()));
     		receiptArea.setText(receiptArea.getText() + str + str2 + str3 + "\n");
     		if(m.getType().equals(Menu.PACKAGE_TYPE)) {
     			String pi = "";
@@ -526,10 +528,10 @@ private void receipt() {
     		}
     	}
     	receiptArea.setText(receiptArea.getText() + "================================================\r\n"
-    			+ "                   Order Total   : " + order.getTotal() + "\r\n"
-    			+ "                   Discount      : " + tdiscount + "\r\n"
+    			+ "                   Order Total   : " + df.format(order.getTotal()) + "\r\n"
+    			+ "                   Discount      : " + df.format(tdiscount) + "\r\n"
     			+ "                   Amount Paid   : " + order.getTotal() + "\r\n"
-    			+ "                   Change        : " + tchange + "\r\n"
+    			+ "                   Change        : " + df.format(tchange) + "\r\n"
     			+ "\r\n"
     			+ "CUSTOMER DETAILS:\n");
     	

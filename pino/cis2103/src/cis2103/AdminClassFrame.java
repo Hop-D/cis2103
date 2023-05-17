@@ -6,6 +6,7 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.print.PrinterException;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
 
@@ -44,7 +45,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
 
     private int rowIndex;
     private static AdminClass temp;
-    
+    private static final DecimalFormat df = new DecimalFormat("0.00");
     
     public AdminClassFrame(UserClass user) {
     	
@@ -1392,7 +1393,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
 		try {
 			Package p = Database.getPackageByID(inputPackageID.getText());
 			Item i = Database.getItemByID(inputPackageSingleID.getText());
-			inputPackagePrice.setText("" + (p.getPrice() + i.getPrice()*(int)jSpinner1.getValue()));
+			inputPackagePrice.setText("" + df.format(p.getPrice() + i.getPrice()*(int)jSpinner1.getValue()));
 		} catch (MenuNotFoundException e1) {
 		}
 	}
@@ -1545,10 +1546,17 @@ public class AdminClassFrame extends javax.swing.JFrame {
     private void tableItemsMouseClicked(java.awt.event.MouseEvent evt) {      
         model = (DefaultTableModel) tableItems.getModel();
         rowIndex = tableItems.getSelectedRow();  
-        inputItemID.setText(model.getValueAt(rowIndex, 0).toString());
-        inputSingleName.setText(model.getValueAt(rowIndex, 1).toString());
-        inputSinglePrice.setText(model.getValueAt(rowIndex, 2).toString());
-        buttonAddNewItem.setEnabled(false );
+        String id = model.getValueAt(rowIndex, 0).toString();
+        try {
+			Item item = Database.getItemByID(model.getValueAt(rowIndex, 0).toString());
+			inputItemID.setText(item.getId());
+	        inputSingleName.setText(item.getName());
+	        inputSinglePrice.setText(df.format(item.getPrice()));
+	        buttonAddNewItem.setEnabled(false);
+		} catch (MenuNotFoundException e) {
+			e.printStackTrace();
+		}
+        
     }
     
     // put data of items in a table //AnotherClass
@@ -1561,7 +1569,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
                 row = new Object[5];
                 row[0] = i.getId();
                 row[1] = i.getName();
-                row[2] = i.getPrice();
+                row[2] = df.format(i.getPrice());
                 row[3] = i.getDateAdded();
                 row[4] = i.getDateUpdated();
                 model.addRow(row);
@@ -1611,7 +1619,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
     		row = new Object[5];
     		row[0] = pack.getId();
             row[1] = pack.getName();
-            row[2] = pack.getPrice();
+            row[2] = df.format(pack.getPrice());
             row[3] = pack.getNumberOfItems();
             row[4] = pack.getDateAdded();
             model.addRow(row);
@@ -1628,7 +1636,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
                row = new Object[3];
                row[0] = i.getId();
                row[1] = i.getName();
-               row[2] = i.getPrice();
+               row[2] = df.format(i.getPrice());
                model.addRow(row);
     	}
     }
@@ -1646,7 +1654,8 @@ public class AdminClassFrame extends javax.swing.JFrame {
 	    		row[0] = i.getId();
 	    		row[1] = i.getName();
 	    		row[2] = i.getQuantity();
-	    		row[3] = row[2] + " * " + i.getPrice();
+	    		row[3] = row[2] + " * " + df.format(i.getPrice());
+	    		System.out.println(i.getPrice());
 	    		model.addRow(row);
 	    	}
 		} catch (MenuNotFoundException e) {
@@ -1657,24 +1666,28 @@ public class AdminClassFrame extends javax.swing.JFrame {
     
     // Fetch data of selected package //AnotherClass
     private void tablePackagesMouseClicked(java.awt.event.MouseEvent evt) {
-        
         model = (DefaultTableModel) tablePackages.getModel();
         rowIndex = tablePackages.getSelectedRow();
-        
-        inputPackageID.setText(model.getValueAt(rowIndex, 0).toString());
-        inputPackagePrice.setText(model.getValueAt(rowIndex, 2).toString());
-        
-        tablePackageItem.setModel(new DefaultTableModel(null, new Object[] {
-        		"ID", "NAME", "QUANTITY", "PRICE"
-        }));
 
-    	model = (DefaultTableModel) tablePackages.getModel();
-    	rowIndex = tablePackages.getSelectedRow();
-    	
-    	inputPackageID.setText(model.getValueAt(rowIndex, 0).toString());
-    	inputPackageName.setText(model.getValueAt(rowIndex, 1).toString());
-    	inputPackagePrice.setText(model.getValueAt(rowIndex, 2).toString());
-    	tableViewPackageItem(inputPackageID.getText());
+        try {
+			Package pack = Database.getPackageByID(model.getValueAt(rowIndex, 0).toString());
+			inputPackageID.setText(pack.getId());
+	        inputPackagePrice.setText(df.format(pack.getPrice()));
+	        
+	        tablePackageItem.setModel(new DefaultTableModel(null, new Object[] {
+	        		"ID", "NAME", "QUANTITY", "PRICE"
+	        }));
+	        
+	    	inputPackageName.setText(pack.getName());
+	    	inputPackagePrice.setText(df.format(pack.getPrice()));
+	    	tableViewPackageItem(inputPackageID.getText());
+        
+        } catch (MenuNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
+        
 
     }
     
@@ -1789,7 +1802,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
 		try {
 	        Package p = Database.getPackageByID(inputPackageID.getText());
 			i = Database.getItemByID(inputPackageSingleID.getText());
-			inputPackagePrice.setText("" + (p.getPrice() + i.getPrice()*(int)jSpinner1.getValue()));
+			inputPackagePrice.setText("" + df.format((p.getPrice() + i.getPrice()*(int)jSpinner1.getValue())));
 		} catch (MenuNotFoundException e) {
 			JOptionPane.showMessageDialog(this, e.getMessage());
 		}
@@ -1920,7 +1933,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
     		
 			Item i = Database.getItemByID(itemID);
 		
-				inputPackagePrice.setText("" + (p.getPrice() - i.getPrice()));
+				inputPackagePrice.setText("" + df.format(p.getPrice() - i.getPrice()));
 				if(inputPackagePrice.getText().substring(0, 1).equals("-")) {
 					inputPackagePrice.setText("0");
 				}
@@ -2064,8 +2077,12 @@ public class AdminClassFrame extends javax.swing.JFrame {
     //```buttons ---- UPDATE USER// //AnotherClass
     private void buttonUserUpdateActionPerformed(java.awt.event.ActionEvent evt) {
     	
-        if(isEmptyUser() && noDupe() == 0) {
-        	int choice = JOptionPane.showConfirmDialog(null, "Update User?", "UpdatevConfirmation", JOptionPane.YES_NO_OPTION);
+        if(isEmptyUser()) {
+        	if(noDupe() != 0) {
+            	JOptionPane.showMessageDialog(this, "Username exists");
+        		return;
+        	} 
+        	int choice = JOptionPane.showConfirmDialog(null, "Update User?", "Update Confirmation", JOptionPane.YES_NO_OPTION);
     		if(choice != JOptionPane.YES_OPTION) {
     			return;
     		} 
@@ -2078,8 +2095,6 @@ public class AdminClassFrame extends javax.swing.JFrame {
 			} catch (SQLException e) {
 				JOptionPane.showMessageDialog(this, e.getMessage());
 			}
-        } else {
-        	JOptionPane.showMessageDialog(this, "Username exists");
         }
         clearUser();
         tableViewUsers("");
