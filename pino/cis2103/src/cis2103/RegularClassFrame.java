@@ -943,7 +943,6 @@ public class RegularClassFrame extends javax.swing.JFrame {
     	try {
     		
     		Menu temp = Database.getMenuByID(jLabel10.getText());
-    		boolean exist = false;
             if(menuExistInOrder(model.getValueAt(rowIndex1, 1).toString())) {
             	JOptionPane.showMessageDialog(this, "This item already exists.");
             	return;

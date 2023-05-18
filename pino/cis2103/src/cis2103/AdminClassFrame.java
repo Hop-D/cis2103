@@ -1032,11 +1032,11 @@ public class AdminClassFrame extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "USERNAME", "PASSWORD", "CONTACT #", "ROLE", "DATE CREATED", "DATE UPDATED", "UPDATE BY"
+                "ID", "USERNAME", "CONTACT #", "ROLE", "DATE CREATED", "DATE UPDATED", "UPDATE BY"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false
+                false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -2006,12 +2006,11 @@ public class AdminClassFrame extends javax.swing.JFrame {
         	if(u.concatDets().toLowerCase().contains(searchVal.toLowerCase())) {
         		row[0] = u.getId();
             	row[1] = u.getUserName();
-            	row[2] = u.getPassword();
-            	row[3] = u.getContact();
-            	row[4] = u.getRole();
-            	row[5] = u.getUserCreated();
-            	row[6] = u.getUserUpdated();
-            	row[7] = u.getEditedByID();
+            	row[2] = u.getContact();
+            	row[3] = u.getRole();
+            	row[4] = u.getUserCreated();
+            	row[5] = u.getUserUpdated();
+            	row[6] = u.getEditedByID();
             	model.addRow(row);
         	}
         }
@@ -2021,18 +2020,24 @@ public class AdminClassFrame extends javax.swing.JFrame {
     private void tableUsersMouseClicked(java.awt.event.MouseEvent evt) {
         model = (DefaultTableModel) tableUsers.getModel();
         rowIndex = tableUsers.getSelectedRow();
+        try {
+			UserClass user = Database.getUserByID(model.getValueAt(rowIndex, 0).toString());
+			inputUserID.setText(user.getId());
+	        inputUserName.setText(user.getUserName());
+	        inputUserPass.setText(user.getPassword());
+	        inputUserContact.setText(user.getContact());
+	        if(user.getRole().equals("ADMIN")) {
+	            radioUserAdmin.setSelected(true);
+	            radioUserRegular.setSelected(false);
+	        } else {
+	            radioUserAdmin.setSelected(false);
+	            radioUserRegular.setSelected(true);
+	        }
+		} catch (UserNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         
-        inputUserID.setText(model.getValueAt(rowIndex, 0).toString());
-        inputUserName.setText(model.getValueAt(rowIndex, 1).toString());
-        inputUserPass.setText(model.getValueAt(rowIndex, 2).toString());
-        inputUserContact.setText(model.getValueAt(rowIndex, 3).toString());
-        if(model.getValueAt(rowIndex, 4).toString().equals("ADMIN")) {
-            radioUserAdmin.setSelected(true);
-            radioUserRegular.setSelected(false);
-        } else {
-            radioUserAdmin.setSelected(false);
-            radioUserRegular.setSelected(true);
-        }
     }
 
     //```buttons ---- ADD USER// //AnotherClass
