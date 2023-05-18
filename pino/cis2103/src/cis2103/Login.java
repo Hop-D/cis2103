@@ -44,169 +44,219 @@ public Login() {
 
     private void initComponents() {
 
-        jPanel3 = new javax.swing.JPanel();
-        jPanel1 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
+    	jLabel1 = new javax.swing.JLabel();
+        inputLoginUP = new javax.swing.JPasswordField();
+        inputLoginUN = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        inputLoginUN = new javax.swing.JTextField();
-        inputLoginUP = new javax.swing.JPasswordField();
         buttonLogin = new javax.swing.JButton();
         labelUN = new javax.swing.JLabel();
         labelUP = new javax.swing.JLabel();
+        labelBackground = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setAlwaysOnTop(true);
         setBackground(new java.awt.Color(15, 4, 76));
-        setMaximumSize(new java.awt.Dimension(1020, 600));
-        setMinimumSize(new java.awt.Dimension(1020, 600));
-        setPreferredSize(new java.awt.Dimension(1020, 570));
+        setFocusTraversalPolicyProvider(true);
+        setMaximumSize(new java.awt.Dimension(602, 480));
+        setMinimumSize(new java.awt.Dimension(602, 480));
+        setPreferredSize(new java.awt.Dimension(602, 480));
         setResizable(false);
+        getContentPane().setLayout(null);
+        
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cis2103/logo.png"))); // NOI18N
+        getContentPane().add(jLabel1);
+        jLabel1.setBounds(160, 10, 334, 240);
+        
+        inputLoginUP.setFont(new java.awt.Font("sansserif", 0, 14)); // NOI18N
+        inputLoginUP.setText("password");
+        inputLoginUP.setForeground(java.awt.Color.lightGray);
+        inputLoginUP.addFocusListener(new java.awt.event.FocusAdapter() {
+          public void focusGained(java.awt.event.FocusEvent evt) {
+          	inputLoginUPFocusGained(evt);
+          }
+          public void focusLost(java.awt.event.FocusEvent evt) {
+          	inputLoginUPFocusLost(evt);
+          }
+        });
+        
+        getContentPane().add(inputLoginUP);
+        inputLoginUP.setBounds(270, 300, 200, 31);
 
-        jPanel3.setBackground(new java.awt.Color(15, 4, 76));
-        jPanel3.setMaximumSize(new java.awt.Dimension(1020, 600));
-        jPanel3.setMinimumSize(new java.awt.Dimension(1020, 600));
+        inputLoginUN.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        inputLoginUN.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        inputLoginUN.setForeground(java.awt.Color.lightGray);
+        inputLoginUN.setText("username");
+        getContentPane().add(inputLoginUN);
+        inputLoginUN.setBounds(270, 250, 200, 30);
+        inputLoginUN.addFocusListener(new java.awt.event.FocusAdapter() {
+          public void focusGained(java.awt.event.FocusEvent evt) {
+          	inputLoginUNFocusGained(evt);
+          }
+          public void focusLost(java.awt.event.FocusEvent evt) {
+          	inputLoginUNFocusLost(evt);
+          }
+        });
 
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel1.setMaximumSize(new java.awt.Dimension(600, 588));
-        jPanel1.setMinimumSize(new java.awt.Dimension(600, 588));
-        jPanel1.setPreferredSize(new java.awt.Dimension(600, 588));
+        jLabel2.setFont(new java.awt.Font("sansserif", 1, 18)); // NOI18N
+        jLabel2.setText("Username:");
+        getContentPane().add(jLabel2);
+        jLabel2.setBounds(150, 250, 97, 24);
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 3, 36)); // NOI18N
-        jLabel1.setText("WELCOME");
+        jLabel3.setFont(new java.awt.Font("sansserif", 1, 18)); // NOI18N
+        jLabel3.setText("Password:");
+        getContentPane().add(jLabel3);
+        jLabel3.setBounds(150, 300, 93, 24);
 
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jLabel2.setText("LOGIN TO ENTER THE SYSTEM");
-
-        jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jLabel3.setText("Username :");
-
-        jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jLabel4.setText("Password :");
-
+        buttonLogin.setBackground(new java.awt.Color(240, 240, 192));
+        buttonLogin.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
+        buttonLogin.setForeground(new java.awt.Color(51, 0, 51));
         buttonLogin.setText("LOGIN");
-        buttonLogin.setBackground(new Color(15, 4, 76));
-        buttonLogin.setForeground(Color.WHITE);
         buttonLogin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonLoginActionPerformed(evt);
             }
         });
+        getContentPane().add(buttonLogin);
+        buttonLogin.setBounds(230, 370, 100, 50);
 
-        labelUN.setText("Username is empty");
-        labelUN.setForeground(Color.RED);
+        labelUN.setForeground(new Color(255, 255, 0));
+        labelUN.setFont(new java.awt.Font("sansserif", 1, 11)); // NOI18N
+        labelUN.setText("Username is empty!");
+        getContentPane().add(labelUN);
+        labelUN.setBounds(270, 275, 200, 16);
 
-        labelUP.setText("Password is empty");
-        labelUP.setForeground(Color.RED);
 
-        inputLoginUN.setForeground(Color.LIGHT_GRAY);
-        inputLoginUN.setText("username");
-        inputLoginUN.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        inputLoginUN.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-            	inputLoginUNFocusGained(evt);
-            }
-            public void focusLost(java.awt.event.FocusEvent evt) {
-            	inputLoginUNFocusLost(evt);
-            }
-        });
+        labelUP.setForeground(new Color(255, 255, 0));
+        labelUP.setFont(new java.awt.Font("sansserif", 1, 11)); // NOI18N
+        labelUP.setText("Password is empty!");
+        getContentPane().add(labelUP);
+        labelUP.setBounds(270, 330, 200, 16);
 
-        inputLoginUP.setForeground(Color.LIGHT_GRAY);
-        inputLoginUP.setText("password");
-        inputLoginUP.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        inputLoginUP.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-            	inputLoginUPFocusGained(evt);
-            }
-            public void focusLost(java.awt.event.FocusEvent evt) {
-            	inputLoginUPFocusLost(evt);
-            }
-        });
+        labelBackground.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cis2103/bckg.jpg"))); // NOI18N
+        labelBackground.setToolTipText("");
+        labelBackground.setMaximumSize(new java.awt.Dimension(1020, 600));
+        labelBackground.setMinimumSize(new java.awt.Dimension(1020, 600));
+        labelBackground.setPreferredSize(new java.awt.Dimension(1020, 600));
+        getContentPane().add(labelBackground);
+        labelBackground.setBounds(0, 0, 610, 450);
         
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap(186, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addGap(210, 210, 210))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addGap(173, 173, 173))))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(113, 113, 113)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel4))
-                        .addGap(46, 46, 46)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(labelUN)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(inputLoginUN)
-                                .addComponent(inputLoginUP, javax.swing.GroupLayout.DEFAULT_SIZE, 240, Short.MAX_VALUE))
-                            .addComponent(labelUP)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(239, 239, 239)
-                        .addComponent(buttonLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(0, 0, Short.MAX_VALUE))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(86, 86, 86)
-                .addComponent(jLabel1)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel2)
-                .addGap(78, 78, 78)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(inputLoginUN, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(labelUN)
-                .addGap(25, 25, 25)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(inputLoginUP, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(labelUP)
-                .addGap(53, 53, 53)
-                .addComponent(buttonLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap(398, Short.MAX_VALUE)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(22, 22, 22))
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 549, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(45, Short.MAX_VALUE))
-        );
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-        );
-
+//        
+//
+//        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cis2103/logo.png"))); // NOI18N
+//        jLabel1.setText("jLabel1");
+//        
+//        
+//        jLabel2.setFont(new java.awt.Font("sansserif", 1, 18)); // NOI18N
+//        jLabel2.setText("Username:");
+//
+//        jLabel3.setFont(new java.awt.Font("sansserif", 1, 18)); // NOI18N
+//        jLabel3.setText("Password:");
+//        
+//        buttonLogin.setText("LOGIN");
+//        buttonLogin.setBackground(new java.awt.Color(240, 240, 192));
+//        buttonLogin.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
+//        buttonLogin.setForeground(Color.WHITE);
+//        buttonLogin.addActionListener(new java.awt.event.ActionListener() {
+//            public void actionPerformed(java.awt.event.ActionEvent evt) {
+//                buttonLoginActionPerformed(evt);
+//            }
+//        });
+//
+//        labelUN.setForeground(java.awt.Color.red);
+//        labelUN.setText("Username is empty!");
+//
+//        labelUP.setForeground(java.awt.Color.red);
+//        labelUP.setText("Password is empty!");
+//
+//        inputLoginUN.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+//        inputLoginUN.setForeground(Color.LIGHT_GRAY);
+//        inputLoginUN.setFont(new java.awt.Font("Dialog", 0, 14));
+//        inputLoginUN.setText("username");
+//        inputLoginUN.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+//        inputLoginUN.addFocusListener(new java.awt.event.FocusAdapter() {
+//            public void focusGained(java.awt.event.FocusEvent evt) {
+//            	inputLoginUNFocusGained(evt);
+//            }
+//            public void focusLost(java.awt.event.FocusEvent evt) {
+//            	inputLoginUNFocusLost(evt);
+//            }
+//        });
+//
+//        inputLoginUP.setForeground(Color.LIGHT_GRAY);
+//        inputLoginUP.setFont(new java.awt.Font("sansserif", 0, 14));
+//        inputLoginUP.setText("password");
+//        inputLoginUP.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+//        inputLoginUP.addFocusListener(new java.awt.event.FocusAdapter() {
+//            public void focusGained(java.awt.event.FocusEvent evt) {
+//            	inputLoginUPFocusGained(evt);
+//            }
+//            public void focusLost(java.awt.event.FocusEvent evt) {
+//            	inputLoginUPFocusLost(evt);
+//            }
+//        });
+//        
+//        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+//        jPanel1.setLayout(jPanel1Layout);
+//        jPanel1Layout.setHorizontalGroup(
+//            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+//            .addGroup(jPanel1Layout.createSequentialGroup()
+//                .addContainerGap(121, Short.MAX_VALUE)
+//                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+//                    .addGroup(jPanel1Layout.createSequentialGroup()
+//                        .addComponent(jLabel2)
+//                        .addGap(22, 22, 22)
+//                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+//                            .addComponent(labelUN)
+//                            .addComponent(inputLoginUN, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE)))
+//                    .addGroup(jPanel1Layout.createSequentialGroup()
+//                        .addComponent(jLabel3)
+//                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+//                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+//                            .addComponent(labelUP)
+//                            .addComponent(inputLoginUP, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE))))
+//                .addGap(134, 134, 134))
+//            .addGroup(jPanel1Layout.createSequentialGroup()
+//                .addGap(230, 230, 230)
+//                .addComponent(buttonLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+//                .addGap(0, 0, Short.MAX_VALUE))
+//            .addGroup(jPanel1Layout.createSequentialGroup()
+//                .addGap(151, 151, 151)
+//                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 303, javax.swing.GroupLayout.PREFERRED_SIZE)
+//                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+//        );
+//        jPanel1Layout.setVerticalGroup(
+//            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+//            .addGroup(jPanel1Layout.createSequentialGroup()
+//                .addGap(44, 44, 44)
+//                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
+//                .addGap(18, 18, 18)
+//                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+//                    .addComponent(inputLoginUN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+//                    .addComponent(jLabel2))
+//                .addGap(3, 3, 3)
+//                .addComponent(labelUN)
+//                .addGap(18, 18, 18)
+//                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+//                    .addComponent(inputLoginUP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+//                    .addComponent(jLabel3))
+//                .addGap(2, 2, 2)
+//                .addComponent(labelUP)
+//                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+//                .addComponent(buttonLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+//                .addContainerGap(130, Short.MAX_VALUE))
+//        );
+//
+//        getContentPane().add(jPanel1);
+//        jPanel1.setBounds(0, 0, 610, 550);
+//
+//        labelBackground.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cis2103/bckg2.jpg"))); // NOI18N
+//        labelBackground.setToolTipText("");
+//        labelBackground.setMaximumSize(new java.awt.Dimension(1020, 600));
+//        labelBackground.setMinimumSize(new java.awt.Dimension(1020, 600));
+//        labelBackground.setPreferredSize(new java.awt.Dimension(1020, 600));
+//        getContentPane().add(labelBackground);
+//        labelBackground.setBounds(0, 0, 610, 550);
         pack();
     }
     
@@ -303,7 +353,7 @@ public Login() {
     	try {
             UIManager.setLookAndFeel(new FlatIntelliJLaf());
         } catch (UnsupportedLookAndFeelException ex) {
-             java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
     	
     	Login log = new Login();
@@ -312,16 +362,13 @@ public Login() {
 	}
 
 
-    private javax.swing.JButton buttonLogin;
     private javax.swing.JTextField inputLoginUN;
     private javax.swing.JPasswordField inputLoginUP;
+    private javax.swing.JButton buttonLogin;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel3;
+    private javax.swing.JLabel labelBackground;
     private javax.swing.JLabel labelUN;
     private javax.swing.JLabel labelUP;
-
 }

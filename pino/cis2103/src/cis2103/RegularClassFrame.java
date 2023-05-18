@@ -37,7 +37,7 @@ public class RegularClassFrame extends javax.swing.JFrame {
     int rowIndex1, rowIndex2, rowIndex3;
     private static RegularClass temp;
 
-    private static final DecimalFormat df = new DecimalFormat("0.00");
+    private static final DecimalFormat df = new DecimalFormat("'₱'0.00");
     
     public RegularClassFrame(UserClass user) {
         initComponents();
@@ -833,6 +833,9 @@ public class RegularClassFrame extends javax.swing.JFrame {
     private void tableRegOneMouseClicked(java.awt.event.MouseEvent evt) {                                            
         model = (DefaultTableModel) tableRegOne.getModel();
         rowIndex1 = tableRegOne.getSelectedRow();
+
+
+        
         jLabel10.setText(model.getValueAt(rowIndex1, 0).toString());
 
         inputRegOne.setText(model.getValueAt(rowIndex1, 1).toString());
@@ -843,6 +846,7 @@ public class RegularClassFrame extends javax.swing.JFrame {
     private void tableRegTwoMouseClicked(java.awt.event.MouseEvent evt) {                                             
         model = (DefaultTableModel) tableRegTwo.getModel();
         rowIndex2 = tableRegTwo.getSelectedRow();
+        
         jLabel10.setText(model.getValueAt(rowIndex2, 0).toString());
         
         inputRegOne.setText(model.getValueAt(rowIndex2, 1).toString());
@@ -851,7 +855,7 @@ public class RegularClassFrame extends javax.swing.JFrame {
         tableRegItems.clearSelection();
         
         
-        displayPack(jLabel10.getText(), inputRegOne.getText(), Float.parseFloat(model.getValueAt(rowIndex2, 2).toString()));
+        displayPack(jLabel10.getText(), inputRegOne.getText(), Float.parseFloat(model.getValueAt(rowIndex2, 2).toString().substring(1)));
     }        
     
  // display item list of a package
@@ -904,6 +908,7 @@ public class RegularClassFrame extends javax.swing.JFrame {
         model = (DefaultTableModel) tableRegItems.getModel();
         rowIndex3 = tableRegItems.getSelectedRow();
         
+        
         jSpinner1.setValue(model.getValueAt(rowIndex3, 1));
         inputRegTemp.setText(model.getValueAt(rowIndex3, 0).toString());   
         inputRegOne.setText("");
@@ -911,6 +916,15 @@ public class RegularClassFrame extends javax.swing.JFrame {
         tableRegOne.clearSelection();
         tableRegTwo.clearSelection();
     }      
+    
+    private boolean menuExistInOrder(String name) {
+    	for(Menu m: order.getMenuOrders()) {
+    		if(m.getName().equals(name)) {
+    			return true;
+    		}
+    	}
+    	return false;
+    }
     
     private void clearReg() {
     	
@@ -923,27 +937,25 @@ public class RegularClassFrame extends javax.swing.JFrame {
 	    tableRegItems.clearSelection();
     }
 
-    private void buttonRegAddOneActionPerformed(java.awt.event.ActionEvent evt) {                                              
+    private void buttonRegAddOneActionPerformed(java.awt.event.ActionEvent evt) {
+    	
     	int tempQty = Integer.parseInt(spinnerOne.getValue().toString());
     	try {
     		
     		Menu temp = Database.getMenuByID(jLabel10.getText());
     		boolean exist = false;
-    		for(Menu m: order.getMenuOrders()) {
-    			if(temp.getId().equals(m.getId())) {
-    				m.setQuantity(m.getQuantity() + tempQty);
-    				exist = false;
-    				break;
-    			}
-    		}
-    		if(!exist) {
-    			temp.setQuantity(tempQty);
-    			order.getMenuOrders().add(temp);
-    		}
+            if(menuExistInOrder(model.getValueAt(rowIndex1, 1).toString())) {
+            	JOptionPane.showMessageDialog(this, "This item already exists.");
+            	return;
+            }
+            
+    		temp.setQuantity(tempQty);
+    		order.getMenuOrders().add(temp);
+    	
     		
            
 		} catch (NumberFormatException | MenuNotFoundException e) {
-			
+			e.printStackTrace();
 		}
 
     	tableViewRegItem();
@@ -952,7 +964,9 @@ public class RegularClassFrame extends javax.swing.JFrame {
     }                                                                                   
 
     private void buttonRegUpdateActionPerformed(java.awt.event.ActionEvent evt) {                                                
-        
+        if(inputRegTemp.getText().isEmpty()) {
+        	JOptionPane.showMessageDialog(this, "Please select an item to update");
+        }
     	int choice = JOptionPane.showConfirmDialog(null, "Update Order Item?", "Update Confirmation", JOptionPane.YES_NO_OPTION);
 		if(choice == JOptionPane.NO_OPTION) {
 			return;

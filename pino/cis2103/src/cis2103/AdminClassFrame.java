@@ -45,7 +45,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
 
     private int rowIndex;
     private static AdminClass temp;
-    private static final DecimalFormat df = new DecimalFormat("0.00");
+    private static final DecimalFormat df = new DecimalFormat("'₱'0.00");
     
     public AdminClassFrame(UserClass user) {
     	
@@ -513,7 +513,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
+                return canEdit[columnIndex];
             }
         });
         tableItems.setRowHeight(40);
@@ -696,7 +696,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
+                return canEdit[columnIndex];
             }
         });
         tablePackageSingle.setRowHeight(40);
@@ -709,10 +709,6 @@ public class AdminClassFrame extends javax.swing.JFrame {
 
         tablePackageItem.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-//                {null, null, null, null},
-//                {null, null, null, null},
-//                {null, null, null, null},
-//                {null, null, null, null}
             },
             new String [] {
                 "ID", "NAME", "QUANTITY", "PRICE"
@@ -723,7 +719,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
+                return canEdit[columnIndex];
             }
         });
         tablePackageItem.setRowHeight(40);
@@ -847,7 +843,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
+                return canEdit[columnIndex];
             }
         });
         tablePackages.setRowHeight(40);
@@ -1044,7 +1040,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
+                return canEdit[columnIndex];
             }
         });
         tableUsers.setRowHeight(40);
@@ -1283,7 +1279,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
+                return canEdit[columnIndex];
             }
         });
         tableFeedback.setRowHeight(40);
@@ -1426,7 +1422,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
 			        if(choice != JOptionPane.YES_OPTION) {
 			        	return;
 			        }
-					Database.addItem(new Item("I" + inputItemID.getText(), inputSingleName.getText(), Float.parseFloat(inputSinglePrice.getText())));
+					Database.addItem(new Item("I" + inputItemID.getText(), inputSingleName.getText(), Float.parseFloat(inputSinglePrice.getText().substring(1))));
 				} catch (NumberFormatException | SQLException | NameExistsInArrayException e1) {
 					JOptionPane.showMessageDialog(this, e1.getMessage());
 				}
@@ -1458,7 +1454,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
 	        if(choice == JOptionPane.NO_OPTION) {
 	        	return;
 	        }
-			Database.updateItem(inputItemID.getText(), inputSingleName.getText(), Float.parseFloat(inputSinglePrice.getText()));
+			Database.updateItem(inputItemID.getText(), inputSingleName.getText(), Float.parseFloat(inputSinglePrice.getText().substring(1)));
 	        
 		} catch (Exception e) {
 			JOptionPane.showInputDialog(this, e.getMessage());
@@ -1741,7 +1737,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
     private void updatePackage() {
     	try {
 			Package temp = Database.getPackageByID(inputPackageID.getText());
-			Database.updatePackage(inputPackageID.getText(), inputPackageName.getText(), Float.parseFloat(inputPackagePrice.getText().toString()), tablePackageItem.getRowCount());
+			Database.updatePackage(inputPackageID.getText(), inputPackageName.getText(), Float.parseFloat(inputPackagePrice.getText().substring(1)), tablePackageItem.getRowCount());
 		} catch (NumberFormatException | SQLException | MenuNotFoundException | NameExistsInArrayException e) {
 			JOptionPane.showMessageDialog(this, e.getMessage());
 		}
@@ -1948,7 +1944,6 @@ public class AdminClassFrame extends javax.swing.JFrame {
     	
     	
     	tableViewPackageItem(inputPackageID.getText());
-    	inputPackageID.setText("");
     	tableViewPackages();
     }
 
@@ -2252,6 +2247,10 @@ public class AdminClassFrame extends javax.swing.JFrame {
     private void welcomeTableMouseClicked(java.awt.event.MouseEvent evt) {
     	
     }
+//    
+//    private String currencyFormatter(float ) {
+//    	
+//    }
     
     private javax.swing.JButton buttonAddNewItem;
     private javax.swing.JButton buttonClearInputItem;

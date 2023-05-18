@@ -27,7 +27,7 @@ public class Billing extends javax.swing.JFrame {
 	private static float amount, tdiscount, tchange;
 	private static Invoice i = new Invoice();
 	private static BillingAddress bill = new BillingAddress();
-    private static final DecimalFormat df = new DecimalFormat("0.00");
+    private static final DecimalFormat df = new DecimalFormat("'₱'0.00");
 	int vid = 1;
 	UserClass user;
 	
