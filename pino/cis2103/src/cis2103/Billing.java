@@ -207,13 +207,15 @@ public class Billing extends javax.swing.JFrame {
                 .addGap(37, 37, 37))
         );
 
-        jLabel8.setText("VOUCHER CODE :");
+        jLabel8.setText("");
+        jLabel8.setVisible(false);
+        jLabel9.setText("");
 
-        jLabel9.setText("VOUCHER NAME : <voucher_name>");
+        jLabel9.setVisible(false);
+        jLabel10.setText("");
 
-        jLabel10.setText("DISCOUNT RATE : <discount rate>");
-
-        jButton2.setText("CHECK VOUCHER");
+        jLabel10.setVisible(false);
+        jButton2.setText("");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
               //  jButton2ActionPerformed(evt);
@@ -378,6 +380,7 @@ public class Billing extends javax.swing.JFrame {
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
+        jPanel4.setVisible(false);
         pack();
     }// </editor-fold>                        
                   
@@ -398,8 +401,8 @@ public class Billing extends javax.swing.JFrame {
         try {
 			jLabel1.setText("BILLING ID # " + Database.getLastBillingID());
 		
-    	jLabel11.setText("TOTAL AMOUNT : " + String.valueOf(amount));
-    	jLabel12.setText("BILL - VOUCHER : " + String.valueOf(order.getTotal()) + " - " + String.valueOf(tdiscount));
+    	jLabel11.setText("AMOUNT PAID: " + String.valueOf(amount));
+    	jLabel12.setText("ORDER TOTAL: " + String.valueOf(order.getTotal()));
     	jLabel13.setText("TOTAL CHANGE : " + String.valueOf(tchange)); 
     	receiptArea.setEditable(false);
         } catch (SQLException e) {
