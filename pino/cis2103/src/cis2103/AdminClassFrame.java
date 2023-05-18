@@ -1981,6 +1981,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
         inputUserContact.setText(null);
         radioUserRegular.setSelected(true); 
         tableUsers.getSelectionModel().clearSelection();
+        buttonUserAdd.setEnabled(true);
     }
     
     
@@ -2014,6 +2015,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
             	model.addRow(row);
         	}
         }
+        buttonAddNewItem.setEnabled(true);
     }
     
     // fetch data of selected table row //AnotherClass
@@ -2033,6 +2035,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
 	            radioUserAdmin.setSelected(false);
 	            radioUserRegular.setSelected(true);
 	        }
+	        buttonUserAdd.setEnabled(false);
 		} catch (UserNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -2117,6 +2120,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
 
     	
 		if(choice != JOptionPane.YES_OPTION) {
+
 			return;
 		} 
 		try {
@@ -2144,6 +2148,7 @@ public class AdminClassFrame extends javax.swing.JFrame {
         } catch (PrinterException ex) {
             Logger.getLogger(AdminClassFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
+
     }
 
     //```buttons ---- SEARCH USER// //AnotherClass
