@@ -34,7 +34,6 @@ public class Database {
         try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
         conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/cis2103", "root", "");

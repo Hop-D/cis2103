@@ -1422,7 +1422,12 @@ public class AdminClassFrame extends javax.swing.JFrame {
 			        if(choice != JOptionPane.YES_OPTION) {
 			        	return;
 			        }
-					Database.addItem(new Item("I" + inputItemID.getText(), inputSingleName.getText(), Float.parseFloat(inputSinglePrice.getText().substring(1))));
+			        String price = inputSinglePrice.getText();
+		        	System.out.println('P');
+			        if(price.contains("₱")) {
+			        	price = price.substring(1);
+			        }
+					Database.addItem(new Item("I" + inputItemID.getText(), inputSingleName.getText(), Float.parseFloat(price)));
 				} catch (NumberFormatException | SQLException | NameExistsInArrayException e1) {
 					JOptionPane.showMessageDialog(this, e1.getMessage());
 				}
@@ -1454,7 +1459,12 @@ public class AdminClassFrame extends javax.swing.JFrame {
 	        if(choice == JOptionPane.NO_OPTION) {
 	        	return;
 	        }
-			Database.updateItem(inputItemID.getText(), inputSingleName.getText(), Float.parseFloat(inputSinglePrice.getText().substring(1)));
+	        String price = inputSinglePrice.getText();
+        	System.out.println('P');
+	        if(price.contains("₱")) {
+	        	price = price.substring(1);
+	        }
+			Database.updateItem(inputItemID.getText(), inputSingleName.getText(), Float.parseFloat(price));
 	        
 		} catch (Exception e) {
 			JOptionPane.showInputDialog(this, e.getMessage());
